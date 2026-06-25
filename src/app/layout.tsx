@@ -3,6 +3,7 @@ import { Heebo } from "next/font/google";
 import Script from "next/script";
 import Link from "next/link";
 import Header from "@/components/Header";
+import AIChat from "@/components/AIChat";
 import "./globals.css";
 
 const heebo = Heebo({
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           />
         )}
         <Header />
+        <AIChat />
         {/* Responsive container: full on mobile, centered+wider on desktop */}
         <div className="w-full max-w-[560px] md:max-w-[900px] mx-auto px-4 md:px-8">
           <div className="text-center py-6 border-b border-[#e5e5e5] mb-6">
