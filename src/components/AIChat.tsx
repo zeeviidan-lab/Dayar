@@ -18,6 +18,7 @@ export default function AIChat() {
   const [loading, setLoading] = useState(false);
   const [tab, setTab] = useState<"chat" | "contract">("chat");
   const [contractLoading, setContractLoading] = useState(false);
+  const [contractStreaming, setContractStreaming] = useState(false);
   const [contractResult, setContractResult] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -36,6 +37,7 @@ export default function AIChat() {
       return;
     }
     setContractLoading(false);
+    setContractStreaming(true);
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
     let result = "";
@@ -45,6 +47,7 @@ export default function AIChat() {
       result += decoder.decode(value, { stream: true });
       setContractResult(result);
     }
+    setContractStreaming(false);
   }
 
   useEffect(() => {
@@ -136,6 +139,14 @@ export default function AIChat() {
                 }}>
                 {contractLoading ? "מנתח חוזה... ⏳" : "📄 העלה חוזה לסקירה"}
               </button>
+              {(contractLoading || contractStreaming) && !contractResult && (
+                <div style={{ textAlign: "center", padding: "16px 0", color: "#f97316", fontSize: "13px" }}>
+                  <span style={{ display: "inline-block", animation: "pulse 1.2s ease-in-out infinite" }}>
+                    ⏳ מנתח את החוזה...
+                  </span>
+                  <style>{`@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }`}</style>
+                </div>
+              )}
               {contractResult && (
                 <div style={{
                   background: "#f9f9f9", border: "1px solid #e5e5e5", borderRadius: "12px",
