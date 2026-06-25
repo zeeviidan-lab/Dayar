@@ -237,12 +237,12 @@ export default function ReviewModal({ propertyId, onClose, onDone }: Props) {
           )}
           {step < 4 ? (
             <button onClick={() => { if (step === 3 && !agreedToTerms) { setError("יש לאשר את תנאי השימוש"); return; } setError(""); setStep((s) => s + 1); }} disabled={step === 1 && rating === 0}
-              className="flex-1 py-3 rounded-xl bg-[#f97316] text-white font-bold hover:bg-[#fb923c] disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+              className="flex-1 py-3 rounded-xl bg-[#f97316] text-white font-bold hover:bg-[#fb923c] disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-center">
               {"המשך"}
             </button>
           ) : (
             <button onClick={handleSubmit} disabled={submitting}
-              className="flex-1 py-3 rounded-xl bg-[#f97316] text-white font-bold hover:bg-[#fb923c] disabled:opacity-50 transition-colors">
+              className="flex-1 py-3 rounded-xl bg-[#f97316] text-white font-bold hover:bg-[#fb923c] disabled:opacity-50 transition-colors text-center">
               {submitting ? "שולח..." : "פרסם ביקורת"}
             </button>
           )}
