@@ -192,13 +192,7 @@ export default function PropertyPage() {
               )}
             </div>
           ) : (
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-[#f97316] font-medium">{"אדמין ✓"}</span>
-              <button onClick={deleteProperty}
-                style={{ background: "#ef4444", color: "white", padding: "4px 8px", borderRadius: "8px", fontSize: "12px", border: "none", cursor: "pointer" }}>
-                {"🗑 מחק נכס"}
-              </button>
-            </div>
+            <span className="text-xs text-[#f97316] font-medium">{"אדמין ✓"}</span>
           )}
         <button onClick={handleShare}
           className="flex items-center gap-1.5 text-sm text-[#666] hover:text-[#f97316] transition-colors border border-[#e5e5e5] rounded-lg px-3 py-1.5">
@@ -208,9 +202,19 @@ export default function PropertyPage() {
       </div>
 
       <div className="bg-white border border-[#e5e5e5] rounded-2xl p-5 mb-4 shadow-sm">
-        <h1 className="text-xl font-bold text-[#111]">{property.address}</h1>
-        <p className="text-[#666] mt-1">{property.city}</p>
-        {property.landlord_name && <p className="text-sm text-[#999] mt-1">{"משכיר: "}{property.landlord_name}</p>}
+        <div className="flex justify-between items-start">
+          <div>
+            <h1 className="text-xl font-bold text-[#111]">{property.address}</h1>
+            <p className="text-[#666] mt-1">{property.city}</p>
+            {property.landlord_name && <p className="text-sm text-[#999] mt-1">{"משכיר: "}{property.landlord_name}</p>}
+          </div>
+          {isAdmin && (
+            <button onClick={deleteProperty}
+              style={{ background: "#ef4444", color: "white", padding: "6px 12px", borderRadius: "8px", fontSize: "13px", border: "none", cursor: "pointer", whiteSpace: "nowrap" }}>
+              {"🗑 מחק נכס"}
+            </button>
+          )}
+        </div>
 
         <div className="flex items-center gap-3 mt-4">
           <StarRating rating={overallAvg} size="md" />
