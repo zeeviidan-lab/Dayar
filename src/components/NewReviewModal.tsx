@@ -33,6 +33,7 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
   const [code, setCode] = useState("");
   const [codeSent, setCodeSent] = useState(false);
   const [verified, setVerified] = useState(false);
+  const [rentAmount, setRentAmount] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -162,6 +163,7 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
       text: text || null, is_anonymous: isAnonymous,
       is_verified: verified,
       verifier_email: verified ? email : null,
+      rent_amount: rentAmount ? parseInt(rentAmount) : null,
     }).select().single();
 
     if (reviewError || !review) { setError("שגיאה בשמירה"); setSubmitting(false); return; }
@@ -249,6 +251,12 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
                   </button>
                 ))}
               </div>
+            </div>
+            <div>
+              <p className="text-sm text-[#666] mb-2">{"שכירות חודשית (₪) — אופציונלי"}</p>
+              <input value={rentAmount} onChange={(e) => setRentAmount(e.target.value.replace(/\D/g, ""))}
+                placeholder="לדוגמה: 4500" type="text" inputMode="numeric" dir="ltr"
+                className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors" />
             </div>
             <textarea value={text} onChange={(e) => setText(e.target.value)}
               placeholder="שתף את החוויה שלך (אופציונלי)..." rows={3} dir="rtl"
