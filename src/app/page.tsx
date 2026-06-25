@@ -142,16 +142,10 @@ export default function HomePage() {
           <>
             <p className="text-xs text-[#bbb] mb-3">{filtered.length}{" נכסים"}</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {filtered.map((p, i) => (
-                <Fragment key={p.id}>
-                  <PropertyCard property={p} />
-                  {i === 1 && (
-                    <div className="col-span-1 md:col-span-2 rounded-xl border border-dashed border-[#e5e5e5] bg-white flex items-center justify-center py-6 text-xs text-[#ccc]">
-                      פרסומת
-                    </div>
-                  )}
-                </Fragment>
-              ))}
+              {filtered.map((p) => <PropertyCard key={p.id} property={p} />)}
+            </div>
+            <div className="mt-4 rounded-xl border border-dashed border-[#e5e5e5] bg-white flex items-center justify-center py-6 text-xs text-[#ccc]">
+              פרסומת
             </div>
           </>
         )}
