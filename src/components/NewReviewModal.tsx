@@ -337,7 +337,7 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
         )}
 
         {step !== "done" && (
-          <div className="flex gap-3 mt-6">
+          <div className="flex gap-3 mt-6 w-full">
             {stepIndex > 0 && (
               <button onClick={() => setStep(STEPS[stepIndex - 1])}
                 className="flex-1 py-3 rounded-xl border border-[#e5e5e5] text-[#666] hover:border-[#ccc] transition-colors text-sm">
