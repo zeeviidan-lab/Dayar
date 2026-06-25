@@ -22,9 +22,10 @@ export type Review = {
   property_id: string;
   rating: number;
   rating_maintenance: number;
-  rating_communication: number;
+  rating_landlord: number;
   rating_neighbors: number;
-  rating_value: number;
+  rating_parking: number;
+  rating_noise: number;
   text: string | null;
   helpful_count: number;
   is_anonymous: boolean;

@@ -14,6 +14,7 @@ type Step = "address" | "rating" | "details" | "verify" | "done";
 
 export default function NewReviewModal({ onClose, onDone }: Props) {
   const [step, setStep] = useState<Step>("address");
+  const [initialized, setInitialized] = useState(false);
   const [address, setAddress] = useState("");
   const [propertyId, setPropertyId] = useState<string | null>(null);
   const [addressSearch, setAddressSearch] = useState("");
@@ -88,6 +89,7 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
         }, 100);
       }
     }
+    setInitialized(true);
   }, []);
 
   async function searchProperties(q: string) {
@@ -157,8 +159,8 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
 
     const { data: review, error: reviewError } = await supabase.from("reviews").insert({
       property_id: propertyId, rating,
-      rating_maintenance: rating, rating_communication: rating,
-      rating_neighbors: rating, rating_value: rating,
+      rating_maintenance: rating, rating_landlord: rating,
+      rating_neighbors: rating, rating_parking: rating, rating_noise: rating,
       text: text || null, is_anonymous: isAnonymous,
       is_verified: verified,
       verifier_email: verified ? email : null,

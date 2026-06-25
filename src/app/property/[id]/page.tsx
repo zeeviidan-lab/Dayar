@@ -15,12 +15,13 @@ const TENANT_RIGHTS = [
   { title: "איסור כניסה ללא תיאום", desc: "המשכיר אינו רשאי להיכנס לדירה ללא הסכמת הדייר מראש ובכתב, אלא במקרי חירום.", icon: "🚪" },
 ];
 
-type SubRatingKey = "rating_maintenance" | "rating_communication" | "rating_neighbors" | "rating_value";
+type SubRatingKey = "rating_maintenance" | "rating_landlord" | "rating_neighbors" | "rating_parking" | "rating_noise";
 const SUB_RATINGS: { key: SubRatingKey; label: string }[] = [
   { key: "rating_maintenance", label: "תחזוקה" },
-  { key: "rating_communication", label: "תקשורת" },
+  { key: "rating_landlord", label: "משכיר" },
   { key: "rating_neighbors", label: "שכנים" },
-  { key: "rating_value", label: "ערך" },
+  { key: "rating_parking", label: "חניון" },
+  { key: "rating_noise", label: "רעש" },
 ];
 
 function avg(arr: number[]) {

@@ -64,7 +64,7 @@ export default function ReviewModal({ propertyId, onClose, onDone }: Props) {
     setError("");
     const { data: review, error: reviewError } = await supabase
       .from("reviews")
-      .insert({ property_id: propertyId, rating, rating_maintenance: rating, rating_communication: rating, rating_neighbors: rating, rating_value: rating, text: text || null, is_anonymous: isAnonymous })
+      .insert({ property_id: propertyId, rating, rating_maintenance: rating, rating_landlord: rating, rating_neighbors: rating, rating_parking: rating, rating_noise: rating, text: text || null, is_anonymous: isAnonymous })
       .select().single();
     if (reviewError || !review) { setError("שגיאה בשמירת הביקורת. נסה שוב."); setSubmitting(false); return; }
     if (selectedTags.length > 0) {
