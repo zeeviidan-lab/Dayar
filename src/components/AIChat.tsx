@@ -30,9 +30,21 @@ export default function AIChat() {
     const formData = new FormData();
     formData.append("file", file);
     const res = await fetch("/api/review-contract", { method: "POST", body: formData });
-    const data = await res.json();
+    if (!res.ok || !res.body) {
+      setContractResult("שגיאה בניתוח");
+      setContractLoading(false);
+      return;
+    }
     setContractLoading(false);
-    setContractResult(data.analysis || data.error || "שגיאה בניתוח");
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let result = "";
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      result += decoder.decode(value, { stream: true });
+      setContractResult(result);
+    }
   }
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 
 export const maxDuration = 60;
@@ -8,7 +8,7 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 export async function POST(req: NextRequest) {
   const formData = await req.formData();
   const file = formData.get("file") as File;
-  if (!file) return NextResponse.json({ error: "לא נמצא קובץ" }, { status: 400 });
+  if (!file) return new Response(JSON.stringify({ error: "לא נמצא קובץ" }), { status: 400 });
 
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
@@ -25,15 +25,19 @@ export async function POST(req: NextRequest) {
   }
 
   if (!text.trim()) {
-    return NextResponse.json({ error: "לא ניתן לקרוא את הקובץ" }, { status: 400 });
+    return new Response(JSON.stringify({ error: "לא ניתן לקרוא את הקובץ" }), { status: 400 });
   }
 
-  const response = await client.messages.create({
-    model: "claude-haiku-4-5-20251001",
-    max_tokens: 2048,
-    messages: [{
-      role: "user",
-      content: `אתה עוזר לדיירים לסקור חוזי שכירות בישראל. קרא את החוזה הבא וספק:
+  const stream = new ReadableStream({
+    async start(controller) {
+      const encoder = new TextEncoder();
+      try {
+        const anthropicStream = await client.messages.stream({
+          model: "claude-haiku-4-5-20251001",
+          max_tokens: 2048,
+          messages: [{
+            role: "user",
+            content: `אתה עוזר לדיירים לסקור חוזי שכירות בישראל. קרא את החוזה הבא וספק:
 
 1. **סיכום קצר** — מה עיקר החוזה (כתובת, שכירות חודשית, תקופה, פיקדון)
 2. **נקודות חשובות לתשומת לב** — סעיפים שכדאי לשים לב אליהם
@@ -44,13 +48,24 @@ export async function POST(req: NextRequest) {
 
 החוזה:
 ${text.slice(0, 15000)}`,
-    }],
+          }],
+        });
+
+        for await (const chunk of anthropicStream) {
+          if (chunk.type === "content_block_delta" && chunk.delta.type === "text_delta") {
+            controller.enqueue(encoder.encode(chunk.delta.text));
+          }
+        }
+      } catch (e) {
+        controller.enqueue(new TextEncoder().encode("\n\nשגיאה בניתוח החוזה."));
+        console.error(e);
+      } finally {
+        controller.close();
+      }
+    },
   });
 
-  const content = response.content[0];
-  if (content.type !== "text") {
-    return NextResponse.json({ error: "שגיאה בניתוח" }, { status: 500 });
-  }
-
-  return NextResponse.json({ analysis: content.text });
+  return new Response(stream, {
+    headers: { "Content-Type": "text/plain; charset=utf-8" },
+  });
 }
