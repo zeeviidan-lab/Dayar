@@ -31,4 +31,5 @@ export type Review = {
   created_at: string;
   tags?: string[];
   photos?: string[];
+  is_verified?: boolean;
 };

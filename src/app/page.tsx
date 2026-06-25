@@ -5,6 +5,7 @@ import Link from "next/link";
 import { supabase, Property } from "@/lib/supabase";
 import AddressSearch from "@/components/AddressSearch";
 import PropertyCard from "@/components/PropertyCard";
+import NewReviewModal from "@/components/NewReviewModal";
 
 type SortOption = "newest" | "rating" | "most_reviewed";
 
@@ -14,6 +15,7 @@ export default function HomePage() {
   const [cityFilter, setCityFilter] = useState("");
   const [sort, setSort] = useState<SortOption>("newest");
   const [loading, setLoading] = useState(true);
+  const [showNewReview, setShowNewReview] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -74,6 +76,11 @@ export default function HomePage() {
 
   return (
     <main className="py-6">
+      <button onClick={() => setShowNewReview(true)}
+        className="w-full py-3 rounded-xl bg-[#f97316] text-white font-bold text-base hover:bg-[#fb923c] transition-colors mb-4 flex items-center justify-center gap-2">
+        {"✏️ כתוב ביקורת חדשה"}
+      </button>
+
       <AddressSearch onSelect={handleSelect} />
 
       {/* Filters row */}
@@ -140,6 +147,10 @@ export default function HomePage() {
           </>
         )}
       </div>
+
+      {showNewReview && (
+        <NewReviewModal onClose={() => setShowNewReview(false)} onDone={() => { setShowNewReview(false); window.location.reload(); }} />
+      )}
 
       <footer className="mt-16 pb-8 text-center text-xs text-[#bbb] flex justify-center gap-4">
         <Link href="/terms" className="hover:text-[#f97316]">{"תנאי שימוש"}</Link>

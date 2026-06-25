@@ -242,7 +242,12 @@ export default function PropertyPage() {
           ) : reviews.map((r) => (
             <div key={r.id} className="bg-white border border-[#e5e5e5] rounded-xl p-4 shadow-sm">
               <div className="flex justify-between items-start mb-2">
-                <StarRating rating={r.rating} size="sm" />
+                <div className="flex items-center gap-2">
+                  <StarRating rating={r.rating} size="sm" />
+                  {r.is_verified && (
+                    <span className="text-xs bg-green-50 text-green-600 border border-green-200 px-2 py-0.5 rounded-full">{"✓ מאומת"}</span>
+                  )}
+                </div>
                 <span className="text-xs text-[#bbb]">{new Date(r.created_at).toLocaleDateString("he-IL")}</span>
               </div>
               {r.tags && r.tags.length > 0 && (
