@@ -16,8 +16,9 @@ export async function POST(req: NextRequest) {
   let text = "";
 
   if (file.type === "application/pdf" || file.name.endsWith(".pdf")) {
+    // use lib path directly to avoid pdf-parse loading test files at import time
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const pdfParse: (buf: Buffer) => Promise<{ text: string }> = require("pdf-parse");
+    const pdfParse: (buf: Buffer) => Promise<{ text: string }> = require("pdf-parse/lib/pdf-parse.js");
     const data = await pdfParse(buffer);
     text = data.text;
   } else {
