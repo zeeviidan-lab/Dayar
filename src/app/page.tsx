@@ -145,6 +145,8 @@ export default function HomePage() {
         <Link href="/terms" className="hover:text-[#f97316]">{"תנאי שימוש"}</Link>
         <span>{"·"}</span>
         <Link href="/privacy" className="hover:text-[#f97316]">{"מדיניות פרטיות"}</Link>
+        <span>{"·"}</span>
+        <Link href="/contact" className="hover:text-[#f97316]">{"צור קשר"}</Link>
       </footer>
     </main>
   );

@@ -51,6 +51,7 @@ export default function Header() {
                 { href: "/", label: "דף הבית", icon: "🏠" },
                 { href: "/terms", label: "תנאי שימוש", icon: "📄" },
                 { href: "/privacy", label: "מדיניות פרטיות", icon: "🔒" },
+                { href: "/contact", label: "צור קשר", icon: "✉️" },
               ].map(({ href, label, icon }) => (
                 <Link key={href} href={href} onClick={() => setMenuOpen(false)}
                   className="flex items-center gap-3 px-4 py-3 text-sm text-[#333] hover:bg-[#fff7f0] hover:text-[#f97316] transition-colors border-b border-[#f9f9f9] last:border-0">
