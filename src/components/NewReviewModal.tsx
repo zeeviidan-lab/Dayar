@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { TAGS, TAG_COLOR_CLASSES } from "@/lib/tags";
 import StarRating from "./StarRating";
@@ -41,7 +41,7 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
   const stepIndex = STEPS.indexOf(step);
 
   // Google Places autocomplete
-  useState(() => {
+  useEffect(() => {
     function initAuto() {
       if (!inputRef.current) return;
       autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
@@ -88,7 +88,7 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
         }, 100);
       }
     }
-  });
+  }, []);
 
   async function searchProperties(q: string) {
     setAddressSearch(q);
