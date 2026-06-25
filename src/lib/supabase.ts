@@ -30,4 +30,5 @@ export type Review = {
   is_anonymous: boolean;
   created_at: string;
   tags?: string[];
+  photos?: string[];
 };
