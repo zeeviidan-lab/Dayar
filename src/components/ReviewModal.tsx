@@ -23,6 +23,33 @@ export default function ReviewModal({ propertyId, onClose, onDone }: Props) {
   const [photos, setPhotos] = useState<File[]>([]);
   const [photoPreviews, setPhotoPreviews] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [email, setEmail] = useState("");
+  const [code, setCode] = useState("");
+  const [codeSent, setCodeSent] = useState(false);
+  const [verified, setVerified] = useState(false);
+
+  async function sendCode() {
+    if (!email.includes("@")) { setError("אימייל לא תקין"); return; }
+    setSubmitting(true); setError("");
+    const res = await fetch("/api/send-verification", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    setSubmitting(false);
+    if (res.ok) setCodeSent(true);
+    else setError("שגיאה בשליחת אימייל");
+  }
+
+  async function verifyCode() {
+    setSubmitting(true); setError("");
+    const res = await fetch("/api/verify-code", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, code }),
+    });
+    setSubmitting(false);
+    if (res.ok) setVerified(true);
+    else setError("קוד שגוי או פג תוקף");
+  }
 
   function toggleTag(tag: string) {
     setSelectedTags((prev) => prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]);
@@ -59,12 +86,11 @@ export default function ReviewModal({ propertyId, onClose, onDone }: Props) {
   }
 
   async function handleSubmit() {
-    if (!agreedToTerms) { setError("יש לאשר את תנאי השימוש"); return; }
     setSubmitting(true);
     setError("");
     const { data: review, error: reviewError } = await supabase
       .from("reviews")
-      .insert({ property_id: propertyId, rating, rating_maintenance: rating, rating_landlord: rating, rating_neighbors: rating, rating_parking: rating, rating_noise: rating, text: text || null, is_anonymous: isAnonymous })
+      .insert({ property_id: propertyId, rating, rating_maintenance: rating, rating_landlord: rating, rating_neighbors: rating, rating_parking: rating, rating_noise: rating, text: text || null, is_anonymous: isAnonymous, is_verified: verified })
       .select().single();
     if (reviewError || !review) { setError("שגיאה בשמירת הביקורת. נסה שוב."); setSubmitting(false); return; }
     if (selectedTags.length > 0) {
@@ -91,7 +117,7 @@ export default function ReviewModal({ propertyId, onClose, onDone }: Props) {
         </div>
 
         <div className="flex gap-2 mb-6">
-          {[1, 2, 3].map((s) => (
+          {[1, 2, 3, 4].map((s) => (
             <div key={s} className={`h-1 flex-1 rounded-full transition-colors ${s <= step ? "bg-[#f97316]" : "bg-[#e5e5e5]"}`} />
           ))}
         </div>
@@ -162,14 +188,55 @@ export default function ReviewModal({ propertyId, onClose, onDone }: Props) {
           </div>
         )}
 
+        {step === 4 && (
+          <div className="space-y-4">
+            {!verified ? (
+              <>
+                <div className="bg-orange-50 border border-orange-200 rounded-xl p-4">
+                  <p className="text-sm font-semibold text-[#f97316] mb-1">{"אימות ביקורת (אופציונלי)"}</p>
+                  <p className="text-xs text-[#888]">{"אמת את הביקורת עם האימייל שלך כדי לקבל תג ✓ מאומת."}</p>
+                </div>
+                {!codeSent ? (
+                  <div className="space-y-2">
+                    <input value={email} onChange={(e) => setEmail(e.target.value)}
+                      placeholder="האימייל שלך" type="email" dir="ltr"
+                      className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316]" />
+                    <button onClick={sendCode} disabled={submitting || !email}
+                      className="w-full py-2.5 bg-[#f97316] text-white rounded-xl text-sm font-medium disabled:opacity-40">
+                      {submitting ? "שולח..." : "שלח קוד אימות"}
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <p className="text-sm text-[#666]">{"הכנס את הקוד שנשלח ל-"}{email}</p>
+                    <input value={code} onChange={(e) => setCode(e.target.value)}
+                      placeholder="123456" maxLength={6} dir="ltr"
+                      className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm text-center tracking-widest focus:outline-none focus:border-[#f97316]" />
+                    <button onClick={verifyCode} disabled={submitting || code.length !== 6}
+                      className="w-full py-2.5 bg-[#f97316] text-white rounded-xl text-sm font-medium disabled:opacity-40">
+                      {submitting ? "מאמת..." : "אמת קוד"}
+                    </button>
+                  </div>
+                )}
+                {error && <p className="text-red-500 text-sm">{error}</p>}
+              </>
+            ) : (
+              <div className="text-center py-4">
+                <div className="text-4xl mb-2">✅</div>
+                <p className="text-sm font-semibold text-green-600">{"אימייל אומת בהצלחה!"}</p>
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="flex gap-3 mt-6">
           {step > 1 && (
             <button onClick={() => setStep((s) => s - 1)} className="flex-1 py-3 rounded-xl border border-[#e5e5e5] text-[#666] hover:border-[#ccc] transition-colors">
               {"חזור"}
             </button>
           )}
-          {step < 3 ? (
-            <button onClick={() => setStep((s) => s + 1)} disabled={step === 1 && rating === 0}
+          {step < 4 ? (
+            <button onClick={() => { if (step === 3 && !agreedToTerms) { setError("יש לאשר את תנאי השימוש"); return; } setError(""); setStep((s) => s + 1); }} disabled={step === 1 && rating === 0}
               className="flex-1 py-3 rounded-xl bg-[#f97316] text-white font-bold hover:bg-[#fb923c] disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
               {"המשך"}
             </button>
