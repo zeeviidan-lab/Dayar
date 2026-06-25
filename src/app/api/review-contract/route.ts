@@ -14,24 +14,42 @@ export async function POST(req: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    let text = "";
+    const isPdf = file.type === "application/pdf" || file.name.endsWith(".pdf");
 
-    if (file.type === "application/pdf" || file.name.endsWith(".pdf")) {
-      try {
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        const pdfParse: (buf: Buffer) => Promise<{ text: string }> = require("pdf-parse");
-        const data = await pdfParse(buffer);
-        text = data.text;
-      } catch (pdfErr) {
-        console.error("pdf-parse error:", pdfErr);
-        return new Response(`שגיאה בקריאת PDF: ${String(pdfErr)}`, { status: 500 });
-      }
+    const prompt = `אתה עוזר לדיירים לסקור חוזי שכירות בישראל. קרא את החוזה וספק:
+
+1. **סיכום קצר** — מה עיקר החוזה (כתובת, שכירות חודשית, תקופה, פיקדון)
+2. **נקודות חשובות לתשומת לב** — סעיפים שכדאי לשים לב אליהם
+3. **סעיפים בעייתיים** — דברים שעשויים להיות לא סבירים או בניגוד לחוק שכירות הוגנת 2017
+4. **המלצות** — מה לבדוק / לשאול את המשכיר
+
+ענה בעברית בלבד. בסוף הוסף: "⚠️ מידע זה כללי בלבד ואינו מהווה ייעוץ משפטי. לקבלת ייעוץ מחייב פנה לעורך דין."`;
+
+    type MessageParam = Anthropic.MessageParam;
+    let messages: MessageParam[];
+
+    if (isPdf) {
+      messages = [{
+        role: "user",
+        content: [
+          {
+            type: "document",
+            source: {
+              type: "base64",
+              media_type: "application/pdf",
+              data: buffer.toString("base64"),
+            },
+          } as Anthropic.DocumentBlockParam,
+          { type: "text", text: prompt },
+        ],
+      }];
     } else {
-      text = buffer.toString("utf-8");
-    }
-
-    if (!text.trim()) {
-      return new Response("לא ניתן לקרוא את הקובץ", { status: 400 });
+      const text = buffer.toString("utf-8");
+      if (!text.trim()) return new Response("לא ניתן לקרוא את הקובץ", { status: 400 });
+      messages = [{
+        role: "user",
+        content: `${prompt}\n\nהחוזה:\n${text.slice(0, 15000)}`,
+      }];
     }
 
     const stream = new ReadableStream({
@@ -41,20 +59,7 @@ export async function POST(req: NextRequest) {
           const anthropicStream = await client.messages.stream({
             model: "claude-haiku-4-5-20251001",
             max_tokens: 2048,
-            messages: [{
-              role: "user",
-              content: `אתה עוזר לדיירים לסקור חוזי שכירות בישראל. קרא את החוזה הבא וספק:
-
-1. **סיכום קצר** — מה עיקר החוזה (כתובת, שכירות חודשית, תקופה, פיקדון)
-2. **נקודות חשובות לתשומת לב** — סעיפים שכדאי לשים לב אליהם
-3. **סעיפים בעייתיים** — דברים שעשויים להיות לא סבירים או בניגוד לחוק שכירות הוגנת 2017
-4. **המלצות** — מה לבדוק / לשאול את המשכיר
-
-ענה בעברית בלבד. בסוף הוסף: "⚠️ מידע זה כללי בלבד ואינו מהווה ייעוץ משפטי. לקבלת ייעוץ מחייב פנה לעורך דין."
-
-החוזה:
-${text.slice(0, 15000)}`,
-            }],
+            messages,
           });
 
           for await (const chunk of anthropicStream) {
@@ -76,6 +81,6 @@ ${text.slice(0, 15000)}`,
     });
   } catch (e) {
     console.error("route error:", e);
-    return new Response(`שגיאה כללית: ${String(e)}`, { status: 500 });
+    return new Response(`שגיאה: ${String(e)}`, { status: 500 });
   }
 }
