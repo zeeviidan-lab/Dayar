@@ -18,6 +18,10 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
   const [propertyId, setPropertyId] = useState<string | null>(null);
   const [addressSearch, setAddressSearch] = useState("");
   const [suggestions, setSuggestions] = useState<{ id: string; address: string; city: string }[]>([]);
+  const [lat, setLat] = useState<number | null>(null);
+  const [lng, setLng] = useState<number | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const [rating, setRating] = useState(0);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [text, setText] = useState("");
@@ -35,6 +39,56 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
 
   const STEPS: Step[] = ["address", "rating", "details", "verify"];
   const stepIndex = STEPS.indexOf(step);
+
+  // Google Places autocomplete
+  useState(() => {
+    function initAuto() {
+      if (!inputRef.current) return;
+      autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
+        componentRestrictions: { country: "IL" },
+        fields: ["formatted_address", "geometry", "address_components"],
+        types: ["address"],
+      });
+      autocompleteRef.current.addListener("place_changed", async () => {
+        const place = autocompleteRef.current!.getPlace();
+        const fullAddress = place.formatted_address ?? "";
+        const components = place.address_components ?? [];
+        const cityComp = components.find((c: google.maps.GeocoderAddressComponent) =>
+          c.types.includes("locality") || c.types.includes("administrative_area_level_2")
+        );
+        const city = cityComp?.long_name ?? "";
+        const streetNum = components.find((c: google.maps.GeocoderAddressComponent) => c.types.includes("street_number"))?.long_name ?? "";
+        const streetName = components.find((c: google.maps.GeocoderAddressComponent) => c.types.includes("route"))?.long_name ?? "";
+        const addr = streetNum ? `${streetName} ${streetNum}` : streetName || fullAddress;
+        const placeLat = place.geometry?.location?.lat() ?? null;
+        const placeLng = place.geometry?.location?.lng() ?? null;
+        setAddressSearch(fullAddress);
+        setLat(placeLat);
+        setLng(placeLng);
+
+        // find or create property
+        const { data: existing } = await supabase.from("properties")
+          .select("id").eq("address", addr).eq("city", city).maybeSingle();
+        if (existing) {
+          setPropertyId(existing.id);
+        } else {
+          const { data: created } = await supabase.from("properties")
+            .insert({ address: addr, city, lat: placeLat, lng: placeLng }).select().single();
+          if (created) setPropertyId(created.id);
+        }
+        setAddress(`${addr}, ${city}`);
+        setSuggestions([]);
+      });
+    }
+    if (typeof window !== "undefined") {
+      if (window.google?.maps?.places) initAuto();
+      else {
+        const interval = setInterval(() => {
+          if (window.google?.maps?.places) { clearInterval(interval); initAuto(); }
+        }, 100);
+      }
+    }
+  });
 
   async function searchProperties(q: string) {
     setAddressSearch(q);
@@ -157,32 +211,17 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
         {/* Step 1: Address */}
         {step === "address" && (
           <div className="space-y-3">
-            <p className="text-sm text-[#666]">{"חפש את הנכס שעליו תרצה לכתוב ביקורת"}</p>
-            <div className="relative">
-              <input value={addressSearch} onChange={(e) => searchProperties(e.target.value)}
-                placeholder="רחוב, עיר..." dir="rtl"
-                className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors" />
-              {suggestions.length > 0 && (
-                <div className="absolute top-full right-0 left-0 bg-white border border-[#e5e5e5] rounded-xl mt-1 shadow-lg overflow-hidden z-10">
-                  {suggestions.map((s) => (
-                    <button key={s.id} onClick={() => selectProperty(s.id, s.address, s.city)}
-                      className="w-full text-right px-4 py-3 text-sm hover:bg-[#fff7f0] border-b border-[#f9f9f9] last:border-0">
-                      <span className="font-medium">{s.address}</span>
-                      <span className="text-[#aaa] mr-2">{s.city}</span>
-                    </button>
-                  ))}
-                  {addressSearch.length > 3 && (
-                    <button onClick={createAndSelectProperty}
-                      className="w-full text-right px-4 py-3 text-sm text-[#f97316] hover:bg-[#fff7f0] font-medium">
-                      {"+ הוסף כתובת חדשה: "}{addressSearch}
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
+            <p className="text-sm text-[#666]">{"הזן את כתובת הנכס"}</p>
+            <input
+              ref={inputRef}
+              type="text"
+              placeholder="רחוב ומספר, עיר..."
+              dir="rtl"
+              className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors"
+            />
             {propertyId && (
               <div className="bg-orange-50 border border-orange-200 rounded-xl px-4 py-2 text-sm text-[#f97316] font-medium">
-                ✓ {address}
+                {"✓ "}{address}
               </div>
             )}
           </div>
