@@ -58,7 +58,7 @@ export default function PropertyPage() {
           .select("*")
           .neq("id", prop.id);
         if (allProps) {
-          const streetWord = prop.address.split(" ").find((w) => w.length > 2) ?? "";
+          const streetWord = prop.address.split(" ").find((w: string) => w.length > 2) ?? "";
           const withCounts = await Promise.all(allProps.map(async (p: Property) => {
             const { count } = await supabase
               .from("reviews")
