@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { TAGS, TAG_COLOR_CLASSES } from "@/lib/tags";
 import StarRating from "./StarRating";
@@ -20,9 +20,42 @@ export default function ReviewModal({ propertyId, onClose, onDone }: Props) {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [photos, setPhotos] = useState<File[]>([]);
+  const [photoPreviews, setPhotoPreviews] = useState<string[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   function toggleTag(tag: string) {
     setSelectedTags((prev) => prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]);
+  }
+
+  function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? []).slice(0, 3 - photos.length);
+    if (!files.length) return;
+    setPhotos((prev) => [...prev, ...files].slice(0, 3));
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = (ev) => setPhotoPreviews((prev) => [...prev, ev.target?.result as string].slice(0, 3));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function removePhoto(i: number) {
+    setPhotos((prev) => prev.filter((_, idx) => idx !== i));
+    setPhotoPreviews((prev) => prev.filter((_, idx) => idx !== i));
+  }
+
+  async function uploadPhotos(reviewId: string): Promise<string[]> {
+    const urls: string[] = [];
+    for (const file of photos) {
+      const ext = file.name.split(".").pop();
+      const path = `${reviewId}/${Date.now()}.${ext}`;
+      const { error } = await supabase.storage.from("review-photos").upload(path, file);
+      if (!error) {
+        const { data } = supabase.storage.from("review-photos").getPublicUrl(path);
+        urls.push(data.publicUrl);
+      }
+    }
+    return urls;
   }
 
   async function handleSubmit() {
@@ -36,6 +69,12 @@ export default function ReviewModal({ propertyId, onClose, onDone }: Props) {
     if (reviewError || !review) { setError("שגיאה בשמירת הביקורת. נסה שוב."); setSubmitting(false); return; }
     if (selectedTags.length > 0) {
       await supabase.from("review_tags").insert(selectedTags.map((tag) => ({ review_id: review.id, tag })));
+    }
+    if (photos.length > 0) {
+      const photoUrls = await uploadPhotos(review.id);
+      if (photoUrls.length > 0) {
+        await supabase.from("reviews").update({ photos: photoUrls }).eq("id", review.id);
+      }
     }
     setSubmitting(false);
     onDone();
@@ -81,8 +120,33 @@ export default function ReviewModal({ propertyId, onClose, onDone }: Props) {
 
         {step === 3 && (
           <div className="space-y-4">
-            <textarea value={text} onChange={(e) => setText(e.target.value)} placeholder="שתף את החוויה שלך (אופציונלי)..." rows={4}
+            <textarea value={text} onChange={(e) => setText(e.target.value)} placeholder="שתף את החוויה שלך (אופציונלי)..." rows={3}
               className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-[#111] placeholder-[#aaa] focus:outline-none focus:border-[#f97316] transition-colors resize-none text-right" dir="rtl" />
+
+            {/* Photo upload */}
+            <div>
+              <p className="text-sm text-[#666] mb-2">{"תמונות (עד 3)"}</p>
+              <div className="flex gap-2 flex-wrap">
+                {photoPreviews.map((src, i) => (
+                  <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden border border-[#e5e5e5]">
+                    <img src={src} alt="" className="w-full h-full object-cover" />
+                    <button onClick={() => removePhoto(i)}
+                      className="absolute top-0.5 right-0.5 bg-black/60 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs leading-none">
+                      ×
+                    </button>
+                  </div>
+                ))}
+                {photos.length < 3 && (
+                  <button onClick={() => fileInputRef.current?.click()}
+                    className="w-20 h-20 rounded-xl border-2 border-dashed border-[#e5e5e5] flex flex-col items-center justify-center text-[#bbb] hover:border-[#f97316] hover:text-[#f97316] transition-colors text-xs gap-1">
+                    <span className="text-2xl leading-none">+</span>
+                    <span>{"הוסף"}</span>
+                  </button>
+                )}
+              </div>
+              <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handlePhotoChange} />
+            </div>
+
             <label className="flex items-center gap-3 cursor-pointer">
               <input type="checkbox" checked={isAnonymous} onChange={(e) => setIsAnonymous(e.target.checked)} className="accent-[#f97316]" />
               <span className="text-sm text-[#666]">{"פרסם באנונימיות"}</span>

@@ -219,6 +219,15 @@ export default function PropertyPage() {
                 </div>
               )}
               {r.text && <p className="text-sm text-[#555] leading-relaxed">{r.text}</p>}
+              {r.photos && r.photos.length > 0 && (
+                <div className="flex gap-2 mt-2 flex-wrap">
+                  {r.photos.map((url: string, i: number) => (
+                    <a key={i} href={url} target="_blank" rel="noopener noreferrer">
+                      <img src={url} alt="" className="w-20 h-20 object-cover rounded-xl border border-[#e5e5e5] hover:opacity-90 transition-opacity" />
+                    </a>
+                  ))}
+                </div>
+              )}
               <div className="flex justify-between items-center mt-3">
                 <span className="text-xs text-[#bbb]">{r.is_anonymous ? "אנונימי" : "משתמש רשום"}</span>
                 <button onClick={() => setReported((prev) => new Set([...prev, r.id]))}
