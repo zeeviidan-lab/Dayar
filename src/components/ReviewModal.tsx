@@ -231,7 +231,7 @@ export default function ReviewModal({ propertyId, onClose, onDone }: Props) {
 
         <div className="flex gap-3 mt-6 w-full">
           {step > 1 && (
-            <button onClick={() => setStep((s) => s - 1)} style={{ display: "flex", flex: 1, justifyContent: "center" }}
+            <button onClick={() => setStep((s) => s - 1)} style={{ display: "flex", flex: 1, justifyContent: "center", textAlign: "center" }}
               className="py-3 rounded-xl border border-[#e5e5e5] text-[#666] hover:border-[#ccc] transition-colors">
               {"חזור"}
             </button>
