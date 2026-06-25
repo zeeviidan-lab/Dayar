@@ -61,7 +61,18 @@ export default function HomePage() {
 
       <div className="mt-8">
         {loading ? (
-          <div className="text-center text-[#aaa] py-16">{"טוען נכסים..."}</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="bg-white border border-[#e5e5e5] rounded-xl overflow-hidden animate-pulse">
+                <div className="h-36 bg-[#f0f0f0]" />
+                <div className="p-4 space-y-2">
+                  <div className="h-4 bg-[#f0f0f0] rounded w-3/4" />
+                  <div className="h-3 bg-[#f0f0f0] rounded w-1/2" />
+                  <div className="h-3 bg-[#f0f0f0] rounded w-1/3 mt-3" />
+                </div>
+              </div>
+            ))}
+          </div>
         ) : filtered.length === 0 ? (
           <div className="text-center text-[#aaa] py-16">
             <p className="text-lg mb-2">{"לא נמצאו נכסים"}</p>

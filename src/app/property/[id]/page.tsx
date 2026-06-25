@@ -84,6 +84,13 @@ export default function PropertyPage() {
 
   const overallAvg = avg(reviews.map((r) => r.rating));
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+  const [copied, setCopied] = useState(false);
+  function handleShare() {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
 
   if (loading) return <main className="py-8 text-center text-[#aaa]">{"טוען..."}</main>;
   if (!property) return (
@@ -95,7 +102,13 @@ export default function PropertyPage() {
 
   return (
     <main className="py-6">
-      <Link href="/" className="text-[#f97316] text-sm mb-4 inline-block">{"← חזרה"}</Link>
+      <div className="flex justify-between items-center mb-4">
+        <Link href="/" className="text-[#f97316] text-sm">{"← חזרה"}</Link>
+        <button onClick={handleShare}
+          className="flex items-center gap-1.5 text-sm text-[#666] hover:text-[#f97316] transition-colors border border-[#e5e5e5] rounded-lg px-3 py-1.5">
+          {copied ? "✓ הועתק!" : "🔗 שתף"}
+        </button>
+      </div>
 
       <div className="bg-white border border-[#e5e5e5] rounded-2xl p-5 mb-4 shadow-sm">
         <h1 className="text-xl font-bold text-[#111]">{property.address}</h1>
