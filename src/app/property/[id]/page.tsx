@@ -43,6 +43,8 @@ export default function PropertyPage() {
   const [responses, setResponses] = useState<Record<string, { text: string; created_at: string }[]>>({});
   const [submittingResponse, setSubmittingResponse] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [showAdminInput, setShowAdminInput] = useState(false);
+  const [adminInput, setAdminInput] = useState("");
   const adminKey = process.env.NEXT_PUBLIC_ADMIN_KEY;
 
   async function loadData() {
@@ -149,11 +151,32 @@ export default function PropertyPage() {
         <Link href="/" className="text-[#f97316] text-sm">{"← חזרה"}</Link>
         <div className="flex items-center gap-2">
           {!isAdmin ? (
-            <button onClick={() => {
-              const key = window.prompt("סיסמת אדמין:");
-              if (key === adminKey) setIsAdmin(true);
-              else if (key) window.alert("סיסמה שגויה");
-            }} className="text-xs text-[#e5e5e5] hover:text-[#aaa] transition-colors">{"🔑"}</button>
+            <div className="relative">
+              <button onClick={() => setShowAdminInput((v) => !v)}
+                className="text-xs text-[#e5e5e5] hover:text-[#aaa] transition-colors">{"🔑"}</button>
+              {showAdminInput && (
+                <div className="absolute left-0 top-6 bg-white border border-[#e5e5e5] rounded-xl shadow-lg p-3 flex gap-2 z-10 w-52">
+                  <input
+                    type="password"
+                    value={adminInput}
+                    onChange={(e) => setAdminInput(e.target.value)}
+                    placeholder="סיסמה..."
+                    dir="ltr"
+                    className="flex-1 bg-[#f5f5f5] border border-[#e5e5e5] rounded-lg px-2 py-1 text-sm focus:outline-none focus:border-[#f97316]"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        if (adminInput === adminKey) { setIsAdmin(true); setShowAdminInput(false); }
+                        else { setAdminInput(""); }
+                      }
+                    }}
+                  />
+                  <button onClick={() => {
+                    if (adminInput === adminKey) { setIsAdmin(true); setShowAdminInput(false); }
+                    else setAdminInput("");
+                  }} className="text-xs bg-[#f97316] text-white px-2 py-1 rounded-lg">{"אישור"}</button>
+                </div>
+              )}
+            </div>
           ) : (
             <span className="text-xs text-[#f97316] font-medium">{"אדמין ✓"}</span>
           )}
