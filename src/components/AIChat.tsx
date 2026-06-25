@@ -16,7 +16,24 @@ export default function AIChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [tab, setTab] = useState<"chat" | "contract">("chat");
+  const [contractLoading, setContractLoading] = useState(false);
+  const [contractResult, setContractResult] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  async function handleContractUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setContractLoading(true);
+    setContractResult("");
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await fetch("/api/review-contract", { method: "POST", body: formData });
+    const data = await res.json();
+    setContractLoading(false);
+    setContractResult(data.analysis || data.error || "שגיאה בניתוח");
+  }
 
   useEffect(() => {
     if (open) bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -72,8 +89,58 @@ export default function AIChat() {
             <p style={{ margin: "4px 0 0", fontSize: "12px", opacity: 0.85 }}>מידע על זכויות דיירים וסקירת חוזים</p>
           </div>
 
+          {/* Tabs */}
+          <div style={{ display: "flex", borderBottom: "1px solid #f0f0f0" }}>
+            {(["chat", "contract"] as const).map((t) => (
+              <button key={t} onClick={() => setTab(t)}
+                style={{
+                  flex: 1, padding: "10px", border: "none", cursor: "pointer",
+                  background: tab === t ? "#fff8f3" : "white",
+                  color: tab === t ? "#f97316" : "#888",
+                  fontWeight: tab === t ? "bold" : "normal",
+                  fontSize: "13px", borderBottom: tab === t ? "2px solid #f97316" : "none",
+                  fontFamily: "Heebo, Arial, sans-serif",
+                }}>
+                {t === "chat" ? "💬 שאל שאלה" : "📄 סקירת חוזה"}
+              </button>
+            ))}
+          </div>
+
+          {/* Contract tab */}
+          {tab === "contract" && (
+            <div style={{ flex: 1, overflowY: "auto", padding: "16px" }}>
+              <p style={{ fontSize: "13px", color: "#666", textAlign: "right", marginBottom: "12px" }}>
+                העלה חוזה שכירות (PDF) וקבל סקירה מפורטת
+              </p>
+              <input ref={fileInputRef} type="file" accept=".pdf,.txt,.doc,.docx" className="hidden"
+                onChange={handleContractUpload} style={{ display: "none" }} />
+              <button onClick={() => fileInputRef.current?.click()} disabled={contractLoading}
+                style={{
+                  display: "block", width: "100%", padding: "12px",
+                  background: contractLoading ? "#fde8d3" : "#f97316",
+                  color: "white", border: "none", borderRadius: "12px",
+                  fontSize: "14px", fontWeight: "bold", cursor: contractLoading ? "not-allowed" : "pointer",
+                  fontFamily: "Heebo, Arial, sans-serif", marginBottom: "12px",
+                }}>
+                {contractLoading ? "מנתח חוזה... ⏳" : "📄 העלה חוזה לסקירה"}
+              </button>
+              {contractResult && (
+                <div style={{
+                  background: "#f9f9f9", border: "1px solid #e5e5e5", borderRadius: "12px",
+                  padding: "12px", fontSize: "13px", lineHeight: "1.6",
+                  textAlign: "right", direction: "rtl", whiteSpace: "pre-wrap",
+                }}>
+                  {contractResult}
+                </div>
+              )}
+              <p style={{ fontSize: "11px", color: "#bbb", textAlign: "center", marginTop: "8px" }}>
+                הקובץ לא נשמר ולא מועבר לאף גורם
+              </p>
+            </div>
+          )}
+
           {/* Messages */}
-          <div style={{ flex: 1, overflowY: "auto", padding: "12px", display: "flex", flexDirection: "column", gap: "8px" }}>
+          {tab === "chat" && <div style={{ flex: 1, overflowY: "auto", padding: "12px", display: "flex", flexDirection: "column", gap: "8px" }}>
             {messages.length === 0 && (
               <div>
                 <p style={{ fontSize: "13px", color: "#888", textAlign: "right", marginBottom: "12px" }}>שאלות נפוצות:</p>
@@ -115,8 +182,10 @@ export default function AIChat() {
             <div ref={bottomRef} />
           </div>
 
-          {/* Input */}
-          <div style={{ padding: "12px", borderTop: "1px solid #f0f0f0", display: "flex", gap: "8px" }}>
+          }
+
+          {/* Input — chat tab only */}
+          {tab === "chat" && <div style={{ padding: "12px", borderTop: "1px solid #f0f0f0", display: "flex", gap: "8px" }}>
             <button onClick={() => sendMessage(input)} disabled={!input.trim() || loading}
               style={{
                 background: "#f97316", color: "white", border: "none",
@@ -137,6 +206,8 @@ export default function AIChat() {
               }}
             />
           </div>
+
+          }
 
           {/* Disclaimer */}
           <p style={{ fontSize: "10px", color: "#bbb", textAlign: "center", padding: "4px 12px 8px", margin: 0 }}>
