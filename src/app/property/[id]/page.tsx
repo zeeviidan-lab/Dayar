@@ -37,6 +37,10 @@ export default function PropertyPage() {
   const [showModal, setShowModal] = useState(false);
   const [reported, setReported] = useState<Set<string>>(new Set());
   const [nearbyProps, setNearbyProps] = useState<Property[]>([]);
+  const [respondingTo, setRespondingTo] = useState<string | null>(null);
+  const [responseText, setResponseText] = useState("");
+  const [responses, setResponses] = useState<Record<string, { text: string; created_at: string }[]>>({});
+  const [submittingResponse, setSubmittingResponse] = useState(false);
 
   async function loadData() {
     const [{ data: prop }, { data: revs }] = await Promise.all([
@@ -50,6 +54,23 @@ export default function PropertyPage() {
         return { ...r, tags: tags?.map((t) => t.tag) ?? [] };
       }));
       setReviews(withTags);
+
+      // load landlord responses
+      const reviewIds = revs.map((r) => r.id);
+      if (reviewIds.length > 0) {
+        const { data: resps } = await supabase
+          .from("landlord_responses")
+          .select("*")
+          .in("review_id", reviewIds);
+        if (resps) {
+          const grouped: Record<string, { text: string; created_at: string }[]> = {};
+          resps.forEach((resp) => {
+            if (!grouped[resp.review_id]) grouped[resp.review_id] = [];
+            grouped[resp.review_id].push({ text: resp.text, created_at: resp.created_at });
+          });
+          setResponses(grouped);
+        }
+      }
 
       // if no reviews, find nearby properties on same street or city
       if (revs.length === 0 && prop) {
@@ -81,6 +102,19 @@ export default function PropertyPage() {
   }
 
   useEffect(() => { loadData(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [id]);
+
+  async function submitResponse(reviewId: string) {
+    if (!responseText.trim()) return;
+    setSubmittingResponse(true);
+    await supabase.from("landlord_responses").insert({ review_id: reviewId, text: responseText.trim() });
+    setResponses((prev) => ({
+      ...prev,
+      [reviewId]: [...(prev[reviewId] ?? []), { text: responseText.trim(), created_at: new Date().toISOString() }],
+    }));
+    setResponseText("");
+    setRespondingTo(null);
+    setSubmittingResponse(false);
+  }
 
   const overallAvg = avg(reviews.map((r) => r.rating));
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
@@ -235,6 +269,38 @@ export default function PropertyPage() {
                   {reported.has(r.id) ? "✓ דווח" : "דווח"}
                 </button>
               </div>
+
+              {/* Landlord responses */}
+              {(responses[r.id] ?? []).map((resp, i) => (
+                <div key={i} className="mt-3 bg-[#fff7f0] border border-[#fed7aa] rounded-xl p-3">
+                  <p className="text-xs font-bold text-[#f97316] mb-1">{"תגובת משכיר"}</p>
+                  <p className="text-sm text-[#555]">{resp.text}</p>
+                  <p className="text-xs text-[#bbb] mt-1">{new Date(resp.created_at).toLocaleDateString("he-IL")}</p>
+                </div>
+              ))}
+
+              {respondingTo === r.id ? (
+                <div className="mt-3 space-y-2">
+                  <textarea value={responseText} onChange={(e) => setResponseText(e.target.value)}
+                    placeholder="כתוב תגובה כמשכיר..." rows={3} dir="rtl"
+                    className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-3 py-2 text-sm text-[#111] placeholder-[#aaa] focus:outline-none focus:border-[#f97316] transition-colors resize-none" />
+                  <div className="flex gap-2">
+                    <button onClick={() => submitResponse(r.id)} disabled={submittingResponse || !responseText.trim()}
+                      className="px-4 py-2 bg-[#f97316] text-white text-sm rounded-lg hover:bg-[#fb923c] disabled:opacity-40 transition-colors">
+                      {submittingResponse ? "שולח..." : "פרסם"}
+                    </button>
+                    <button onClick={() => { setRespondingTo(null); setResponseText(""); }}
+                      className="px-4 py-2 border border-[#e5e5e5] text-sm text-[#666] rounded-lg hover:border-[#ccc] transition-colors">
+                      {"ביטול"}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button onClick={() => { setRespondingTo(r.id); setResponseText(""); }}
+                  className="mt-2 text-xs text-[#bbb] hover:text-[#f97316] transition-colors">
+                  {"↩ השב כמשכיר"}
+                </button>
+              )}
             </div>
           ))}
         </div>
