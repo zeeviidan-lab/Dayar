@@ -110,15 +110,22 @@ export default function PropertyPage() {
 
   async function deleteReview(reviewId: string) {
     if (!window.confirm("למחוק את הביקורת?")) return;
-    await supabase.from("reviews").delete().eq("id", reviewId);
-    setReviews((prev) => prev.filter((r) => r.id !== reviewId));
+    const res = await fetch("/api/admin-delete", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type: "review", id: reviewId, adminKey }),
+    });
+    if (res.ok) setReviews((prev) => prev.filter((r) => r.id !== reviewId));
   }
 
   async function deleteProperty() {
     if (!window.confirm("למחוק את הנכס וכל הביקורות שלו?")) return;
-    await supabase.from("reviews").delete().eq("property_id", id);
-    await supabase.from("properties").delete().eq("id", id);
-    window.location.href = "/";
+    const res = await fetch("/api/admin-delete", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type: "property", id, adminKey }),
+    });
+    if (res.ok) window.location.href = "/";
   }
 
   async function submitResponse(reviewId: string) {
