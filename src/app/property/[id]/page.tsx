@@ -193,12 +193,12 @@ export default function PropertyPage() {
             </div>
           ) : (
             <div className="flex items-center gap-2">
-            <span className="text-xs text-[#f97316] font-medium">{"אדמין ✓"}</span>
-            <button onClick={deleteProperty}
-              className="text-xs bg-red-500 text-white px-2 py-1 rounded-lg hover:bg-red-600 transition-colors">
-              {"🗑 מחק נכס"}
-            </button>
-          </div>
+              <span className="text-xs text-[#f97316] font-medium">{"אדמין ✓"}</span>
+              <button onClick={deleteProperty}
+                style={{ background: "#ef4444", color: "white", padding: "4px 8px", borderRadius: "8px", fontSize: "12px", border: "none", cursor: "pointer" }}>
+                {"🗑 מחק נכס"}
+              </button>
+            </div>
           )}
         <button onClick={handleShare}
           className="flex items-center gap-1.5 text-sm text-[#666] hover:text-[#f97316] transition-colors border border-[#e5e5e5] rounded-lg px-3 py-1.5">
