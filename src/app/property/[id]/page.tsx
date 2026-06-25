@@ -114,6 +114,13 @@ export default function PropertyPage() {
     setReviews((prev) => prev.filter((r) => r.id !== reviewId));
   }
 
+  async function deleteProperty() {
+    if (!window.confirm("למחוק את הנכס וכל הביקורות שלו?")) return;
+    await supabase.from("reviews").delete().eq("property_id", id);
+    await supabase.from("properties").delete().eq("id", id);
+    window.location.href = "/";
+  }
+
   async function submitResponse(reviewId: string) {
     if (!responseText.trim()) return;
     setSubmittingResponse(true);
@@ -178,7 +185,13 @@ export default function PropertyPage() {
               )}
             </div>
           ) : (
+            <div className="flex items-center gap-2">
             <span className="text-xs text-[#f97316] font-medium">{"אדמין ✓"}</span>
+            <button onClick={deleteProperty}
+              className="text-xs bg-red-500 text-white px-2 py-1 rounded-lg hover:bg-red-600 transition-colors">
+              {"🗑 מחק נכס"}
+            </button>
+          </div>
           )}
         <button onClick={handleShare}
           className="flex items-center gap-1.5 text-sm text-[#666] hover:text-[#f97316] transition-colors border border-[#e5e5e5] rounded-lg px-3 py-1.5">
