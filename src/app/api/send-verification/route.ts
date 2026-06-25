@@ -34,6 +34,10 @@ export async function POST(req: NextRequest) {
     }),
   });
 
-  if (!res.ok) return NextResponse.json({ error: "שגיאה בשליחת אימייל" }, { status: 500 });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    console.error("Resend error:", res.status, body);
+    return NextResponse.json({ error: "שגיאה בשליחת אימייל", details: body }, { status: 500 });
+  }
   return NextResponse.json({ ok: true });
 }
