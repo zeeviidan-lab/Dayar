@@ -346,7 +346,7 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
             )}
             {step === "address" && (
               <button onClick={() => setStep("rating")} disabled={!propertyId}
-                className="flex-1 py-3 rounded-xl bg-[#f97316] text-white font-bold disabled:opacity-30 hover:bg-[#fb923c] transition-colors text-sm">
+                className="w-full py-3 rounded-xl bg-[#f97316] text-white font-bold disabled:opacity-30 hover:bg-[#fb923c] transition-colors text-sm">
                 {"המשך"}
               </button>
             )}
