@@ -14,10 +14,9 @@ export async function POST(req: NextRequest) {
   let text = "";
 
   if (file.type === "application/pdf" || file.name.endsWith(".pdf")) {
-    // dynamic import to avoid build issues
-    const pdfParseModule = await import("pdf-parse");
-    const pdfParse = pdfParseModule.default ?? pdfParseModule;
-    const data = await (pdfParse as (buf: Buffer) => Promise<{ text: string }>)(buffer);
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const pdfParse: (buf: Buffer) => Promise<{ text: string }> = require("pdf-parse");
+    const data = await pdfParse(buffer);
     text = data.text;
   } else {
     text = buffer.toString("utf-8");
