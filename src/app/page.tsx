@@ -142,7 +142,16 @@ export default function HomePage() {
           <>
             <p className="text-xs text-[#bbb] mb-3">{filtered.length}{" נכסים"}</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {filtered.map((p) => <PropertyCard key={p.id} property={p} />)}
+              {filtered.map((p, i) => (
+                <>
+                  <PropertyCard key={p.id} property={p} />
+                  {i === 3 && (
+                    <div key="ad" className="col-span-1 md:col-span-2 rounded-xl border border-dashed border-[#e5e5e5] bg-white flex items-center justify-center py-6 text-xs text-[#ccc]">
+                      פרסומת
+                    </div>
+                  )}
+                </>
+              ))}
             </div>
           </>
         )}
