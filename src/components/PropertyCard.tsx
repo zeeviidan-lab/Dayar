@@ -45,7 +45,8 @@ export default function PropertyCard({ property: p, onReviewDone }: { property: 
         <div className="px-4 pb-3">
           <button
             onClick={(e) => { e.stopPropagation(); setShowModal(true); }}
-            className="w-full py-2 rounded-xl border border-[#f97316] text-[#f97316] text-sm font-medium hover:bg-[#fff7f0] transition-colors">
+            style={{ display: "flex", width: "100%" }}
+            className="py-2 rounded-xl border border-[#f97316] text-[#f97316] text-sm font-medium hover:bg-[#fff7f0] transition-colors justify-center items-center">
             {"+ כתוב ביקורת"}
           </button>
         </div>
