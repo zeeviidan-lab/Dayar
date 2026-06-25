@@ -52,7 +52,7 @@ export default function AIChat() {
           boxShadow: "0 4px 20px rgba(249,115,22,0.4)",
           display: "flex", alignItems: "center", gap: "8px",
         }}>
-        {open ? "✕ סגור" : "⚖️ ייעוץ משפטי AI"}
+        {open ? "✕ סגור" : "⚖️ עוזר דיירים AI"}
       </button>
 
       {/* Chat panel */}
@@ -68,8 +68,8 @@ export default function AIChat() {
         }}>
           {/* Header */}
           <div style={{ background: "#f97316", padding: "16px", color: "white" }}>
-            <p style={{ margin: 0, fontWeight: "bold", fontSize: "15px" }}>⚖️ ייעוץ משפטי AI</p>
-            <p style={{ margin: "4px 0 0", fontSize: "12px", opacity: 0.85 }}>שאל שאלות על זכויות דיירים בישראל</p>
+            <p style={{ margin: 0, fontWeight: "bold", fontSize: "15px" }}>⚖️ עוזר דיירים AI</p>
+            <p style={{ margin: "4px 0 0", fontSize: "12px", opacity: 0.85 }}>מידע על זכויות דיירים וסקירת חוזים</p>
           </div>
 
           {/* Messages */}
