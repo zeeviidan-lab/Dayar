@@ -31,13 +31,13 @@ export default function AIChat() {
     const formData = new FormData();
     formData.append("file", file);
     const res = await fetch("/api/review-contract", { method: "POST", body: formData });
-    if (!res.ok || !res.body) {
-      setContractResult("שגיאה בניתוח");
-      setContractLoading(false);
-      return;
-    }
     setContractLoading(false);
     setContractStreaming(true);
+    if (!res.body) {
+      setContractResult("שגיאה בניתוח");
+      setContractStreaming(false);
+      return;
+    }
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
     let result = "";
