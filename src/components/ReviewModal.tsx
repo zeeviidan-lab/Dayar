@@ -1,0 +1,122 @@
+"use client";
+
+import { useState } from "react";
+import { supabase } from "@/lib/supabase";
+import { TAGS, TAG_COLOR_CLASSES } from "@/lib/tags";
+import StarRating from "./StarRating";
+
+interface Props {
+  propertyId: string;
+  onClose: () => void;
+  onDone: () => void;
+}
+
+export default function ReviewModal({ propertyId, onClose, onDone }: Props) {
+  const [step, setStep] = useState(1);
+  const [rating, setRating] = useState(0);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [text, setText] = useState("");
+  const [isAnonymous, setIsAnonymous] = useState(true);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  function toggleTag(tag: string) {
+    setSelectedTags((prev) => prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]);
+  }
+
+  async function handleSubmit() {
+    if (!agreedToTerms) { setError("יש לאשר את תנאי השימוש"); return; }
+    setSubmitting(true);
+    setError("");
+    const { data: review, error: reviewError } = await supabase
+      .from("reviews")
+      .insert({ property_id: propertyId, rating, rating_maintenance: rating, rating_communication: rating, rating_neighbors: rating, rating_value: rating, text: text || null, is_anonymous: isAnonymous })
+      .select().single();
+    if (reviewError || !review) { setError("שגיאה בשמירת הביקורת. נסה שוב."); setSubmitting(false); return; }
+    if (selectedTags.length > 0) {
+      await supabase.from("review_tags").insert(selectedTags.map((tag) => ({ review_id: review.id, tag })));
+    }
+    setSubmitting(false);
+    onDone();
+  }
+
+  const RATINGS_LABELS = ["", "גרוע מאוד", "גרוע", "בינוני", "טוב", "מצוין"];
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-end justify-center z-50 p-4" onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className="bg-white border border-[#e5e5e5] rounded-2xl w-full max-w-[560px] p-6 mb-4 shadow-xl">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-lg font-bold text-[#111]">{"כתוב ביקורת"}</h2>
+          <button onClick={onClose} className="text-[#aaa] hover:text-[#111] text-2xl leading-none">×</button>
+        </div>
+
+        <div className="flex gap-2 mb-6">
+          {[1, 2, 3].map((s) => (
+            <div key={s} className={`h-1 flex-1 rounded-full transition-colors ${s <= step ? "bg-[#f97316]" : "bg-[#e5e5e5]"}`} />
+          ))}
+        </div>
+
+        {step === 1 && (
+          <div className="text-center">
+            <p className="text-[#666] mb-6">{"איך הייתה החוויה שלך?"}</p>
+            <StarRating rating={rating} size="lg" interactive onRate={setRating} />
+            <p className="text-[#aaa] text-sm mt-4">{rating === 0 ? "בחר דירוג" : RATINGS_LABELS[rating]}</p>
+          </div>
+        )}
+
+        {step === 2 && (
+          <div>
+            <p className="text-[#666] mb-4 text-sm">{"בחר תגיות (אפשר כמה)"}</p>
+            <div className="flex flex-wrap gap-2">
+              {TAGS.map(({ label, color }) => (
+                <button key={label} onClick={() => toggleTag(label)}
+                  className={`px-3 py-1.5 rounded-full text-sm border transition-all ${selectedTags.includes(label) ? TAG_COLOR_CLASSES[color] + " scale-105" : "border-[#e5e5e5] text-[#666] hover:border-[#ccc]"}`}>
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {step === 3 && (
+          <div className="space-y-4">
+            <textarea value={text} onChange={(e) => setText(e.target.value)} placeholder="שתף את החוויה שלך (אופציונלי)..." rows={4}
+              className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-[#111] placeholder-[#aaa] focus:outline-none focus:border-[#f97316] transition-colors resize-none text-right" dir="rtl" />
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" checked={isAnonymous} onChange={(e) => setIsAnonymous(e.target.checked)} className="accent-[#f97316]" />
+              <span className="text-sm text-[#666]">{"פרסם באנונימיות"}</span>
+            </label>
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" checked={agreedToTerms} onChange={(e) => setAgreedToTerms(e.target.checked)} className="accent-[#f97316]" />
+              <span className="text-sm text-[#666]">{"אני מסכים/ה ל"}
+                <a href="/terms" target="_blank" className="text-[#f97316] underline mr-1">{"תנאי השימוש"}</a>
+              </span>
+            </label>
+            {error && <p className="text-red-500 text-sm">{error}</p>}
+            <p className="text-xs text-[#bbb]">{"הביקורת מייצגת חוויה אישית בלבד ואינה מהווה עמדה של הפלטפורמה."}</p>
+          </div>
+        )}
+
+        <div className="flex gap-3 mt-6">
+          {step > 1 && (
+            <button onClick={() => setStep((s) => s - 1)} className="flex-1 py-3 rounded-xl border border-[#e5e5e5] text-[#666] hover:border-[#ccc] transition-colors">
+              {"חזור"}
+            </button>
+          )}
+          {step < 3 ? (
+            <button onClick={() => setStep((s) => s + 1)} disabled={step === 1 && rating === 0}
+              className="flex-1 py-3 rounded-xl bg-[#f97316] text-white font-bold hover:bg-[#fb923c] disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+              {"המשך"}
+            </button>
+          ) : (
+            <button onClick={handleSubmit} disabled={submitting}
+              className="flex-1 py-3 rounded-xl bg-[#f97316] text-white font-bold hover:bg-[#fb923c] disabled:opacity-50 transition-colors">
+              {submitting ? "שולח..." : "פרסם ביקורת"}
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
