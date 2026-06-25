@@ -340,31 +340,36 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
           <div className="flex gap-3 mt-6 w-full">
             {stepIndex > 0 && (
               <button onClick={() => setStep(STEPS[stepIndex - 1])}
-                className="flex-1 py-3 rounded-xl border border-[#e5e5e5] text-[#666] hover:border-[#ccc] transition-colors text-sm">
+                style={{ display: "flex", flex: 1, justifyContent: "center", textAlign: "center" }}
+                className="py-3 rounded-xl border border-[#e5e5e5] text-[#666] hover:border-[#ccc] transition-colors text-sm">
                 {"חזור"}
               </button>
             )}
             {step === "address" && (
               <button onClick={() => setStep("rating")} disabled={!propertyId}
-                className="w-full py-3 rounded-xl bg-[#f97316] text-white font-bold disabled:opacity-30 hover:bg-[#fb923c] transition-colors text-sm">
+                style={{ display: "flex", flex: 1, justifyContent: "center", textAlign: "center" }}
+                className="py-3 rounded-xl bg-[#f97316] text-white font-bold disabled:opacity-30 hover:bg-[#fb923c] transition-colors text-sm">
                 {"המשך"}
               </button>
             )}
             {step === "rating" && (
               <button onClick={() => setStep("details")} disabled={rating === 0}
-                className="flex-1 py-3 rounded-xl bg-[#f97316] text-white font-bold disabled:opacity-30 hover:bg-[#fb923c] transition-colors text-sm">
+                style={{ display: "flex", flex: 1, justifyContent: "center", textAlign: "center" }}
+                className="py-3 rounded-xl bg-[#f97316] text-white font-bold disabled:opacity-30 hover:bg-[#fb923c] transition-colors text-sm">
                 {"המשך"}
               </button>
             )}
             {step === "details" && (
               <button onClick={() => { if (!agreedToTerms) { setError("יש לאשר את תנאי השימוש"); return; } setError(""); setStep("verify"); }}
-                className="flex-1 py-3 rounded-xl bg-[#f97316] text-white font-bold hover:bg-[#fb923c] transition-colors text-sm">
+                style={{ display: "flex", flex: 1, justifyContent: "center", textAlign: "center" }}
+                className="py-3 rounded-xl bg-[#f97316] text-white font-bold hover:bg-[#fb923c] transition-colors text-sm">
                 {"המשך"}
               </button>
             )}
             {step === "verify" && (
               <button onClick={handleSubmit} disabled={submitting}
-                className="flex-1 py-3 rounded-xl bg-[#f97316] text-white font-bold disabled:opacity-50 hover:bg-[#fb923c] transition-colors text-sm">
+                style={{ display: "flex", flex: 1, justifyContent: "center", textAlign: "center" }}
+                className="py-3 rounded-xl bg-[#f97316] text-white font-bold disabled:opacity-50 hover:bg-[#fb923c] transition-colors text-sm">
                 {submitting ? "שולח..." : "פרסם ביקורת"}
               </button>
             )}
