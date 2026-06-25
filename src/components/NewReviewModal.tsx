@@ -14,7 +14,6 @@ type Step = "address" | "rating" | "details" | "verify" | "done";
 
 export default function NewReviewModal({ onClose, onDone }: Props) {
   const [step, setStep] = useState<Step>("address");
-  const [initialized, setInitialized] = useState(false);
   const [address, setAddress] = useState("");
   const [propertyId, setPropertyId] = useState<string | null>(null);
   const [addressSearch, setAddressSearch] = useState("");
@@ -41,8 +40,11 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
   const STEPS: Step[] = ["address", "rating", "details", "verify"];
   const stepIndex = STEPS.indexOf(step);
 
-  // Google Places autocomplete
+  // Google Places autocomplete — runs when address step is shown and input is mounted
   useEffect(() => {
+    if (step !== "address" || !inputRef.current) return;
+    if (autocompleteRef.current) return; // already initialized
+
     function initAuto() {
       if (!inputRef.current) return;
       autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
@@ -63,11 +65,8 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
         const addr = streetNum ? `${streetName} ${streetNum}` : streetName || fullAddress;
         const placeLat = place.geometry?.location?.lat() ?? null;
         const placeLng = place.geometry?.location?.lng() ?? null;
-        setAddressSearch(fullAddress);
         setLat(placeLat);
         setLng(placeLng);
-
-        // find or create property
         const { data: existing } = await supabase.from("properties")
           .select("id").eq("address", addr).eq("city", city).maybeSingle();
         if (existing) {
@@ -78,19 +77,18 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
           if (created) setPropertyId(created.id);
         }
         setAddress(`${addr}, ${city}`);
-        setSuggestions([]);
       });
     }
-    if (typeof window !== "undefined") {
-      if (window.google?.maps?.places) initAuto();
-      else {
-        const interval = setInterval(() => {
-          if (window.google?.maps?.places) { clearInterval(interval); initAuto(); }
-        }, 100);
-      }
+
+    if (window.google?.maps?.places) {
+      initAuto();
+    } else {
+      const interval = setInterval(() => {
+        if (window.google?.maps?.places) { clearInterval(interval); initAuto(); }
+      }, 100);
+      return () => clearInterval(interval);
     }
-    setInitialized(true);
-  }, []);
+  }, [step]);
 
   async function searchProperties(q: string) {
     setAddressSearch(q);
