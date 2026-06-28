@@ -375,10 +375,10 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
               </button>
             )}
             {step === "verify" && (
-              <button onClick={handleSubmit} disabled={submitting}
+              <button onClick={handleSubmit} disabled={submitting || !verified}
                 style={{ display: "flex", flex: 1, justifyContent: "center", textAlign: "center" }}
                 className="py-3 rounded-xl bg-[#f97316] text-white font-bold disabled:opacity-50 hover:bg-[#fb923c] transition-colors text-sm">
-                {submitting ? "שולח..." : "פרסם ביקורת"}
+                {submitting ? "שולח..." : verified ? "פרסם ביקורת" : "יש לאמת אימייל תחילה"}
               </button>
             )}
           </div>
