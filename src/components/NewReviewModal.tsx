@@ -235,7 +235,7 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
               <p className="text-sm text-[#666] mb-3">{"דרג לפי קטגוריה (אופציונלי)"}</p>
               <div className="space-y-3">
                 {[
-                  { key: "rating_property", label: "הנכס (הדירה)" },
+                  { key: "rating_property", label: "הדירה" },
                   { key: "rating_maintenance", label: "תחזוקה" },
                   { key: "rating_building", label: "הבניין" },
                   { key: "rating_landlord", label: "בעל הבית" },
