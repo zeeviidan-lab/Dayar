@@ -178,7 +178,11 @@ export default function HomePage() {
         <NewReviewModal onClose={() => setShowNewReview(false)} onDone={() => { setShowNewReview(false); window.location.reload(); }} />
       )}
 
-      <footer className="mt-16 pb-8 text-center text-xs text-[#bbb] flex justify-center gap-4">
+      <div className="mt-12 mb-6 bg-[#fff8f3] border border-orange-100 rounded-xl p-4 text-xs text-[#999] text-center leading-relaxed" dir="rtl">
+        {"דַּיָּר מעודדת ביקורות אמינות, ישרות ומתורבתות. אנא הימנע מלשון הרע, קללות, תוכן פוגעני או שיימינג אישי. ביקורות שלא עומדות בכללים יוסרו."}
+      </div>
+
+      <footer className="mt-4 pb-8 text-center text-xs text-[#bbb] flex justify-center gap-4">
         <Link href="/terms" className="hover:text-[#f97316]">{"תנאי שימוש"}</Link>
         <span>{"·"}</span>
         <Link href="/privacy" className="hover:text-[#f97316]">{"מדיניות פרטיות"}</Link>
