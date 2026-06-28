@@ -308,7 +308,7 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
               <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handlePhotoChange} />
             </div>
             <div className="bg-[#fff8f3] border border-orange-100 rounded-xl p-3 text-xs text-[#888] leading-relaxed" dir="rtl">
-              {"⚠️ אנא כתוב ביקורת אמינה, ישרה ומתורבתת. הימנע מלשון הרע, תוכן פוגעני, קללות או שיימינג אישי. ביקורות שלא עומדות בכללים יוסרו."}
+              {"דַּיָּר מאמינה בחופש הביטוי ובשקיפות. אנא שתף את חוויותיך באופן כן, מכבד ועניני. ביקורות הכוללות תוכן פוגעני, לשון הרע או שפה בוטה יוסרו."}
             </div>
             <label className="flex items-center gap-3 cursor-pointer">
               <input type="checkbox" checked={isAnonymous} onChange={(e) => setIsAnonymous(e.target.checked)} className="accent-[#f97316]" />

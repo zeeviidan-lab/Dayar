@@ -179,7 +179,7 @@ export default function HomePage() {
       )}
 
       <div className="mt-12 mb-6 bg-[#fff8f3] border border-orange-100 rounded-xl p-4 text-xs text-[#999] text-center leading-relaxed" dir="rtl">
-        {"דַּיָּר מעודדת ביקורות אמינות, ישרות ומתורבתות. אנא הימנע מלשון הרע, קללות, תוכן פוגעני או שיימינג אישי. ביקורות שלא עומדות בכללים יוסרו."}
+        {"דַּיָּר מאמינה בחופש הביטוי ובשקיפות. אנא שתפו את חוויותיכם באופן כן, מכבד ועניני. ביקורות הכוללות תוכן פוגעני, לשון הרע או שפה בוטה יוסרו."}
       </div>
 
       <footer className="mt-4 pb-8 text-center text-xs text-[#bbb] flex justify-center gap-4">
