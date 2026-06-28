@@ -33,6 +33,11 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
   const [rating, setRating] = useState(0);
   const [catRatings, setCatRatings] = useState<Record<string, number>>({});
   const [hasStreetNum, setHasStreetNum] = useState(false);
+  const [apartmentNumber, setApartmentNumber] = useState("");
+  const [parsedAddr, setParsedAddr] = useState("");
+  const [parsedCity, setParsedCity] = useState("");
+  const [parsedLat, setParsedLat] = useState<number | null>(null);
+  const [parsedLng, setParsedLng] = useState<number | null>(null);
   const [text, setText] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(true);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
@@ -76,15 +81,11 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
         setHasStreetNum(!!streetNum);
         const placeLat = place.geometry?.location?.lat() ?? null;
         const placeLng = place.geometry?.location?.lng() ?? null;
-        const { data: existing } = await supabase.from("properties")
-          .select("id").eq("address", addr).eq("city", city).maybeSingle();
-        if (existing) {
-          setPropertyId(existing.id);
-        } else {
-          const { data: created } = await supabase.from("properties")
-            .insert({ address: addr, city, lat: placeLat, lng: placeLng }).select().single();
-          if (created) setPropertyId(created.id);
-        }
+        setParsedAddr(addr);
+        setParsedCity(city);
+        setParsedLat(placeLat);
+        setParsedLng(placeLng);
+        setPropertyId(null);
         setAddress(`${addr}, ${city}`);
       });
     }
@@ -98,6 +99,19 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
       return () => clearInterval(interval);
     }
   }, [step]);
+
+  async function resolveProperty(apt: string) {
+    if (!parsedAddr || !parsedCity || !apt.trim()) { setPropertyId(null); return; }
+    const { data: existing } = await supabase.from("properties")
+      .select("id").eq("address", parsedAddr).eq("city", parsedCity).eq("apartment_number", apt.trim()).maybeSingle();
+    if (existing) {
+      setPropertyId(existing.id);
+    } else {
+      const { data: created } = await supabase.from("properties")
+        .insert({ address: parsedAddr, city: parsedCity, lat: parsedLat, lng: parsedLng, apartment_number: apt.trim() }).select().single();
+      if (created) setPropertyId(created.id);
+    }
+  }
 
   async function searchProperties(q: string) {
     setSuggestions([]);
@@ -207,13 +221,28 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
             <p className="text-sm text-[#666]">{"הזן את כתובת הנכס"}</p>
             <input ref={inputRef} type="text" placeholder="רחוב ומספר, עיר..." dir="rtl"
               className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors" />
-            {propertyId && (
+            {address && hasStreetNum && (
               <div className="bg-orange-50 border border-orange-200 rounded-xl px-4 py-2 text-sm text-[#f97316] font-medium">
                 {"✓ "}{address}
               </div>
             )}
-            {propertyId && !hasStreetNum && (
+            {address && !hasStreetNum && (
               <p className="text-red-500 text-xs">{"יש לבחור כתובת עם מספר בניין"}</p>
+            )}
+            {address && hasStreetNum && (
+              <div>
+                <p className="text-sm text-[#666] mb-1">{"מספר דירה"}</p>
+                <input
+                  value={apartmentNumber}
+                  onChange={(e) => {
+                    setApartmentNumber(e.target.value);
+                    resolveProperty(e.target.value);
+                  }}
+                  placeholder="לדוגמה: 4"
+                  type="text" dir="ltr"
+                  className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors"
+                />
+              </div>
             )}
           </div>
         )}
@@ -352,7 +381,7 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
               </button>
             )}
             {step === "address" && (
-              <button onClick={() => setStep("rating")} disabled={!propertyId || !hasStreetNum}
+              <button onClick={() => setStep("rating")} disabled={!propertyId || !hasStreetNum || !apartmentNumber.trim()}
                 style={{ display: "flex", flex: 1, justifyContent: "center", textAlign: "center" }}
                 className="py-3 rounded-xl bg-[#f97316] text-white font-bold disabled:opacity-30 hover:bg-[#fb923c] transition-colors text-sm">
                 {"המשך"}
