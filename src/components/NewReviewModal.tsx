@@ -33,6 +33,7 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
   const [codeSent, setCodeSent] = useState(false);
   const [verified, setVerified] = useState(false);
   const [rentAmount, setRentAmount] = useState("");
+  const [rentYear, setRentYear] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -158,6 +159,7 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
       is_verified: verified,
       verifier_email: verified ? email : null,
       rent_amount: rentAmount ? parseInt(rentAmount) : null,
+      rent_year: rentYear ? parseInt(rentYear) : null,
     }).select().single();
 
     if (reviewError || !review) { setError("שגיאה בשמירה"); setSubmitting(false); return; }
@@ -254,9 +256,14 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
             </div>
             <div>
               <p className="text-sm text-[#666] mb-2">{"שכירות חודשית (₪) — אופציונלי"}</p>
-              <input value={rentAmount} onChange={(e) => setRentAmount(e.target.value.replace(/\D/g, ""))}
-                placeholder="לדוגמה: 4500" type="text" inputMode="numeric" dir="ltr"
-                className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors" />
+              <div className="flex gap-2">
+                <input value={rentAmount} onChange={(e) => setRentAmount(e.target.value.replace(/\D/g, ""))}
+                  placeholder="לדוגמה: 4500" type="text" inputMode="numeric" dir="ltr"
+                  className="flex-1 bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors" />
+                <input value={rentYear} onChange={(e) => setRentYear(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                  placeholder="שנה" type="text" inputMode="numeric" dir="ltr"
+                  className="w-24 bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors" />
+              </div>
             </div>
             <textarea value={text} onChange={(e) => setText(e.target.value)}
               placeholder="שתף את החוויה שלך (אופציונלי)..." rows={3} dir="rtl"
