@@ -188,6 +188,8 @@ export default function HomePage() {
         <Link href="/privacy" className="hover:text-[#f97316]">{"מדיניות פרטיות"}</Link>
         <span>{"·"}</span>
         <Link href="/contact" className="hover:text-[#f97316]">{"צור קשר"}</Link>
+        <span>{"·"}</span>
+        <Link href="/accessibility" className="hover:text-[#f97316]">{"נגישות"}</Link>
       </footer>
     </main>
   );

@@ -43,6 +43,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <AIChat />
         {/* Responsive container: full on mobile, centered+wider on desktop */}
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:right-2 bg-[#f97316] text-white px-4 py-2 rounded-xl text-sm z-50">
+          דלג לתוכן הראשי
+        </a>
         <div className="w-full max-w-[560px] md:max-w-[900px] mx-auto px-4 md:px-8">
           <div className="text-center py-6 border-b border-[#e5e5e5] mb-6">
             <Link href="/" className="inline-flex flex-col items-center">
