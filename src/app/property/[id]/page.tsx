@@ -265,9 +265,10 @@ export default function PropertyPage() {
       </div>
 
       <button onClick={() => setShowModal(true)}
-        className="w-full py-3 rounded-xl bg-[#f97316] text-white font-bold text-base hover:bg-[#fb923c] transition-colors mb-6">
+        className="w-full py-3 rounded-xl bg-[#f97316] text-white font-bold text-base hover:bg-[#fb923c] transition-colors mb-2">
         {"+ כתוב ביקורת"}
       </button>
+      <p className="text-center text-xs text-[#999] mb-6">{"🏠 שוקל לקנות את הנכס? קרא מה הדיירים אומרים"}</p>
 
       <div className="flex border-b border-[#e5e5e5] mb-4">
         {(["reviews", "rights"] as const).map((t) => (
