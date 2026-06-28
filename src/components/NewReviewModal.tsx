@@ -32,6 +32,7 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const [rating, setRating] = useState(0);
   const [catRatings, setCatRatings] = useState<Record<string, number>>({});
+  const [hasStreetNum, setHasStreetNum] = useState(false);
   const [text, setText] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(true);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
@@ -72,6 +73,7 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
         const streetNum = components.find((c: google.maps.GeocoderAddressComponent) => c.types.includes("street_number"))?.long_name ?? "";
         const streetName = components.find((c: google.maps.GeocoderAddressComponent) => c.types.includes("route"))?.long_name ?? "";
         const addr = streetNum ? `${streetName} ${streetNum}` : streetName || fullAddress;
+        setHasStreetNum(!!streetNum);
         const placeLat = place.geometry?.location?.lat() ?? null;
         const placeLng = place.geometry?.location?.lng() ?? null;
         const { data: existing } = await supabase.from("properties")
@@ -210,6 +212,9 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
                 {"✓ "}{address}
               </div>
             )}
+            {propertyId && !hasStreetNum && (
+              <p className="text-red-500 text-xs">{"יש לבחור כתובת עם מספר בניין"}</p>
+            )}
           </div>
         )}
 
@@ -347,7 +352,7 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
               </button>
             )}
             {step === "address" && (
-              <button onClick={() => setStep("rating")} disabled={!propertyId}
+              <button onClick={() => setStep("rating")} disabled={!propertyId || !hasStreetNum}
                 style={{ display: "flex", flex: 1, justifyContent: "center", textAlign: "center" }}
                 className="py-3 rounded-xl bg-[#f97316] text-white font-bold disabled:opacity-30 hover:bg-[#fb923c] transition-colors text-sm">
                 {"המשך"}
