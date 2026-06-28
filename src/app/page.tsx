@@ -74,8 +74,31 @@ export default function HomePage() {
     setSearch(address);
   }, []);
 
+  const totalReviews = properties.reduce((s, p) => s + (p.review_count ?? 0), 0);
+
   return (
     <main className="py-6">
+      {/* Tagline */}
+      <p className="text-center text-sm text-[#888] mb-5">
+        {"גלה ביקורות אמיתיות על דירות ומשכירים בישראל"}
+      </p>
+
+      {/* Stats bar */}
+      {!loading && (
+        <div className="flex justify-center gap-8 mb-6">
+          {[
+            { value: properties.length, label: "נכסים" },
+            { value: totalReviews, label: "ביקורות" },
+            { value: cities.length, label: "ערים" },
+          ].map(({ value, label }) => (
+            <div key={label} className="text-center">
+              <p className="text-2xl font-black text-[#f97316]">{value}</p>
+              <p className="text-xs text-[#aaa]">{label}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
       <button onClick={() => setShowNewReview(true)}
         className="w-full py-3 rounded-xl bg-[#f97316] text-white font-bold text-base hover:bg-[#fb923c] transition-colors mb-4 flex items-center justify-center gap-2">
         {"✏️ כתוב ביקורת חדשה"}
