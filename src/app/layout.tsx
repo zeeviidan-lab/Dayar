@@ -46,7 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="w-full max-w-[560px] md:max-w-[900px] mx-auto px-4 md:px-8">
           <div className="text-center py-6 border-b border-[#e5e5e5] mb-6">
             <Link href="/" className="inline-flex flex-col items-center">
-              <span className="text-6xl font-black text-[#f97316] leading-tight" style={{ letterSpacing: "0.05em" }}>דַּיָּר</span>
+              <span className="text-6xl font-black text-[#f97316] leading-tight" style={{ letterSpacing: "0.03em" }}>דַּיָּר</span>
               <span className="text-xs text-[#888] tracking-widest mt-0.5">פלטפורמת ביקורות דיירים</span>
             </Link>
           </div>
