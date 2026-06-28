@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { TAGS, TAG_COLOR_CLASSES } from "@/lib/tags";
 import StarRating from "./StarRating";
 
 interface Props {
@@ -23,7 +22,7 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const [rating, setRating] = useState(0);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [catRatings, setCatRatings] = useState<Record<string, number>>({});
   const [text, setText] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(true);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
@@ -114,10 +113,6 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
     if (data) { setPropertyId(data.id); setAddress(`${addr}, ${city}`); setSuggestions([]); }
   }
 
-  function toggleTag(tag: string) {
-    setSelectedTags((prev) => prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]);
-  }
-
   function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? []).slice(0, 3 - photos.length);
     setPhotos((prev) => [...prev, ...files].slice(0, 3));
@@ -158,8 +153,7 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
 
     const { data: review, error: reviewError } = await supabase.from("reviews").insert({
       property_id: propertyId, rating,
-      rating_maintenance: rating, rating_landlord: rating,
-      rating_neighbors: rating, rating_parking: rating, rating_noise: rating,
+      ...catRatings,
       text: text || null, is_anonymous: isAnonymous,
       is_verified: verified,
       verifier_email: verified ? email : null,
@@ -167,10 +161,6 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
     }).select().single();
 
     if (reviewError || !review) { setError("שגיאה בשמירה"); setSubmitting(false); return; }
-
-    if (selectedTags.length > 0) {
-      await supabase.from("review_tags").insert(selectedTags.map((tag) => ({ review_id: review.id, tag })));
-    }
 
     if (photos.length > 0) {
       const urls: string[] = [];
@@ -242,13 +232,23 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
         {step === "details" && (
           <div className="space-y-4">
             <div>
-              <p className="text-sm text-[#666] mb-2">{"תגיות"}</p>
-              <div className="flex flex-wrap gap-2">
-                {TAGS.map(({ label, color }) => (
-                  <button key={label} onClick={() => toggleTag(label)}
-                    className={`px-3 py-1.5 rounded-full text-sm border transition-all ${selectedTags.includes(label) ? TAG_COLOR_CLASSES[color] + " scale-105" : "border-[#e5e5e5] text-[#666]"}`}>
-                    {label}
-                  </button>
+              <p className="text-sm text-[#666] mb-3">{"דרג לפי קטגוריה (אופציונלי)"}</p>
+              <div className="space-y-3">
+                {[
+                  { key: "rating_property", label: "הנכס (הדירה)" },
+                  { key: "rating_maintenance", label: "תחזוקה" },
+                  { key: "rating_building", label: "הבניין" },
+                  { key: "rating_landlord", label: "בעל הבית" },
+                  { key: "rating_neighbors", label: "שכנים" },
+                  { key: "rating_parking", label: "חניה" },
+                  { key: "rating_noise", label: "רעש" },
+                  { key: "rating_transport", label: "תחבורה ציבורית" },
+                  { key: "rating_shopping", label: "קניות" },
+                ].map(({ key, label }) => (
+                  <div key={key} className="flex items-center justify-between">
+                    <StarRating rating={catRatings[key] ?? 0} size="sm" interactive onRate={(v) => setCatRatings((p) => ({ ...p, [key]: v }))} />
+                    <span className="text-sm text-[#555]">{label}</span>
+                  </div>
                 ))}
               </div>
             </div>
