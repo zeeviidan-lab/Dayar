@@ -113,7 +113,7 @@ export default function ReviewModal({ propertyId, onClose, onDone }: Props) {
       <div className="bg-white border border-[#e5e5e5] rounded-2xl w-full max-w-[560px] p-6 mb-4 shadow-xl">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-lg font-bold text-[#111]">{"כתוב ביקורת"}</h2>
-          <button onClick={onClose} className="text-[#aaa] hover:text-[#111] text-2xl leading-none">×</button>
+          <button onClick={onClose} aria-label="סגור" className="text-[#aaa] hover:text-[#111] text-2xl leading-none">×</button>
         </div>
 
         <div className="flex gap-2 mb-6">

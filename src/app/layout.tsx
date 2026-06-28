@@ -53,7 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <span className="text-xs text-[#888] tracking-widest mt-0.5">פלטפורמת ביקורות דיירים</span>
             </Link>
           </div>
-          {children}
+          <main id="main-content">{children}</main>
         </div>
       </body>
     </html>

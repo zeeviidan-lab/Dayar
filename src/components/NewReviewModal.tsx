@@ -204,7 +204,7 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
       <div className="bg-white rounded-2xl w-full max-w-[560px] p-6 shadow-xl max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-bold text-[#111]">{"ביקורת חדשה"}</h2>
-          <button onClick={onClose} className="text-[#aaa] hover:text-[#111] text-2xl leading-none">×</button>
+          <button onClick={onClose} aria-label="סגור" className="text-[#aaa] hover:text-[#111] text-2xl leading-none">×</button>
         </div>
 
         {step !== "done" && (
