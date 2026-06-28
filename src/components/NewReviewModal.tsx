@@ -9,16 +9,25 @@ interface Props {
   onDone: () => void;
 }
 
-type Step = "address" | "rating" | "details" | "verify" | "done";
+type Step = "address" | "rating" | "categories" | "details" | "verify" | "done";
+
+const CATEGORIES = [
+  { key: "rating_property", label: "הדירה" },
+  { key: "rating_maintenance", label: "תחזוקה" },
+  { key: "rating_building", label: "הבניין" },
+  { key: "rating_landlord", label: "בעל הבית" },
+  { key: "rating_neighbors", label: "שכנים" },
+  { key: "rating_parking", label: "חניה" },
+  { key: "rating_noise", label: "רעש" },
+  { key: "rating_transport", label: "תחבורה ציבורית" },
+  { key: "rating_shopping", label: "קניות" },
+];
 
 export default function NewReviewModal({ onClose, onDone }: Props) {
   const [step, setStep] = useState<Step>("address");
   const [address, setAddress] = useState("");
   const [propertyId, setPropertyId] = useState<string | null>(null);
-  const [addressSearch, setAddressSearch] = useState("");
   const [suggestions, setSuggestions] = useState<{ id: string; address: string; city: string }[]>([]);
-  const [lat, setLat] = useState<number | null>(null);
-  const [lng, setLng] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const [rating, setRating] = useState(0);
@@ -38,13 +47,12 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
   const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const STEPS: Step[] = ["address", "rating", "details", "verify"];
+  const STEPS: Step[] = ["address", "rating", "categories", "details", "verify"];
   const stepIndex = STEPS.indexOf(step);
 
-  // Google Places autocomplete — runs when address step is shown and input is mounted
   useEffect(() => {
     if (step !== "address" || !inputRef.current) return;
-    if (autocompleteRef.current) return; // already initialized
+    if (autocompleteRef.current) return;
 
     function initAuto() {
       if (!inputRef.current) return;
@@ -66,8 +74,6 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
         const addr = streetNum ? `${streetName} ${streetNum}` : streetName || fullAddress;
         const placeLat = place.geometry?.location?.lat() ?? null;
         const placeLng = place.geometry?.location?.lng() ?? null;
-        setLat(placeLat);
-        setLng(placeLng);
         const { data: existing } = await supabase.from("properties")
           .select("id").eq("address", addr).eq("city", city).maybeSingle();
         if (existing) {
@@ -92,8 +98,8 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
   }, [step]);
 
   async function searchProperties(q: string) {
-    setAddressSearch(q);
-    if (q.length < 2) { setSuggestions([]); return; }
+    setSuggestions([]);
+    if (q.length < 2) return;
     const { data } = await supabase.from("properties").select("id,address,city")
       .or(`address.ilike.%${q}%,city.ilike.%${q}%`).limit(5);
     setSuggestions(data ?? []);
@@ -102,16 +108,7 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
   async function selectProperty(id: string, addr: string, city: string) {
     setPropertyId(id);
     setAddress(`${addr}, ${city}`);
-    setAddressSearch(`${addr}, ${city}`);
     setSuggestions([]);
-  }
-
-  async function createAndSelectProperty() {
-    const parts = addressSearch.split(",").map((s) => s.trim());
-    const addr = parts[0] ?? addressSearch;
-    const city = parts[1] ?? "";
-    const { data } = await supabase.from("properties").insert({ address: addr, city }).select().single();
-    if (data) { setPropertyId(data.id); setAddress(`${addr}, ${city}`); setSuggestions([]); }
   }
 
   function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -206,13 +203,8 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
         {step === "address" && (
           <div className="space-y-3">
             <p className="text-sm text-[#666]">{"הזן את כתובת הנכס"}</p>
-            <input
-              ref={inputRef}
-              type="text"
-              placeholder="רחוב ומספר, עיר..."
-              dir="rtl"
-              className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors"
-            />
+            <input ref={inputRef} type="text" placeholder="רחוב ומספר, עיר..." dir="rtl"
+              className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors" />
             {propertyId && (
               <div className="bg-orange-50 border border-orange-200 rounded-xl px-4 py-2 text-sm text-[#f97316] font-medium">
                 {"✓ "}{address}
@@ -221,39 +213,33 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
           </div>
         )}
 
-        {/* Step 2: Rating */}
+        {/* Step 2: Overall rating */}
         {step === "rating" && (
           <div className="text-center space-y-4">
-            <p className="text-[#666]">{"איך הייתה החוויה שלך?"}</p>
+            <p className="text-[#666]">{"איך הייתה החוויה הכללית?"}</p>
             <StarRating rating={rating} size="lg" interactive onRate={setRating} />
             <p className="text-[#aaa] text-sm">{rating === 0 ? "בחר דירוג" : RATINGS_LABELS[rating]}</p>
           </div>
         )}
 
-        {/* Step 3: Details */}
+        {/* Step 3: Category ratings */}
+        {step === "categories" && (
+          <div>
+            <p className="text-sm text-[#666] mb-4">{"דרג לפי קטגוריה (אופציונלי)"}</p>
+            <div className="space-y-3">
+              {CATEGORIES.map(({ key, label }) => (
+                <div key={key} className="flex items-center justify-between">
+                  <StarRating rating={catRatings[key] ?? 0} size="sm" interactive onRate={(v) => setCatRatings((p) => ({ ...p, [key]: v }))} />
+                  <span className="text-sm text-[#555]">{label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Step 4: Details */}
         {step === "details" && (
           <div className="space-y-4">
-            <div>
-              <p className="text-sm text-[#666] mb-3">{"דרג לפי קטגוריה (אופציונלי)"}</p>
-              <div className="space-y-3">
-                {[
-                  { key: "rating_property", label: "הדירה" },
-                  { key: "rating_maintenance", label: "תחזוקה" },
-                  { key: "rating_building", label: "הבניין" },
-                  { key: "rating_landlord", label: "בעל הבית" },
-                  { key: "rating_neighbors", label: "שכנים" },
-                  { key: "rating_parking", label: "חניה" },
-                  { key: "rating_noise", label: "רעש" },
-                  { key: "rating_transport", label: "תחבורה ציבורית" },
-                  { key: "rating_shopping", label: "קניות" },
-                ].map(({ key, label }) => (
-                  <div key={key} className="flex items-center justify-between">
-                    <StarRating rating={catRatings[key] ?? 0} size="sm" interactive onRate={(v) => setCatRatings((p) => ({ ...p, [key]: v }))} />
-                    <span className="text-sm text-[#555]">{label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
             <div>
               <p className="text-sm text-[#666] mb-2">{"שכירות חודשית (₪) — אופציונלי"}</p>
               <div className="flex gap-2">
@@ -266,7 +252,7 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
               </div>
             </div>
             <textarea value={text} onChange={(e) => setText(e.target.value)}
-              placeholder="שתף את החוויה שלך (אופציונלי)..." rows={3} dir="rtl"
+              placeholder="שתף את החוויה שלך (אופציונלי)..." rows={4} dir="rtl"
               className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors resize-none" />
             <div>
               <p className="text-sm text-[#666] mb-2">{"תמונות (עד 3)"}</p>
@@ -300,13 +286,13 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
           </div>
         )}
 
-        {/* Step 4: Verify */}
+        {/* Step 5: Verify */}
         {step === "verify" && (
           <div className="space-y-4">
             {!verified ? (
               <>
                 <div className="bg-orange-50 border border-orange-200 rounded-xl p-4">
-                  <p className="text-sm font-semibold text-[#f97316] mb-1">{"אימות ביקורת (אופציונלי)"}</p>
+                  <p className="text-sm font-semibold text-[#f97316] mb-1">{"אימות ביקורת"}</p>
                   <p className="text-xs text-[#888]">{"אמת את הביקורת עם האימייל שלך כדי לקבל תג ✓ מאומת. הכתובת לא תוצג פומבית."}</p>
                 </div>
                 {!codeSent ? (
@@ -368,9 +354,16 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
               </button>
             )}
             {step === "rating" && (
-              <button onClick={() => setStep("details")} disabled={rating === 0}
+              <button onClick={() => setStep("categories")} disabled={rating === 0}
                 style={{ display: "flex", flex: 1, justifyContent: "center", textAlign: "center" }}
                 className="py-3 rounded-xl bg-[#f97316] text-white font-bold disabled:opacity-30 hover:bg-[#fb923c] transition-colors text-sm">
+                {"המשך"}
+              </button>
+            )}
+            {step === "categories" && (
+              <button onClick={() => setStep("details")}
+                style={{ display: "flex", flex: 1, justifyContent: "center", textAlign: "center" }}
+                className="py-3 rounded-xl bg-[#f97316] text-white font-bold hover:bg-[#fb923c] transition-colors text-sm">
                 {"המשך"}
               </button>
             )}
