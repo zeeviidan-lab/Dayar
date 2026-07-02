@@ -41,6 +41,15 @@ button, a {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Ticker animation */
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-ticker {
+  animation: ticker 40s linear infinite;
+}
+
 /* Keyboard focus ring */
 :focus-visible {
   outline: 3px solid #f97316;
