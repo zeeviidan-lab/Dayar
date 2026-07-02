@@ -144,8 +144,13 @@ export default function PropertyPage() {
   const overallAvg = avg(reviews.map((r) => r.rating));
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
   const [copied, setCopied] = useState(false);
-  function handleShare() {
-    navigator.clipboard.writeText(window.location.href).then(() => {
+  async function handleShare() {
+    const url = window.location.href;
+    const text = property ? `ביקורות על ${property.address}, ${property.city} — דַּיָּר` : "דַּיָּר";
+    if (navigator.share) {
+      try { await navigator.share({ title: text, url }); return; } catch {}
+    }
+    navigator.clipboard.writeText(url).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });

@@ -38,6 +38,16 @@ export default function AccessibilityPage() {
 
         <h2 className="text-lg font-bold text-[#111] mt-6">עדכון אחרון</h2>
         <p>יוני 2026</p>
+
+        <div className="mt-8 pt-6 border-t border-[#e5e5e5]">
+          <p className="text-xs text-[#aaa]">
+            למידע נוסף על נגישות דיגיטלית בישראל, בקרו באתר{" "}
+            <a href="https://www.nagish.org.il" target="_blank" rel="noopener noreferrer" className="text-[#f97316] underline">
+              נגישות ישראל
+            </a>
+            .
+          </p>
+        </div>
       </section>
     </main>
   );

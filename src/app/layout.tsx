@@ -4,6 +4,7 @@ import Script from "next/script";
 import Link from "next/link";
 import Header from "@/components/Header";
 import AIChat from "@/components/AIChat";
+import FeedbackButton from "@/components/FeedbackButton";
 import "./globals.css";
 
 const heebo = Heebo({
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
           <main id="main-content">{children}</main>
         </div>
+        <FeedbackButton />
       </body>
     </html>
   );

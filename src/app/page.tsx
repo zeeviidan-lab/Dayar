@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState, useCallback, useMemo, Fragment } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { supabase, Property } from "@/lib/supabase";
 import AddressSearch from "@/components/AddressSearch";
 import PropertyCard from "@/components/PropertyCard";
 import NewReviewModal from "@/components/NewReviewModal";
+import FunBanner from "@/components/FunBanner";
 
 type SortOption = "newest" | "rating" | "most_reviewed";
 
@@ -16,6 +18,11 @@ export default function HomePage() {
   const [sort, setSort] = useState<SortOption>("newest");
   const [loading, setLoading] = useState(true);
   const [showNewReview, setShowNewReview] = useState(false);
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get("write") === "true") setShowNewReview(true);
+  }, [searchParams]);
 
   useEffect(() => {
     async function load() {
@@ -167,9 +174,7 @@ export default function HomePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {filtered.map((p) => <PropertyCard key={p.id} property={p} />)}
             </div>
-            <div className="mt-4 rounded-xl border border-dashed border-[#e5e5e5] bg-white flex items-center justify-center py-6 text-xs text-[#ccc]">
-              פרסומת
-            </div>
+            <FunBanner />
           </>
         )}
       </div>

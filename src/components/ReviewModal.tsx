@@ -109,10 +109,10 @@ export default function ReviewModal({ propertyId, onClose, onDone }: Props) {
   const RATINGS_LABELS = ["", "גרוע מאוד", "גרוע", "בינוני", "טוב", "מצוין"];
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-end justify-center z-50 p-4" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="bg-white border border-[#e5e5e5] rounded-2xl w-full max-w-[560px] p-6 mb-4 shadow-xl">
+    <div className="fixed inset-0 bg-black/50 flex items-end justify-center z-50 p-4" onClick={(e) => e.target === e.currentTarget && onClose()} aria-hidden="true">
+      <div role="dialog" aria-modal="true" aria-labelledby="review-modal-title" className="bg-white border border-[#e5e5e5] rounded-2xl w-full max-w-[560px] p-6 mb-4 shadow-xl">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-lg font-bold text-[#111]">{"כתוב ביקורת"}</h2>
+          <h2 id="review-modal-title" className="text-lg font-bold text-[#111]">{"כתוב ביקורת"}</h2>
           <button onClick={onClose} aria-label="סגור" className="text-[#aaa] hover:text-[#111] text-2xl leading-none">×</button>
         </div>
 

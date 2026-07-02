@@ -200,10 +200,10 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-end md:items-center justify-center z-50 p-4"
-      onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="bg-white rounded-2xl w-full max-w-[560px] p-6 shadow-xl max-h-[90vh] overflow-y-auto">
+      onClick={(e) => e.target === e.currentTarget && onClose()} aria-hidden="true">
+      <div role="dialog" aria-modal="true" aria-labelledby="new-review-modal-title" className="bg-white rounded-2xl w-full max-w-[560px] p-6 shadow-xl max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-bold text-[#111]">{"ביקורת חדשה"}</h2>
+          <h2 id="new-review-modal-title" className="text-lg font-bold text-[#111]">{"ביקורת חדשה"}</h2>
           <button onClick={onClose} aria-label="סגור" className="text-[#aaa] hover:text-[#111] text-2xl leading-none">×</button>
         </div>
 
@@ -371,6 +371,21 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
             <div className="text-5xl mb-3">🎉</div>
             <p className="font-bold text-[#111]">{"הביקורת פורסמה!"}</p>
             {verified && <p className="text-sm text-green-600 mt-1">{"✓ הביקורת מאומתת"}</p>}
+            <p className="text-sm text-[#888] mt-3 mb-4">{"עזור לשכנים שלך — שתף את הדף"}</p>
+            <button
+              onClick={async () => {
+                const url = `${window.location.origin}/property/${propertyId}`;
+                const text = `ביקורות על ${address} — דַּיָּר`;
+                if (navigator.share) {
+                  try { await navigator.share({ title: text, url }); return; } catch {}
+                }
+                await navigator.clipboard.writeText(url);
+                alert("הלינק הועתק!");
+              }}
+              className="px-6 py-2.5 rounded-xl bg-[#f97316] text-white font-bold text-sm hover:bg-[#fb923c] transition-colors"
+            >
+              {"🔗 שתף את הדף"}
+            </button>
           </div>
         )}
 
