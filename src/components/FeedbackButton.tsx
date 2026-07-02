@@ -26,7 +26,7 @@ export default function FeedbackButton() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-6 left-4 z-40 bg-white border border-[#e5e5e5] text-[#888] text-xs px-3 py-2 rounded-full shadow-sm hover:border-[#f97316] hover:text-[#f97316] transition-colors"
+        className="fixed bottom-6 right-4 z-40 bg-white border border-[#e5e5e5] text-[#888] text-xs px-3 py-2 rounded-full shadow-sm hover:border-[#f97316] hover:text-[#f97316] transition-colors"
       >
         💬 פידבק
       </button>
