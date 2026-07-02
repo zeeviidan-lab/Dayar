@@ -33,6 +33,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="theme-color" content="#ffffff" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-C2PWQY3OJ5" strategy="afterInteractive" />
+        <Script id="google-analytics" strategy="afterInteractive">{`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-C2PWQY3OJ5');
+        `}</Script>
       </head>
       <body className={`${heebo.variable} font-[family-name:var(--font-heebo)] bg-[#f9f9f9] text-[#111] min-h-screen`}>
         {apiKey && (
