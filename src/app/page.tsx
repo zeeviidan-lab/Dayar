@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback, useMemo, Fragment } from "react";
+import { useEffect, useState, useCallback, useMemo, Fragment, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { supabase, Property } from "@/lib/supabase";
@@ -11,7 +11,7 @@ import FunBanner from "@/components/FunBanner";
 
 type SortOption = "newest" | "rating" | "most_reviewed";
 
-export default function HomePage() {
+function HomePageInner() {
   const [properties, setProperties] = useState<Property[]>([]);
   const [search, setSearch] = useState("");
   const [cityFilter, setCityFilter] = useState("");
@@ -197,5 +197,13 @@ export default function HomePage() {
         <Link href="/accessibility" className="hover:text-[#f97316]">{"נגישות"}</Link>
       </footer>
     </main>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense>
+      <HomePageInner />
+    </Suspense>
   );
 }
