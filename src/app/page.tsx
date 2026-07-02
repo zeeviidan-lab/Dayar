@@ -188,6 +188,8 @@ function HomePageInner() {
       </div>
 
       <footer className="mt-4 pb-8 text-center text-xs text-[#bbb] flex justify-center gap-4">
+        <Link href="/about" className="hover:text-[#f97316]">{"אודות"}</Link>
+        <span>{"·"}</span>
         <Link href="/terms" className="hover:text-[#f97316]">{"תנאי שימוש"}</Link>
         <span>{"·"}</span>
         <Link href="/privacy" className="hover:text-[#f97316]">{"מדיניות פרטיות"}</Link>
