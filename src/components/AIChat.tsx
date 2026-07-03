@@ -22,6 +22,16 @@ export default function AIChat() {
   const [contractResult, setContractResult] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  // Hide the floating button while any modal is open (modals use `.fixed.inset-0` overlays)
+  useEffect(() => {
+    const check = () => setModalOpen(!!document.querySelector(".fixed.inset-0"));
+    check();
+    const observer = new MutationObserver(check);
+    observer.observe(document.body, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, []);
 
   async function handleContractUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -70,6 +80,9 @@ export default function AIChat() {
     setMessages([...newMessages, { role: "assistant", content: data.reply }]);
     setLoading(false);
   }
+
+  // While a modal is open, hide the assistant so it doesn't cover the modal's controls
+  if (modalOpen) return null;
 
   return (
     <>
