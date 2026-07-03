@@ -8,7 +8,6 @@ import AddressSearch from "@/components/AddressSearch";
 import PropertyCard from "@/components/PropertyCard";
 import NewReviewModal from "@/components/NewReviewModal";
 import FunBanner from "@/components/FunBanner";
-import ReviewsTicker from "@/components/ReviewsTicker";
 
 type SortOption = "newest" | "rating" | "most_reviewed";
 
@@ -106,8 +105,6 @@ function HomePageInner() {
           ))}
         </div>
       )}
-
-      <ReviewsTicker />
 
       <button onClick={() => setShowNewReview(true)}
         className="w-full py-3 rounded-xl bg-[#f97316] text-white font-bold text-base hover:bg-[#fb923c] transition-colors mb-4 flex items-center justify-center gap-2">
