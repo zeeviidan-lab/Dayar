@@ -89,15 +89,16 @@ export default function AIChat() {
       {/* Floating button */}
       <button
         onClick={() => setOpen((v) => !v)}
+        aria-label={open ? "סגור עוזר AI" : "פתח עוזר AI"}
         style={{
           position: "fixed", bottom: "24px", left: "24px", zIndex: 100,
-          background: "#f97316", color: "white", border: "none", borderRadius: "50px",
-          padding: "12px 20px", fontFamily: "Heebo, Arial, sans-serif",
-          fontSize: "14px", fontWeight: "bold", cursor: "pointer",
+          background: "#f97316", color: "white", border: "none", borderRadius: "50%",
+          width: "56px", height: "56px",
+          fontSize: "24px", cursor: "pointer",
           boxShadow: "0 4px 20px rgba(249,115,22,0.4)",
-          display: "flex", alignItems: "center", gap: "8px",
+          display: "flex", alignItems: "center", justifyContent: "center",
         }}>
-        {open ? "✕ סגור" : "⚖️ עוזר דיירים AI"}
+        {open ? "✕" : "✨"}
       </button>
 
       {/* Chat panel */}
