@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback, useMemo, Fragment, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
 import { supabase, Property } from "@/lib/supabase";
 import SmartSearch from "@/components/SmartSearch";
 import PropertyCard from "@/components/PropertyCard";
@@ -188,17 +187,6 @@ function HomePageInner() {
         {"דַּיָּר מאמינה בחופש הביטוי ובשקיפות. אנא שתפו את חוויותיכם באופן כן, מכבד ועניני. ביקורות הכוללות תוכן פוגעני, לשון הרע או שפה בוטה יוסרו."}
       </div>
 
-      <footer className="mt-4 pb-8 text-center text-xs text-[#bbb] flex justify-center gap-4">
-        <Link href="/about" className="hover:text-[#f97316]">{"אודות"}</Link>
-        <span>{"·"}</span>
-        <Link href="/terms" className="hover:text-[#f97316]">{"תנאי שימוש"}</Link>
-        <span>{"·"}</span>
-        <Link href="/privacy" className="hover:text-[#f97316]">{"מדיניות פרטיות"}</Link>
-        <span>{"·"}</span>
-        <Link href="/contact" className="hover:text-[#f97316]">{"צור קשר"}</Link>
-        <span>{"·"}</span>
-        <Link href="/accessibility" className="hover:text-[#f97316]">{"נגישות"}</Link>
-      </footer>
     </main>
   );
 }
