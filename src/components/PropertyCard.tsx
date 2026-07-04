@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useState } from "react";
 import { Property } from "@/lib/supabase";
 import StarRating from "./StarRating";
-import ReviewModal from "./ReviewModal";
+import NewReviewModal from "./NewReviewModal";
 
-export default function PropertyCard({ property: p, onReviewDone }: { property: Property; onReviewDone?: () => void }) {
+export default function PropertyCard({ property: p }: { property: Property }) {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
   const hasLocation = p.lat && p.lng;
   const [showModal, setShowModal] = useState(false);
@@ -53,10 +53,9 @@ export default function PropertyCard({ property: p, onReviewDone }: { property: 
       </div>
 
       {showModal && (
-        <ReviewModal
-          propertyId={p.id}
+        <NewReviewModal
+          existingPropertyId={p.id}
           onClose={() => setShowModal(false)}
-          onDone={() => { setShowModal(false); onReviewDone?.(); }}
         />
       )}
     </>

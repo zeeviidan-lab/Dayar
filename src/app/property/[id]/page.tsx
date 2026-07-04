@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { supabase, Property, Review } from "@/lib/supabase";
 import StarRating from "@/components/StarRating";
-import ReviewModal from "@/components/ReviewModal";
+import NewReviewModal from "@/components/NewReviewModal";
 import { TAG_COLOR_CLASSES, getTagColor } from "@/lib/tags";
 
 const TENANT_RIGHTS = [
@@ -406,7 +406,7 @@ export default function PropertyPage() {
         </div>
       )}
 
-      {showModal && <ReviewModal propertyId={property.id} onClose={() => setShowModal(false)} onDone={() => { setShowModal(false); loadData(); }} />}
+      {showModal && <NewReviewModal existingPropertyId={property.id} onClose={() => setShowModal(false)} onPublished={() => { setShowModal(false); loadData(); }} />}
     </main>
   );
 }

@@ -7,6 +7,10 @@ import StarRating from "./StarRating";
 
 interface Props {
   onClose: () => void;
+  /** Open directly on an existing property, skipping the address step */
+  existingPropertyId?: string;
+  /** Called after publish instead of navigating to the property page */
+  onPublished?: () => void;
 }
 
 type Step = "address" | "rating" | "categories" | "details" | "verify" | "done";
@@ -23,11 +27,11 @@ const CATEGORIES = [
   { key: "rating_shopping", label: "קניות" },
 ];
 
-export default function NewReviewModal({ onClose }: Props) {
+export default function NewReviewModal({ onClose, existingPropertyId, onPublished }: Props) {
   const router = useRouter();
-  const [step, setStep] = useState<Step>("address");
+  const [step, setStep] = useState<Step>(existingPropertyId ? "rating" : "address");
   const [address, setAddress] = useState("");
-  const [propertyId, setPropertyId] = useState<string | null>(null);
+  const [propertyId, setPropertyId] = useState<string | null>(existingPropertyId ?? null);
   const [suggestions, setSuggestions] = useState<{ id: string; address: string; city: string }[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
@@ -193,7 +197,8 @@ export default function NewReviewModal({ onClose }: Props) {
     }
 
     setSubmitting(false);
-    router.push(`/property/${propertyId}`);
+    if (onPublished) onPublished();
+    else router.push(`/property/${propertyId}`);
   }
 
   const RATINGS_LABELS = ["", "גרוע מאוד", "גרוע", "בינוני", "טוב", "מצוין"];
@@ -391,7 +396,7 @@ export default function NewReviewModal({ onClose }: Props) {
 
         {step !== "done" && (
           <div className="flex gap-3 mt-6 w-full">
-            {stepIndex > 0 && (
+            {stepIndex > (existingPropertyId ? 1 : 0) && (
               <button onClick={() => setStep(STEPS[stepIndex - 1])}
                 style={{ display: "flex", flex: 1, justifyContent: "center", textAlign: "center" }}
                 className="py-3 rounded-xl border border-[#e5e5e5] text-[#666] hover:border-[#ccc] transition-colors text-sm">
