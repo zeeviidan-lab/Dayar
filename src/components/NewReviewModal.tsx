@@ -329,8 +329,8 @@ export default function NewReviewModal({ onClose }: Props) {
             {!verified ? (
               <>
                 <div className="bg-orange-50 border border-orange-200 rounded-xl p-4">
-                  <p className="text-sm font-semibold text-[#f97316] mb-1">{"אימות ביקורת"}</p>
-                  <p className="text-xs text-[#888]">{"אמת את הביקורת עם האימייל שלך כדי לקבל תג ✓ מאומת. הכתובת לא תוצג פומבית."}</p>
+                  <p className="text-sm font-semibold text-[#f97316] mb-1">{"אימות ביקורת (אופציונלי)"}</p>
+                  <p className="text-xs text-[#888]">{"אמת את הביקורת עם האימייל שלך כדי לקבל תג ✓ מאומת. הכתובת לא תוצג פומבית. אפשר גם לפרסם ללא אימות."}</p>
                 </div>
                 {!codeSent ? (
                   <div className="space-y-2">
@@ -427,10 +427,10 @@ export default function NewReviewModal({ onClose }: Props) {
               </button>
             )}
             {step === "verify" && (
-              <button onClick={handleSubmit} disabled={submitting || !verified}
+              <button onClick={handleSubmit} disabled={submitting}
                 style={{ display: "flex", flex: 1, justifyContent: "center", textAlign: "center" }}
                 className="py-3 rounded-xl bg-[#f97316] text-white font-bold disabled:opacity-50 hover:bg-[#fb923c] transition-colors text-sm">
-                {submitting ? "שולח..." : verified ? "פרסם ביקורת" : "יש לאמת אימייל תחילה"}
+                {submitting ? "שולח..." : verified ? "פרסם ביקורת" : "פרסם ללא אימות"}
               </button>
             )}
           </div>

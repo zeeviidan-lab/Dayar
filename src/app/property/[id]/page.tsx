@@ -20,7 +20,7 @@ const SUB_RATINGS: { key: SubRatingKey; label: string }[] = [
   { key: "rating_maintenance", label: "תחזוקה" },
   { key: "rating_landlord", label: "משכיר" },
   { key: "rating_neighbors", label: "שכנים" },
-  { key: "rating_parking", label: "חניון" },
+  { key: "rating_parking", label: "חניה" },
   { key: "rating_noise", label: "רעש" },
 ];
 
