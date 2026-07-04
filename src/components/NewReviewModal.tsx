@@ -23,7 +23,7 @@ const CATEGORIES = [
   { key: "rating_neighbors", label: "שכנים" },
   { key: "rating_parking", label: "חניה" },
   { key: "rating_noise", label: "רעש" },
-  { key: "rating_transport", label: "תחבורה ציבורית" },
+  { key: "rating_transport", label: "תחבורה" },
   { key: "rating_shopping", label: "קניות" },
 ];
 
