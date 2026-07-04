@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback, useMemo, Fragment, Suspense } from "r
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { supabase, Property } from "@/lib/supabase";
-import AddressSearch from "@/components/AddressSearch";
+import SmartSearch from "@/components/SmartSearch";
 import PropertyCard from "@/components/PropertyCard";
 import NewReviewModal from "@/components/NewReviewModal";
 import FunBanner from "@/components/FunBanner";
@@ -90,28 +90,13 @@ function HomePageInner() {
         {"גלה ביקורות אמיתיות על דירות ומשכירים בישראל"}
       </p>
 
-      {/* Stats bar */}
-      {!loading && (
-        <div className="flex justify-center gap-8 mb-6">
-          {[
-            { value: properties.length, label: "נכסים" },
-            { value: totalReviews, label: "ביקורות" },
-            { value: cities.length, label: "ערים" },
-          ].map(({ value, label }) => (
-            <div key={label} className="text-center">
-              <p className="text-2xl font-black text-[#f97316]">{value}</p>
-              <p className="text-xs text-[#aaa]">{label}</p>
-            </div>
-          ))}
-        </div>
-      )}
+      {/* Hero: smart search */}
+      <SmartSearch onSearch={handleSelect} />
 
       <button onClick={() => setShowNewReview(true)}
-        className="w-full py-3 rounded-xl bg-[#f97316] text-white font-bold text-base hover:bg-[#fb923c] transition-colors mb-4 flex items-center justify-center gap-2">
+        className="w-full py-3 rounded-xl bg-[#f97316] text-white font-bold text-base hover:bg-[#fb923c] transition-colors mt-4 flex items-center justify-center gap-2">
         {"✏️ כתוב ביקורת חדשה"}
       </button>
-
-      <AddressSearch onSelect={handleSelect} />
 
       {/* Filters row */}
       {!loading && (
@@ -166,7 +151,7 @@ function HomePageInner() {
         ) : filtered.length === 0 ? (
           <div className="text-center text-[#aaa] py-16">
             <p className="text-lg mb-2">{"לא נמצאו נכסים"}</p>
-            <p className="text-sm">{"נסה לשנות את הסינון"}</p>
+            <p className="text-sm">{"נסו לשנות את הסינון — או שאלו את ה-AI למעלה ✨"}</p>
           </div>
         ) : (
           <>
@@ -183,7 +168,23 @@ function HomePageInner() {
         <NewReviewModal onClose={() => setShowNewReview(false)} />
       )}
 
-      <div className="mt-12 mb-6 bg-[#fff8f3] border border-orange-100 rounded-xl p-4 text-xs text-[#999] text-center leading-relaxed" dir="rtl">
+      {/* Stats */}
+      {!loading && (
+        <div className="mt-12 flex justify-center gap-8">
+          {[
+            { value: properties.length, label: "נכסים" },
+            { value: totalReviews, label: "ביקורות" },
+            { value: cities.length, label: "ערים" },
+          ].map(({ value, label }) => (
+            <div key={label} className="text-center">
+              <p className="text-xl font-black text-[#f97316]">{value}</p>
+              <p className="text-xs text-[#aaa]">{label}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="mt-6 mb-6 bg-[#fff8f3] border border-orange-100 rounded-xl p-4 text-xs text-[#999] text-center leading-relaxed" dir="rtl">
         {"דַּיָּר מאמינה בחופש הביטוי ובשקיפות. אנא שתפו את חוויותיכם באופן כן, מכבד ועניני. ביקורות הכוללות תוכן פוגעני, לשון הרע או שפה בוטה יוסרו."}
       </div>
 
