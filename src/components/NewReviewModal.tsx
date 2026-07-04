@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import StarRating from "./StarRating";
 
 interface Props {
   onClose: () => void;
-  onDone: () => void;
 }
 
 type Step = "address" | "rating" | "categories" | "details" | "verify" | "done";
@@ -23,7 +23,8 @@ const CATEGORIES = [
   { key: "rating_shopping", label: "קניות" },
 ];
 
-export default function NewReviewModal({ onClose, onDone }: Props) {
+export default function NewReviewModal({ onClose }: Props) {
+  const router = useRouter();
   const [step, setStep] = useState<Step>("address");
   const [address, setAddress] = useState("");
   const [propertyId, setPropertyId] = useState<string | null>(null);
@@ -192,8 +193,7 @@ export default function NewReviewModal({ onClose, onDone }: Props) {
     }
 
     setSubmitting(false);
-    setStep("done");
-    setTimeout(onDone, 1500);
+    router.push(`/property/${propertyId}`);
   }
 
   const RATINGS_LABELS = ["", "גרוע מאוד", "גרוע", "בינוני", "טוב", "מצוין"];

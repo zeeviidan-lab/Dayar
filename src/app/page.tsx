@@ -180,7 +180,7 @@ function HomePageInner() {
       </div>
 
       {showNewReview && (
-        <NewReviewModal onClose={() => setShowNewReview(false)} onDone={() => { setShowNewReview(false); window.location.reload(); }} />
+        <NewReviewModal onClose={() => setShowNewReview(false)} />
       )}
 
       <div className="mt-12 mb-6 bg-[#fff8f3] border border-orange-100 rounded-xl p-4 text-xs text-[#999] text-center leading-relaxed" dir="rtl">
