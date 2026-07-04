@@ -77,15 +77,16 @@ export default function SmartSearch({ onSearch }: Props) {
           onChange={handleChange}
           placeholder="חפשו כתובת או שאלו שאלה..."
           aria-label="חיפוש כתובת או שאלה על זכויות דיירים"
-          className="w-full bg-white border-2 border-[#f97316]/60 rounded-2xl pr-4 pl-24 py-4 text-[#111] placeholder-[#aaa] focus:outline-none focus:border-[#f97316] shadow-sm transition-colors text-right"
+          className="w-full bg-white border-2 border-[#f97316]/60 rounded-2xl pr-4 pl-14 py-4 text-[#111] placeholder-[#aaa] focus:outline-none focus:border-[#f97316] shadow-sm transition-colors text-right"
           dir="rtl"
         />
         <button
           onClick={askAI}
           disabled={!value.trim() || aiLoading}
-          className="absolute left-2 top-1/2 -translate-y-1/2 px-3 py-2 rounded-xl bg-[#f97316] text-white text-sm font-bold disabled:opacity-30 hover:bg-[#fb923c] transition-colors"
+          aria-label="שאל את ה-AI"
+          className="absolute left-2 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-[#f97316] text-white text-xl disabled:opacity-30 hover:bg-[#fb923c] transition-colors flex items-center justify-center"
         >
-          {aiLoading ? "..." : "✨ שאל AI"}
+          {aiLoading ? "…" : "✨"}
         </button>
       </div>
       <p className="text-xs text-[#bbb] mt-1.5 text-right pr-1">
