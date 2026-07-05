@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { getTurnstileToken } from "@/lib/turnstile-client";
+import { fetchAddressSuggestions, resolveSuggestion, type AddressSuggestion } from "@/lib/places-client";
 import StarRating from "./StarRating";
 
 interface Props {
@@ -33,9 +34,9 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
   const [step, setStep] = useState<Step>(existingPropertyId ? "rating" : "address");
   const [address, setAddress] = useState("");
   const [propertyId, setPropertyId] = useState<string | null>(existingPropertyId ?? null);
-  const [suggestions, setSuggestions] = useState<{ id: string; address: string; city: string }[]>([]);
+  const [addrQuery, setAddrQuery] = useState("");
+  const [addrSuggestions, setAddrSuggestions] = useState<AddressSuggestion[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
-  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const [rating, setRating] = useState(0);
   const [catRatings, setCatRatings] = useState<Record<string, number>>({});
   const [hasStreetNum, setHasStreetNum] = useState(false);
@@ -62,49 +63,31 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
   const STEPS: Step[] = ["address", "rating", "categories", "details", "verify"];
   const stepIndex = STEPS.indexOf(step);
 
+  // Debounced address suggestions via the new Places API
   useEffect(() => {
-    if (step !== "address" || !inputRef.current) return;
-    if (autocompleteRef.current) return;
-
-    function initAuto() {
-      if (!inputRef.current) return;
-      autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
-        componentRestrictions: { country: "IL" },
-        fields: ["formatted_address", "geometry", "address_components"],
-        types: ["address"],
-      });
-      autocompleteRef.current.addListener("place_changed", async () => {
-        const place = autocompleteRef.current!.getPlace();
-        const fullAddress = place.formatted_address ?? "";
-        const components = place.address_components ?? [];
-        const cityComp = components.find((c: google.maps.GeocoderAddressComponent) =>
-          c.types.includes("locality") || c.types.includes("administrative_area_level_2")
-        );
-        const city = cityComp?.long_name ?? "";
-        const streetNum = components.find((c: google.maps.GeocoderAddressComponent) => c.types.includes("street_number"))?.long_name ?? "";
-        const streetName = components.find((c: google.maps.GeocoderAddressComponent) => c.types.includes("route"))?.long_name ?? "";
-        const addr = streetNum ? `${streetName} ${streetNum}` : streetName || fullAddress;
-        setHasStreetNum(!!streetNum);
-        const placeLat = place.geometry?.location?.lat() ?? null;
-        const placeLng = place.geometry?.location?.lng() ?? null;
-        setParsedAddr(addr);
-        setParsedCity(city);
-        setParsedLat(placeLat);
-        setParsedLng(placeLng);
-        setPropertyId(null);
-        setAddress(`${addr}, ${city}`);
-      });
+    if (step !== "address" || !addrQuery.trim() || addrQuery === address) {
+      setAddrSuggestions([]);
+      return;
     }
+    const t = setTimeout(async () => {
+      setAddrSuggestions(await fetchAddressSuggestions(addrQuery));
+    }, 250);
+    return () => clearTimeout(t);
+  }, [addrQuery, step, address]);
 
-    if (window.google?.maps?.places) {
-      initAuto();
-    } else {
-      const interval = setInterval(() => {
-        if (window.google?.maps?.places) { clearInterval(interval); initAuto(); }
-      }, 100);
-      return () => clearInterval(interval);
-    }
-  }, [step]);
+  async function selectSuggestion(s: AddressSuggestion) {
+    setAddrSuggestions([]);
+    const resolved = await resolveSuggestion(s);
+    if (!resolved) return;
+    setHasStreetNum(resolved.hasStreetNum);
+    setParsedAddr(resolved.addr);
+    setParsedCity(resolved.city);
+    setParsedLat(resolved.lat);
+    setParsedLng(resolved.lng);
+    setPropertyId(null);
+    setAddress(resolved.display);
+    setAddrQuery(resolved.display);
+  }
 
   async function resolveProperty(apt: string) {
     if (!parsedAddr || !parsedCity || !apt.trim()) { setPropertyId(null); return; }
@@ -117,20 +100,6 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
         .insert({ address: parsedAddr, city: parsedCity, lat: parsedLat, lng: parsedLng, apartment_number: apt.trim() }).select().single();
       if (created) setPropertyId(created.id);
     }
-  }
-
-  async function searchProperties(q: string) {
-    setSuggestions([]);
-    if (q.length < 2) return;
-    const { data } = await supabase.from("properties").select("id,address,city")
-      .or(`address.ilike.%${q}%,city.ilike.%${q}%`).limit(5);
-    setSuggestions(data ?? []);
-  }
-
-  async function selectProperty(id: string, addr: string, city: string) {
-    setPropertyId(id);
-    setAddress(`${addr}, ${city}`);
-    setSuggestions([]);
   }
 
   function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -240,8 +209,27 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
         {step === "address" && (
           <div className="space-y-3">
             <p className="text-sm text-[#666]">{"הזן את כתובת הנכס"}</p>
-            <input ref={inputRef} type="text" placeholder="רחוב ומספר, עיר..." dir="rtl"
-              className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors" />
+            <div className="relative">
+              <input ref={inputRef} type="text" placeholder="רחוב ומספר, עיר..." dir="rtl"
+                value={addrQuery}
+                onChange={(e) => setAddrQuery(e.target.value)}
+                className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors" />
+              {addrSuggestions.length > 0 && (
+                <ul className="absolute right-0 left-0 top-full mt-1 bg-white border border-[#e5e5e5] rounded-xl shadow-lg z-20 overflow-hidden">
+                  {addrSuggestions.map((s) => (
+                    <li key={s.id}>
+                      <button
+                        type="button"
+                        onClick={() => selectSuggestion(s)}
+                        className="w-full text-right px-4 py-2.5 text-sm hover:bg-[#fff8f3] transition-colors border-b border-[#f0f0f0] last:border-b-0"
+                      >
+                        {s.label}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
             {address && hasStreetNum && (
               <div className="bg-orange-50 border border-orange-200 rounded-xl px-4 py-2 text-sm text-[#f97316] font-medium">
                 {"✓ "}{address}

@@ -2,47 +2,43 @@
 
 import { useEffect, useRef, useState } from "react";
 import { getTurnstileToken } from "@/lib/turnstile-client";
+import { fetchAddressSuggestions, type AddressSuggestion } from "@/lib/places-client";
 
 interface Props {
   onSearch: (query: string) => void;
 }
 
+// Address-shaped input gets suggestions; question-shaped input doesn't
+// (saves Places API quota when people type questions for the AI).
+function looksLikeAddress(q: string): boolean {
+  return !q.includes("?") && q.trim().split(/\s+/).length <= 5;
+}
+
 export default function SmartSearch({ onSearch }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const [value, setValue] = useState("");
+  const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([]);
+  const [selected, setSelected] = useState("");
   const [aiAnswer, setAiAnswer] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
 
   useEffect(() => {
-    function initAuto() {
-      if (!inputRef.current) return;
-      autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
-        componentRestrictions: { country: "IL" },
-        fields: ["formatted_address", "geometry", "place_id"],
-        types: ["address"],
-      });
-      autocompleteRef.current.addListener("place_changed", () => {
-        const place = autocompleteRef.current!.getPlace();
-        const addr = place.formatted_address ?? "";
-        setValue(addr);
-        onSearch(addr);
-      });
+    if (!value.trim() || value === selected || !looksLikeAddress(value)) {
+      setSuggestions([]);
+      return;
     }
+    const t = setTimeout(async () => {
+      setSuggestions(await fetchAddressSuggestions(value));
+    }, 250);
+    return () => clearTimeout(t);
+  }, [value, selected]);
 
-    if (window.google?.maps?.places) {
-      initAuto();
-    } else {
-      const interval = setInterval(() => {
-        if (window.google?.maps?.places) {
-          clearInterval(interval);
-          initAuto();
-        }
-      }, 100);
-      return () => clearInterval(interval);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  function selectSuggestion(s: AddressSuggestion) {
+    setSuggestions([]);
+    setSelected(s.label);
+    setValue(s.label);
+    onSearch(s.label);
+  }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setValue(e.target.value);
@@ -90,6 +86,21 @@ export default function SmartSearch({ onSearch }: Props) {
         >
           {aiLoading ? "…" : "✨"}
         </button>
+        {suggestions.length > 0 && (
+          <ul className="absolute right-0 left-0 top-full mt-1 bg-white border border-[#e5e5e5] rounded-xl shadow-lg z-20 overflow-hidden" dir="rtl">
+            {suggestions.map((s) => (
+              <li key={s.id}>
+                <button
+                  type="button"
+                  onClick={() => selectSuggestion(s)}
+                  className="w-full text-right px-4 py-2.5 text-sm hover:bg-[#fff8f3] transition-colors border-b border-[#f0f0f0] last:border-b-0"
+                >
+                  {s.label}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
       <p className="text-xs text-[#bbb] mt-1.5 text-right pr-1">
         {'למשל: "כמה זמן יש למשכיר להחזיר פיקדון?" · הקלדת כתובת מסננת את הרשימה'}
