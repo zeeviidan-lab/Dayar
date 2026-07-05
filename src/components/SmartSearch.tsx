@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { getTurnstileToken } from "@/lib/turnstile-client";
 
 interface Props {
   onSearch: (query: string) => void;
@@ -54,10 +55,11 @@ export default function SmartSearch({ onSearch }: Props) {
     setAiLoading(true);
     setAiAnswer("");
     try {
+      const turnstileToken = await getTurnstileToken();
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: [{ role: "user", content: q }] }),
+        body: JSON.stringify({ messages: [{ role: "user", content: q }], turnstileToken }),
       });
       const data = await res.json();
       setAiAnswer(data.reply ?? "שגיאה, נסו שוב");

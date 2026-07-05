@@ -49,6 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             strategy="beforeInteractive"
           />
         )}
+        <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" />
         <Header />
         <AIChat />
         {/* Responsive container: full on mobile, centered+wider on desktop */}

@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { verifyTurnstile } from "@/lib/turnstile-server";
 
 export const maxDuration = 60;
 
@@ -10,6 +11,11 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const file = formData.get("file") as File;
     if (!file) return new Response("לא נמצא קובץ", { status: 400 });
+
+    const turnstileToken = formData.get("turnstileToken");
+    if (!(await verifyTurnstile(typeof turnstileToken === "string" ? turnstileToken : null))) {
+      return new Response("אימות אבטחה נכשל", { status: 403 });
+    }
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);

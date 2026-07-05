@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { getTurnstileToken } from "@/lib/turnstile-client";
 
 export default function FeedbackButton() {
   const [open, setOpen] = useState(false);
@@ -12,10 +13,11 @@ export default function FeedbackButton() {
   async function handleSubmit() {
     if (!text.trim()) return;
     setSending(true);
+    const turnstileToken = await getTurnstileToken();
     await fetch("/api/feedback", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type, text }),
+      body: JSON.stringify({ type, text, turnstileToken }),
     });
     setSending(false);
     setSent(true);

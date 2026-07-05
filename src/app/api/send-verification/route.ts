@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { verifyTurnstile } from "@/lib/turnstile-server";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -7,8 +8,12 @@ const supabase = createClient(
 );
 
 export async function POST(req: NextRequest) {
-  const { email } = await req.json();
+  const { email, turnstileToken } = await req.json();
   if (!email) return NextResponse.json({ error: "חסר אימייל" }, { status: 400 });
+
+  if (!(await verifyTurnstile(turnstileToken))) {
+    return NextResponse.json({ error: "אימות אבטחה נכשל, רעננו את הדף ונסו שוב" }, { status: 403 });
+  }
 
   const code = Math.floor(100000 + Math.random() * 900000).toString();
   const expires = new Date(Date.now() + 10 * 60 * 1000).toISOString();

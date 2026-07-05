@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { getTurnstileToken } from "@/lib/turnstile-client";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -40,6 +41,7 @@ export default function AIChat() {
     setContractResult("");
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("turnstileToken", await getTurnstileToken());
     const res = await fetch("/api/review-contract", { method: "POST", body: formData });
     setContractLoading(false);
     setContractStreaming(true);
@@ -71,10 +73,11 @@ export default function AIChat() {
     setInput("");
     setLoading(true);
 
+    const turnstileToken = await getTurnstileToken();
     const res = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: newMessages }),
+      body: JSON.stringify({ messages: newMessages, turnstileToken }),
     });
     const data = await res.json();
     setMessages([...newMessages, { role: "assistant", content: data.reply }]);

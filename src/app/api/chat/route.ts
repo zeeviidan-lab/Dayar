@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { verifyTurnstile } from "@/lib/turnstile-server";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 export async function POST(req: NextRequest) {
-  const { messages } = await req.json();
+  const { messages, turnstileToken } = await req.json();
+
+  if (!(await verifyTurnstile(turnstileToken))) {
+    return NextResponse.json({ error: "אימות אבטחה נכשל, רעננו את הדף ונסו שוב" }, { status: 403 });
+  }
 
   const response = await client.messages.create({
     model: "claude-haiku-4-5-20251001",

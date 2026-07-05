@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { getTurnstileToken } from "@/lib/turnstile-client";
 import StarRating from "./StarRating";
 
 interface Props {
@@ -145,9 +146,10 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
   async function sendCode() {
     if (!email.includes("@")) { setError("אימייל לא תקין"); return; }
     setSubmitting(true); setError("");
+    const turnstileToken = await getTurnstileToken();
     const res = await fetch("/api/send-verification", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ email, turnstileToken }),
     });
     setSubmitting(false);
     if (res.ok) setCodeSent(true);
@@ -186,18 +188,29 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
       }
     }
 
-    const { data: review, error: reviewError } = await supabase.from("reviews").insert({
-      property_id: propertyId, rating,
-      ...catRatings,
-      text: text || null, is_anonymous: isAnonymous,
-      is_verified: verified,
-      verifier_email: verified ? email : null,
-      rent_amount: rentAmount ? parseInt(rentAmount) : null,
-      rent_year: rentYear ? parseInt(rentYear) : null,
-      photos: urls.length > 0 ? urls : null,
-    }).select().single();
+    const turnstileToken = await getTurnstileToken();
+    const res = await fetch("/api/submit-review", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        property_id: propertyId, rating,
+        ...catRatings,
+        text: text || null, is_anonymous: isAnonymous,
+        is_verified: verified,
+        verifier_email: verified ? email : null,
+        rent_amount: rentAmount ? parseInt(rentAmount) : null,
+        rent_year: rentYear ? parseInt(rentYear) : null,
+        photos: urls,
+        turnstileToken,
+      }),
+    });
 
-    if (reviewError || !review) { setError("שגיאה בשמירה"); setSubmitting(false); return; }
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      setError(data.error ?? "שגיאה בשמירה");
+      setSubmitting(false);
+      return;
+    }
 
     setSubmitting(false);
     if (onPublished) onPublished();
