@@ -338,8 +338,8 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
             {!verified ? (
               <>
                 <div className="bg-orange-50 border border-orange-200 rounded-xl p-4">
-                  <p className="text-sm font-semibold text-[#f97316] mb-1">{"אימות ביקורת (אופציונלי)"}</p>
-                  <p className="text-xs text-[#888]">{"אמת את הביקורת עם האימייל שלך כדי לקבל תג ✓ מאומת. הכתובת לא תוצג פומבית. אפשר גם לפרסם ללא אימות."}</p>
+                  <p className="text-sm font-semibold text-[#f97316] mb-1">{"אימות ביקורת"}</p>
+                  <p className="text-xs text-[#888]">{"אמת את הביקורת עם האימייל שלך כדי לפרסם. הכתובת לא תוצג פומבית."}</p>
                 </div>
                 {!codeSent ? (
                   <div className="space-y-2">
@@ -436,10 +436,10 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
               </button>
             )}
             {step === "verify" && (
-              <button onClick={handleSubmit} disabled={submitting}
+              <button onClick={handleSubmit} disabled={submitting || !verified}
                 style={{ display: "flex", flex: 1, justifyContent: "center", textAlign: "center" }}
                 className="py-3 rounded-xl bg-[#f97316] text-white font-bold disabled:opacity-50 hover:bg-[#fb923c] transition-colors text-sm">
-                {submitting ? "שולח..." : verified ? "פרסם ביקורת" : "פרסם ללא אימות"}
+                {submitting ? "שולח..." : verified ? "פרסם ביקורת" : "יש לאמת אימייל תחילה"}
               </button>
             )}
           </div>
