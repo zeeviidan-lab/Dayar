@@ -89,6 +89,22 @@ function HomePageInner() {
         {"גלה ביקורות אמיתיות על דירות ומשכירים בישראל"}
       </p>
 
+      {/* Stats */}
+      {!loading && (
+        <div className="flex justify-center gap-8 mb-5">
+          {[
+            { value: properties.length, label: "נכסים" },
+            { value: totalReviews, label: "ביקורות" },
+            { value: cities.length, label: "ערים" },
+          ].map(({ value, label }) => (
+            <div key={label} className="text-center">
+              <p className="text-2xl font-black text-[#f97316]">{value}</p>
+              <p className="text-xs text-[#aaa]">{label}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* Hero: smart search */}
       <SmartSearch onSearch={handleSelect} />
 
@@ -167,23 +183,7 @@ function HomePageInner() {
         <NewReviewModal onClose={() => setShowNewReview(false)} />
       )}
 
-      {/* Stats */}
-      {!loading && (
-        <div className="mt-12 flex justify-center gap-8">
-          {[
-            { value: properties.length, label: "נכסים" },
-            { value: totalReviews, label: "ביקורות" },
-            { value: cities.length, label: "ערים" },
-          ].map(({ value, label }) => (
-            <div key={label} className="text-center">
-              <p className="text-xl font-black text-[#f97316]">{value}</p>
-              <p className="text-xs text-[#aaa]">{label}</p>
-            </div>
-          ))}
-        </div>
-      )}
-
-      <div className="mt-6 mb-6 bg-[#fff8f3] border border-orange-100 rounded-xl p-4 text-xs text-[#999] text-center leading-relaxed" dir="rtl">
+      <div className="mt-12 mb-6 bg-[#fff8f3] border border-orange-100 rounded-xl p-4 text-xs text-[#999] text-center leading-relaxed" dir="rtl">
         {"דַּיָּר מאמינה בחופש הביטוי ובשקיפות. אנא שתפו את חוויותיכם באופן כן, מכבד ועניני. ביקורות הכוללות תוכן פוגעני, לשון הרע או שפה בוטה יוסרו."}
       </div>
 
