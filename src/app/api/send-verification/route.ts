@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: "dayar@tigerandwolf.co.il",
+      from: "דַּיָּר <info@hadayar.co.il>",
       to: email,
       subject: "קוד אימות – דַּיָּר",
       html: `<div dir="rtl" style="font-family:Arial;padding:24px;max-width:400px">
