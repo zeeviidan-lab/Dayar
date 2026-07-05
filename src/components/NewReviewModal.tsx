@@ -170,6 +170,22 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
     if (!agreedToTerms) { setError("יש לאשר את תנאי השימוש"); return; }
     setSubmitting(true); setError("");
 
+    // Upload photos first so the review is created in a single insert —
+    // reviews are immutable once written (no UPDATE policy on the table).
+    const urls: string[] = [];
+    if (photos.length > 0) {
+      const folder = crypto.randomUUID();
+      for (const file of photos) {
+        const ext = file.name.split(".").pop();
+        const path = `${folder}/${Date.now()}.${ext}`;
+        const { error } = await supabase.storage.from("review-photos").upload(path, file);
+        if (!error) {
+          const { data } = supabase.storage.from("review-photos").getPublicUrl(path);
+          urls.push(data.publicUrl);
+        }
+      }
+    }
+
     const { data: review, error: reviewError } = await supabase.from("reviews").insert({
       property_id: propertyId, rating,
       ...catRatings,
@@ -178,23 +194,10 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
       verifier_email: verified ? email : null,
       rent_amount: rentAmount ? parseInt(rentAmount) : null,
       rent_year: rentYear ? parseInt(rentYear) : null,
+      photos: urls.length > 0 ? urls : null,
     }).select().single();
 
     if (reviewError || !review) { setError("שגיאה בשמירה"); setSubmitting(false); return; }
-
-    if (photos.length > 0) {
-      const urls: string[] = [];
-      for (const file of photos) {
-        const ext = file.name.split(".").pop();
-        const path = `${review.id}/${Date.now()}.${ext}`;
-        const { error } = await supabase.storage.from("review-photos").upload(path, file);
-        if (!error) {
-          const { data } = supabase.storage.from("review-photos").getPublicUrl(path);
-          urls.push(data.publicUrl);
-        }
-      }
-      if (urls.length > 0) await supabase.from("reviews").update({ photos: urls }).eq("id", review.id);
-    }
 
     setSubmitting(false);
     if (onPublished) onPublished();

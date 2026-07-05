@@ -4,8 +4,15 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   const { type, id, adminKey } = await req.json();
 
-  if (adminKey !== process.env.NEXT_PUBLIC_ADMIN_KEY) {
+  // Server-only secret — must never be exposed via a NEXT_PUBLIC_* variable
+  const serverKey = process.env.ADMIN_KEY;
+  if (!serverKey || adminKey !== serverKey) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Key check only — used by the admin unlock UI
+  if (type === "verify") {
+    return NextResponse.json({ ok: true });
   }
 
   const supabase = createClient(

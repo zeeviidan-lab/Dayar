@@ -45,7 +45,18 @@ export default function PropertyPage() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAdminInput, setShowAdminInput] = useState(false);
   const [adminInput, setAdminInput] = useState("");
-  const adminKey = process.env.NEXT_PUBLIC_ADMIN_KEY;
+
+  // The admin key is never shipped to the browser — the typed value is
+  // validated server-side and kept in state for subsequent delete calls.
+  async function verifyAdmin() {
+    const res = await fetch("/api/admin-delete", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type: "verify", adminKey: adminInput }),
+    });
+    if (res.ok) { setIsAdmin(true); setShowAdminInput(false); }
+    else setAdminInput("");
+  }
 
   async function loadData() {
     const [{ data: prop }, { data: revs }] = await Promise.all([
@@ -113,7 +124,7 @@ export default function PropertyPage() {
     const res = await fetch("/api/admin-delete", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "review", id: reviewId, adminKey }),
+      body: JSON.stringify({ type: "review", id: reviewId, adminKey: adminInput }),
     });
     if (res.ok) setReviews((prev) => prev.filter((r) => r.id !== reviewId));
   }
@@ -123,7 +134,7 @@ export default function PropertyPage() {
     const res = await fetch("/api/admin-delete", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "property", id, adminKey }),
+      body: JSON.stringify({ type: "property", id, adminKey: adminInput }),
     });
     if (res.ok) window.location.href = "/";
   }
@@ -182,17 +193,9 @@ export default function PropertyPage() {
                     placeholder="סיסמה..."
                     dir="ltr"
                     className="flex-1 bg-[#f5f5f5] border border-[#e5e5e5] rounded-lg px-2 py-1 text-sm focus:outline-none focus:border-[#f97316]"
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        if (adminInput === adminKey) { setIsAdmin(true); setShowAdminInput(false); }
-                        else { setAdminInput(""); }
-                      }
-                    }}
+                    onKeyDown={(e) => { if (e.key === "Enter") verifyAdmin(); }}
                   />
-                  <button onClick={() => {
-                    if (adminInput === adminKey) { setIsAdmin(true); setShowAdminInput(false); }
-                    else setAdminInput("");
-                  }} className="text-xs bg-[#f97316] text-white px-2 py-1 rounded-lg">{"אישור"}</button>
+                  <button onClick={verifyAdmin} className="text-xs bg-[#f97316] text-white px-2 py-1 rounded-lg">{"אישור"}</button>
                 </div>
               )}
             </div>
