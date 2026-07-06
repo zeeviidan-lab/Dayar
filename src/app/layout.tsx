@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import AIChat from "@/components/AIChat";
 import FeedbackButton from "@/components/FeedbackButton";
 import Footer from "@/components/Footer";
+import CookieNotice from "@/components/CookieNotice";
 import "./globals.css";
 
 const heebo = Heebo({
@@ -68,6 +69,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </div>
         <Footer />
         <FeedbackButton />
+        <CookieNotice />
       </body>
     </html>
   );
