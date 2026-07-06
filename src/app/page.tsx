@@ -80,7 +80,6 @@ function HomePageInner() {
     setSearch(address);
   }, []);
 
-  const totalReviews = properties.reduce((s, p) => s + (p.review_count ?? 0), 0);
 
   return (
     <main className="py-6">
@@ -88,22 +87,6 @@ function HomePageInner() {
       <p className="text-center text-sm text-[#888] mb-5">
         {"גלה ביקורות אמיתיות על דירות ומשכירים בישראל"}
       </p>
-
-      {/* Stats */}
-      {!loading && (
-        <div className="flex justify-center gap-8 mb-5">
-          {[
-            { value: properties.length, label: "נכסים" },
-            { value: totalReviews, label: "ביקורות" },
-            { value: cities.length, label: "ערים" },
-          ].map(({ value, label }) => (
-            <div key={label} className="text-center">
-              <p className="text-2xl font-black text-[#f97316]">{value}</p>
-              <p className="text-xs text-[#aaa]">{label}</p>
-            </div>
-          ))}
-        </div>
-      )}
 
       {/* Hero: smart search */}
       <SmartSearch onSearch={handleSelect} />
