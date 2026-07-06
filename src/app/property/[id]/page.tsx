@@ -42,22 +42,6 @@ export default function PropertyPage() {
   const [responseText, setResponseText] = useState("");
   const [responses, setResponses] = useState<Record<string, { text: string; created_at: string }[]>>({});
   const [submittingResponse, setSubmittingResponse] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [showAdminInput, setShowAdminInput] = useState(false);
-  const [adminInput, setAdminInput] = useState("");
-
-  // The admin key is never shipped to the browser — the typed value is
-  // validated server-side and kept in state for subsequent delete calls.
-  async function verifyAdmin() {
-    const res = await fetch("/api/admin-delete", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "verify", adminKey: adminInput }),
-    });
-    if (res.ok) { setIsAdmin(true); setShowAdminInput(false); }
-    else setAdminInput("");
-  }
-
   async function loadData() {
     const [{ data: prop }, { data: revs }] = await Promise.all([
       supabase.from("properties").select("*").eq("id", id).single(),
@@ -119,26 +103,6 @@ export default function PropertyPage() {
 
   useEffect(() => { loadData(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [id]);
 
-  async function deleteReview(reviewId: string) {
-    if (!window.confirm("למחוק את הביקורת?")) return;
-    const res = await fetch("/api/admin-delete", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "review", id: reviewId, adminKey: adminInput }),
-    });
-    if (res.ok) setReviews((prev) => prev.filter((r) => r.id !== reviewId));
-  }
-
-  async function deleteProperty() {
-    if (!window.confirm("למחוק את הנכס וכל הביקורות שלו?")) return;
-    const res = await fetch("/api/admin-delete", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "property", id, adminKey: adminInput }),
-    });
-    if (res.ok) window.location.href = "/";
-  }
-
   async function submitResponse(reviewId: string) {
     if (!responseText.trim()) return;
     setSubmittingResponse(true);
@@ -179,42 +143,11 @@ export default function PropertyPage() {
     <main className="py-6">
       <div className="flex justify-between items-center mb-4">
         <Link href="/" className="text-[#f97316] text-sm">{"← חזרה"}</Link>
-        <div className="flex items-center gap-2">
-          {!isAdmin ? (
-            <div className="relative">
-              <button onClick={() => setShowAdminInput((v) => !v)}
-                className="text-xs text-[#e5e5e5] hover:text-[#aaa] transition-colors">{"🔑"}</button>
-              {showAdminInput && (
-                <div className="absolute left-0 top-6 bg-white border border-[#e5e5e5] rounded-xl shadow-lg p-3 flex gap-2 z-10 w-52">
-                  <input
-                    type="password"
-                    value={adminInput}
-                    onChange={(e) => setAdminInput(e.target.value)}
-                    placeholder="סיסמה..."
-                    dir="ltr"
-                    className="flex-1 bg-[#f5f5f5] border border-[#e5e5e5] rounded-lg px-2 py-1 text-sm focus:outline-none focus:border-[#f97316]"
-                    onKeyDown={(e) => { if (e.key === "Enter") verifyAdmin(); }}
-                  />
-                  <button onClick={verifyAdmin} className="text-xs bg-[#f97316] text-white px-2 py-1 rounded-lg">{"אישור"}</button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <span className="text-xs text-[#f97316] font-medium">{"אדמין ✓"}</span>
-          )}
         <button onClick={handleShare}
           className="flex items-center gap-1.5 text-sm text-[#666] hover:text-[#f97316] transition-colors border border-[#e5e5e5] rounded-lg px-3 py-1.5">
           {copied ? "✓ הועתק!" : "🔗 שתף"}
         </button>
-        </div>
       </div>
-
-      {isAdmin && (
-        <button onClick={deleteProperty} className="w-full mb-4 py-3 rounded-xl text-white font-bold text-sm"
-          style={{ background: "#ef4444", border: "none", cursor: "pointer" }}>
-          {"🗑 מחק נכס זה לצמיתות"}
-        </button>
-      )}
 
       <div className="bg-white border border-[#e5e5e5] rounded-2xl p-5 mb-4 shadow-sm">
         <h1 className="text-xl font-bold text-[#111]">{property.address}</h1>
@@ -343,12 +276,6 @@ export default function PropertyPage() {
               <div className="flex justify-between items-center mt-3">
                 <span className="text-xs text-[#bbb]">{r.is_anonymous ? "אנונימי" : "משתמש רשום"}</span>
                 <div className="flex items-center gap-3">
-                  {isAdmin && (
-                    <button onClick={() => deleteReview(r.id)}
-                      className="text-xs text-red-400 hover:text-red-600 transition-colors font-medium">
-                      {"🗑 מחק"}
-                    </button>
-                  )}
                   <button onClick={() => setReported((prev) => new Set([...prev, r.id]))}
                     className="text-xs text-[#ddd] hover:text-red-400 transition-colors">
                     {reported.has(r.id) ? "✓ דווח" : "דווח"}
