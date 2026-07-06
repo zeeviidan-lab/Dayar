@@ -15,6 +15,7 @@ const heebo = Heebo({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://hadayar.co.il"),
   title: { default: "דַּיָּר – ביקורות דיירים", template: "%s | דַּיָּר" },
   description: "פלטפורמת ביקורות דיירים בישראל — קרא וכתוב ביקורות על דירות, בתים ומשכירים.",
   keywords: ["ביקורות דיירים", "שכירות", "דירה", "משכיר", "ישראל"],
