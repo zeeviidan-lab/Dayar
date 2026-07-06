@@ -191,7 +191,7 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
   return (
     <div className="fixed inset-0 bg-black/50 flex items-end md:items-center justify-center z-50 p-4"
       onClick={(e) => e.target === e.currentTarget && onClose()} aria-hidden="true">
-      <div role="dialog" aria-modal="true" aria-labelledby="new-review-modal-title" className="bg-white rounded-2xl w-full max-w-[560px] p-6 shadow-xl max-h-[90vh] overflow-y-auto">
+      <div role="dialog" aria-modal="true" aria-labelledby="new-review-modal-title" className="bg-white rounded-2xl w-full max-w-[560px] p-6 shadow-xl max-h-[90vh] flex flex-col">
         <div className="flex justify-between items-center mb-4">
           <h2 id="new-review-modal-title" className="text-lg font-bold text-[#111]">{"ביקורת חדשה"}</h2>
           <button onClick={onClose} aria-label="סגור" className="text-[#aaa] hover:text-[#111] text-2xl leading-none">×</button>
@@ -204,6 +204,9 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
             ))}
           </div>
         )}
+
+        {/* Scrollable step content — header and footer stay pinned */}
+        <div className="flex-1 min-h-0 overflow-y-auto">
 
         {/* Step 1: Address */}
         {step === "address" && (
@@ -397,6 +400,7 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
             </button>
           </div>
         )}
+        </div>
 
         {step !== "done" && (
           <div className="flex gap-3 mt-6 w-full">
