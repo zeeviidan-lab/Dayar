@@ -59,6 +59,22 @@ export default function AdminPage() {
     setLoading(false);
   }
 
+  async function downloadBackup() {
+    const res = await fetch("/api/admin-export", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ adminKey: key }),
+    });
+    if (!res.ok) return;
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `dayar-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   async function deleteReview(id: string) {
     if (!window.confirm("למחוק את הביקורת לצמיתות?")) return;
     const res = await fetch("/api/admin-delete", {
@@ -108,7 +124,13 @@ export default function AdminPage() {
     <main className="py-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-lg font-bold">{"ניהול דַּיָּר"}</h1>
-        <span className="text-xs text-[#f97316] font-medium">{"אדמין ✓"}</span>
+        <div className="flex items-center gap-3">
+          <button onClick={downloadBackup}
+            className="text-xs px-3 py-1.5 rounded-lg border border-[#e5e5e5] text-[#666] hover:border-[#f97316] hover:text-[#f97316] transition-colors">
+            {"⬇ הורד גיבוי"}
+          </button>
+          <span className="text-xs text-[#f97316] font-medium">{"אדמין ✓"}</span>
+        </div>
       </div>
 
       {loading ? (
