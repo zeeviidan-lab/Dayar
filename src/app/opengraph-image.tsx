@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { LOGO_DATA_URI } from "./logo-b64";
 
 // Share-preview card (Open Graph) for the whole site — what people see
 // when a link to hadayar.co.il is shared on WhatsApp/Facebook.
@@ -49,18 +50,10 @@ export default async function Image() {
           fontFamily: "Heebo",
         }}
       >
-        {/* The logo is דַּיָּר — the renderer can't stack nikud marks, so the
-            letters are drawn as text and the marks as positioned shapes */}
-        <div style={{ display: "flex", position: "relative", paddingBottom: 44 }}>
-          <div style={{ display: "flex", fontSize: 150, fontWeight: 800, color: "#fff", lineHeight: 1 }}>
-            {rtl("דיר")}
-          </div>
-          {/* patah under the ד (rightmost letter) */}
-          <div style={{ position: "absolute", bottom: 22, right: 18, width: 40, height: 11, background: "#fff", borderRadius: 3 }} />
-          {/* qamats under the י */}
-          <div style={{ position: "absolute", bottom: 22, right: 88, width: 40, height: 11, background: "#fff", borderRadius: 3 }} />
-          <div style={{ position: "absolute", bottom: 2, right: 103, width: 11, height: 18, background: "#fff", borderRadius: 3 }} />
-        </div>
+        {/* The logo דַּיָּר rendered by a real browser text engine (the OG
+            renderer can't stack nikud marks) — embedded as an image */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={LOGO_DATA_URI} alt="" width={620} height={289} style={{ marginTop: -40, marginBottom: -40 }} />
         <div style={{ display: "flex", gap: 10, marginTop: 22 }}>
           <Star /><Star /><Star /><Star /><Star />
         </div>
