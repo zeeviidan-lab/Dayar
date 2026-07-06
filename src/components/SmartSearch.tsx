@@ -45,9 +45,10 @@ export default function SmartSearch({ onSearch }: Props) {
     onSearch(e.target.value);
   }
 
-  async function askAI() {
-    const q = value.trim();
+  async function askAI(text?: string) {
+    const q = (text ?? value).trim();
     if (!q || aiLoading) return;
+    if (text) setValue(text);
     setAiLoading(true);
     setAiAnswer("");
     try {
@@ -79,7 +80,7 @@ export default function SmartSearch({ onSearch }: Props) {
           dir="rtl"
         />
         <button
-          onClick={askAI}
+          onClick={() => askAI()}
           disabled={!value.trim() || aiLoading}
           aria-label="שאל את ה-AI"
           className="absolute left-2 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-[#f97316] text-white text-xl disabled:opacity-30 hover:bg-[#fb923c] transition-colors flex items-center justify-center"
@@ -102,9 +103,23 @@ export default function SmartSearch({ onSearch }: Props) {
           </ul>
         )}
       </div>
-      <p className="text-xs text-[#bbb] mt-1.5 text-right pr-1">
-        {'למשל: "כמה זמן יש למשכיר להחזיר פיקדון?" · הקלדת כתובת מסננת את הרשימה'}
-      </p>
+      {/* Tappable examples — one tap runs the question */}
+      <div className="flex flex-wrap gap-2 mt-2.5 justify-center">
+        {[
+          "כמה זמן יש למשכיר להחזיר פיקדון?",
+          "מה חשוב לבדוק לפני חתימה על חוזה?",
+          "האם מותר להעלות שכר דירה באמצע חוזה?",
+        ].map((q) => (
+          <button
+            key={q}
+            onClick={() => askAI(q)}
+            disabled={aiLoading}
+            className="text-xs text-[#666] bg-white border border-[#e5e5e5] rounded-full px-3.5 py-2 hover:border-[#f97316] hover:text-[#f97316] transition-colors disabled:opacity-50"
+          >
+            {"✨ "}{q}
+          </button>
+        ))}
+      </div>
 
       {(aiLoading || aiAnswer) && (
         <div className="mt-3 bg-[#fff8f3] border border-orange-200 rounded-xl p-4 relative" dir="rtl">
