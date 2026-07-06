@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
   const code = Math.floor(100000 + Math.random() * 900000).toString();
   const expires = new Date(Date.now() + 10 * 60 * 1000).toISOString();
 
-  await supabase.from("verification_codes").upsert({ email, code, expires_at: expires });
+  await supabase.from("verification_codes").upsert({ email: String(email).trim().toLowerCase(), code, expires_at: expires });
 
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
