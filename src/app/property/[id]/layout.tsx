@@ -14,7 +14,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   }
 
   // Lead with "ביקורות" — exact match for address-review searches
-  const title = `ביקורות דיירים על ${property.address}, ${property.city} | דַּיָּר`;
+  // The root layout template appends "| דַּיָּר" automatically
+  const title = `ביקורות דיירים על ${property.address}, ${property.city}`;
   const description = `מה דיירים אומרים על ${property.address} ב${property.city}? דירוגים וביקורות אמיתיות של שוכרים${property.landlord_name ? ` — משכיר: ${property.landlord_name}` : ""}. דַּיָּר — פלטפורמת ביקורות הדיירים של ישראל.`;
 
   return {
