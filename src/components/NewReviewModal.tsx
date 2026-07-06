@@ -218,7 +218,7 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
                 onChange={(e) => setAddrQuery(e.target.value)}
                 className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors" />
               {addrSuggestions.length > 0 && (
-                <ul className="absolute right-0 left-0 top-full mt-1 bg-white border border-[#e5e5e5] rounded-xl shadow-lg z-20 overflow-hidden">
+                <ul className="mt-2 bg-white border border-[#e5e5e5] rounded-xl shadow-sm overflow-hidden">
                   {addrSuggestions.map((s) => (
                     <li key={s.id}>
                       <button
