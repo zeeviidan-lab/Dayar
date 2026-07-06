@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import { supabase } from "@/lib/supabase";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://hedayar.co.il";
+  const baseUrl = "https://hadayar.co.il";
 
   const { data: properties } = await supabase
     .from("properties")
