@@ -92,7 +92,7 @@ function HomePageInner() {
       <SmartSearch onSearch={handleSelect} />
 
       <button onClick={() => setShowNewReview(true)}
-        className="w-full py-3 rounded-xl bg-[#f97316] text-white font-bold text-base hover:bg-[#fb923c] transition-colors mt-4 flex items-center justify-center gap-2">
+        className="w-full py-3 rounded-xl bg-[#C25E3A] text-white font-bold text-base hover:bg-[#A94F2E] transition-colors mt-4 flex items-center justify-center gap-2">
         {"✏️ כתוב ביקורת חדשה"}
       </button>
 
@@ -103,7 +103,7 @@ function HomePageInner() {
           <select
             value={cityFilter}
             onChange={(e) => setCityFilter(e.target.value)}
-            className="flex-1 min-w-[120px] bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-3 py-2 text-sm text-[#555] focus:outline-none focus:border-[#f97316] transition-colors"
+            className="flex-1 min-w-[120px] bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-3 py-2 text-sm text-[#555] focus:outline-none focus:border-[#C25E3A] transition-colors"
           >
             <option value="">{"כל הערים"}</option>
             {cities.map((c) => <option key={c} value={c}>{c}</option>)}
@@ -113,7 +113,7 @@ function HomePageInner() {
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as SortOption)}
-            className="flex-1 min-w-[140px] bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-3 py-2 text-sm text-[#555] focus:outline-none focus:border-[#f97316] transition-colors"
+            className="flex-1 min-w-[140px] bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-3 py-2 text-sm text-[#555] focus:outline-none focus:border-[#C25E3A] transition-colors"
           >
             <option value="newest">{"חדש ביותר"}</option>
             <option value="rating">{"דירוג גבוה"}</option>
@@ -124,7 +124,7 @@ function HomePageInner() {
           {(cityFilter || sort !== "newest" || search) && (
             <button
               onClick={() => { setCityFilter(""); setSort("newest"); setSearch(""); }}
-              className="px-3 py-2 text-sm text-[#aaa] hover:text-[#f97316] border border-[#e5e5e5] rounded-xl transition-colors bg-white"
+              className="px-3 py-2 text-sm text-[#aaa] hover:text-[#C25E3A] border border-[#e5e5e5] rounded-xl transition-colors bg-white"
             >
               {"✕ נקה"}
             </button>
@@ -166,7 +166,7 @@ function HomePageInner() {
         <NewReviewModal onClose={() => setShowNewReview(false)} />
       )}
 
-      <div className="mt-12 mb-6 bg-[#fff8f3] border border-orange-100 rounded-xl p-4 text-xs text-[#999] text-center leading-relaxed" dir="rtl">
+      <div className="mt-12 mb-6 bg-[#FAF5F0] border border-[#F3E6DC] rounded-xl p-4 text-xs text-[#999] text-center leading-relaxed" dir="rtl">
         {"דַּיָּר מאמינה בחופש הביטוי ובשקיפות. אנא שתפו את חוויותיכם באופן כן, מכבד ועניני. ביקורות הכוללות תוכן פוגעני, לשון הרע או שפה בוטה יוסרו."}
       </div>
 

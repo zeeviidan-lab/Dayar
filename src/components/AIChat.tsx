@@ -95,7 +95,7 @@ export default function AIChat() {
         aria-label={open ? "סגור עוזר AI" : "פתח עוזר AI"}
         style={{
           position: "fixed", bottom: "24px", left: "24px", zIndex: 100,
-          background: "#f97316", color: "white", border: "none", borderRadius: "50%",
+          background: "#C25E3A", color: "white", border: "none", borderRadius: "50%",
           width: "56px", height: "56px",
           fontSize: "24px", cursor: "pointer",
           boxShadow: "0 4px 20px rgba(249,115,22,0.4)",
@@ -116,7 +116,7 @@ export default function AIChat() {
           overflow: "hidden",
         }}>
           {/* Header */}
-          <div style={{ background: "#f97316", padding: "16px", color: "white" }}>
+          <div style={{ background: "#C25E3A", padding: "16px", color: "white" }}>
             <p style={{ margin: 0, fontWeight: "bold", fontSize: "15px" }}>⚖️ עוזר דיירים AI</p>
             <p style={{ margin: "4px 0 0", fontSize: "12px", opacity: 0.85 }}>מידע על זכויות דיירים וסקירת חוזים</p>
           </div>
@@ -127,10 +127,10 @@ export default function AIChat() {
               <button key={t} onClick={() => setTab(t)}
                 style={{
                   flex: 1, padding: "10px", border: "none", cursor: "pointer",
-                  background: tab === t ? "#fff8f3" : "white",
-                  color: tab === t ? "#f97316" : "#888",
+                  background: tab === t ? "#FAF5F0" : "white",
+                  color: tab === t ? "#C25E3A" : "#888",
                   fontWeight: tab === t ? "bold" : "normal",
-                  fontSize: "13px", borderBottom: tab === t ? "2px solid #f97316" : "none",
+                  fontSize: "13px", borderBottom: tab === t ? "2px solid #C25E3A" : "none",
                   fontFamily: "Heebo, Arial, sans-serif",
                 }}>
                 {t === "chat" ? "💬 שאל שאלה" : "📄 סקירת חוזה"}
@@ -149,7 +149,7 @@ export default function AIChat() {
               <button onClick={() => fileInputRef.current?.click()} disabled={contractLoading}
                 style={{
                   display: "block", width: "100%", padding: "12px",
-                  background: contractLoading ? "#fde8d3" : "#f97316",
+                  background: contractLoading ? "#fde8d3" : "#C25E3A",
                   color: "white", border: "none", borderRadius: "12px",
                   fontSize: "14px", fontWeight: "bold", cursor: contractLoading ? "not-allowed" : "pointer",
                   fontFamily: "Heebo, Arial, sans-serif", marginBottom: "12px",
@@ -157,7 +157,7 @@ export default function AIChat() {
                 {contractLoading ? "מנתח חוזה... ⏳" : "📄 העלה חוזה לסקירה"}
               </button>
               {(contractLoading || contractStreaming) && !contractResult && (
-                <div style={{ textAlign: "center", padding: "16px 0", color: "#f97316", fontSize: "13px" }}>
+                <div style={{ textAlign: "center", padding: "16px 0", color: "#C25E3A", fontSize: "13px" }}>
                   <span style={{ display: "inline-block", animation: "pulse 1.2s ease-in-out infinite" }}>
                     ⏳ מנתח את החוזה...
                   </span>
@@ -188,9 +188,9 @@ export default function AIChat() {
                   <button key={s} onClick={() => sendMessage(s)}
                     style={{
                       display: "block", width: "100%", textAlign: "right",
-                      background: "#fff8f3", border: "1px solid #fed7aa",
+                      background: "#FAF5F0", border: "1px solid #EBD5C8",
                       borderRadius: "10px", padding: "8px 12px", marginBottom: "6px",
-                      fontSize: "13px", color: "#f97316", cursor: "pointer",
+                      fontSize: "13px", color: "#C25E3A", cursor: "pointer",
                       fontFamily: "Heebo, Arial, sans-serif",
                     }}>
                     {s}
@@ -201,7 +201,7 @@ export default function AIChat() {
             {messages.map((m, i) => (
               <div key={i} style={{
                 alignSelf: m.role === "user" ? "flex-end" : "flex-start",
-                background: m.role === "user" ? "#f97316" : "#f5f5f5",
+                background: m.role === "user" ? "#C25E3A" : "#f5f5f5",
                 color: m.role === "user" ? "white" : "#111",
                 borderRadius: m.role === "user" ? "16px 16px 4px 16px" : "16px 16px 16px 4px",
                 padding: "10px 14px", maxWidth: "85%", fontSize: "13px",
@@ -228,7 +228,7 @@ export default function AIChat() {
           {tab === "chat" && <div style={{ padding: "12px", borderTop: "1px solid #f0f0f0", display: "flex", gap: "8px" }}>
             <button onClick={() => sendMessage(input)} disabled={!input.trim() || loading}
               style={{
-                background: "#f97316", color: "white", border: "none",
+                background: "#C25E3A", color: "white", border: "none",
                 borderRadius: "10px", padding: "8px 14px", cursor: "pointer",
                 fontSize: "13px", opacity: (!input.trim() || loading) ? 0.4 : 1,
               }}>

@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
       to: email,
       subject: "קוד אימות – דַּיָּר",
       html: `<div dir="rtl" style="font-family:Arial;padding:24px;max-width:400px">
-        <h2 style="color:#f97316">דַּיָּר – אימות ביקורת</h2>
+        <h2 style="color:#C25E3A">דַּיָּר – אימות ביקורת</h2>
         <p>קוד האימות שלך:</p>
         <div style="font-size:36px;font-weight:bold;letter-spacing:8px;color:#111;padding:16px 0">${code}</div>
         <p style="color:#aaa;font-size:12px">הקוד תקף ל-10 דקות.</p>

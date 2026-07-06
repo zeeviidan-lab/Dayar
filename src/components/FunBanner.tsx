@@ -31,9 +31,9 @@ const BANNERS = [
     headline: "עוד חוזה, עוד דירה",
     sub: "ארגזי מעבר ב-₪0 לחברים שסבלו",
     cta: "אני סובל",
-    bg: "from-orange-50 to-amber-50",
-    border: "border-orange-100",
-    accent: "text-orange-500",
+    bg: "from-[#FAF5F0] to-amber-50",
+    border: "border-[#F3E6DC]",
+    accent: "text-[#C25E3A]",
     badge: "פרסומת",
   },
   {
@@ -92,7 +92,7 @@ export default function FunBanner() {
         </div>
         <button
           className={`flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold text-white transition-opacity`}
-          style={{ background: "linear-gradient(135deg,#f97316,#fb923c)" }}
+          style={{ background: "linear-gradient(135deg,#C25E3A,#A94F2E)" }}
         >
           {b.cta}
         </button>

@@ -3,8 +3,8 @@ import Link from "next/link";
 export default function PrivacyPage() {
   return (
     <main className="py-8 space-y-6">
-      <Link href="/" className="text-[#f97316] text-sm">{"← חזרה"}</Link>
-      <h1 className="text-2xl font-black text-[#f97316]">{"מדיניות פרטיות"}</h1>
+      <Link href="/" className="text-[#C25E3A] text-sm">{"← חזרה"}</Link>
+      <h1 className="text-2xl font-black text-[#C25E3A]">{"מדיניות פרטיות"}</h1>
 
       <div className="text-sm text-[#666] leading-relaxed space-y-4">
         <p>{"עדכון אחרון: יוני 2026"}</p>
@@ -32,7 +32,7 @@ export default function PrivacyPage() {
         <section>
           <h2 className="text-[#111] font-semibold mb-2">{"5. זכות עיון ומחיקה"}</h2>
           <p>{"בהתאם לחוק הגנת הפרטיות (תשמ\"א–1981), כל משתמש רשאי לבקש עיון במידע שנשמר עליו או מחיקתו. לפנייה: "}
-            <Link href="/contact" className="text-[#f97316] underline">{"צור קשר"}</Link>
+            <Link href="/contact" className="text-[#C25E3A] underline">{"צור קשר"}</Link>
             {"."}
           </p>
         </section>

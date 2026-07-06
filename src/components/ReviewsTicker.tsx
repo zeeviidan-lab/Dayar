@@ -52,7 +52,7 @@ export default function ReviewsTicker() {
       <div className="flex whitespace-nowrap animate-ticker">
         {doubled.map((item, i) => (
           <span key={i} className="inline-flex items-center gap-2 px-6 text-sm">
-            <span className="text-[#f97316] font-bold">{stars(item.rating)}</span>
+            <span className="text-[#C25E3A] font-bold">{stars(item.rating)}</span>
             <span className="text-white font-medium">{item.address}, {item.city}</span>
             {item.text && (
               <span className="text-[#aaa]">— {item.text.slice(0, 60)}{item.text.length > 60 ? "..." : ""}</span>

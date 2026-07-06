@@ -22,7 +22,7 @@ export default function StarRating({ rating, size = "md", interactive = false, o
             aria-label={`דירוג ${s} מתוך 5`}
             onClick={() => onRate?.(s)}
             className={`min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer hover:scale-110 transition-transform ${
-              s <= Math.round(rating) ? "text-[#f97316]" : "text-[#ddd]"
+              s <= Math.round(rating) ? "text-[#C25E3A]" : "text-[#ddd]"
             }`}
           >
             ★
@@ -35,7 +35,7 @@ export default function StarRating({ rating, size = "md", interactive = false, o
   return (
     <div className={`flex gap-0.5 ${sizes[size]}`} dir="ltr">
       {[1, 2, 3, 4, 5].map((s) => (
-        <span key={s} className={s <= Math.round(rating) ? "text-[#f97316]" : "text-[#ddd]"}>
+        <span key={s} className={s <= Math.round(rating) ? "text-[#C25E3A]" : "text-[#ddd]"}>
           ★
         </span>
       ))}

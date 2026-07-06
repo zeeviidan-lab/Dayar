@@ -109,10 +109,10 @@ export default function AdminPage() {
           onKeyDown={(e) => { if (e.key === "Enter") unlock(key); }}
           placeholder="מפתח ניהול"
           dir="ltr"
-          className="w-full bg-white border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm text-center focus:outline-none focus:border-[#f97316] mb-3"
+          className="w-full bg-white border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm text-center focus:outline-none focus:border-[#C25E3A] mb-3"
         />
         <button onClick={() => unlock(key)} disabled={checking}
-          className="w-full py-3 rounded-xl bg-[#f97316] text-white font-bold text-sm disabled:opacity-50 hover:bg-[#fb923c] transition-colors">
+          className="w-full py-3 rounded-xl bg-[#C25E3A] text-white font-bold text-sm disabled:opacity-50 hover:bg-[#A94F2E] transition-colors">
           {checking ? "בודק..." : "כניסה"}
         </button>
         {error && <p className="text-red-500 text-sm mt-3">{error}</p>}
@@ -126,10 +126,10 @@ export default function AdminPage() {
         <h1 className="text-lg font-bold">{"ניהול דַּיָּר"}</h1>
         <div className="flex items-center gap-3">
           <button onClick={downloadBackup}
-            className="text-xs px-3 py-1.5 rounded-lg border border-[#e5e5e5] text-[#666] hover:border-[#f97316] hover:text-[#f97316] transition-colors">
+            className="text-xs px-3 py-1.5 rounded-lg border border-[#e5e5e5] text-[#666] hover:border-[#C25E3A] hover:text-[#C25E3A] transition-colors">
             {"⬇ הורד גיבוי"}
           </button>
-          <span className="text-xs text-[#f97316] font-medium">{"אדמין ✓"}</span>
+          <span className="text-xs text-[#C25E3A] font-medium">{"אדמין ✓"}</span>
         </div>
       </div>
 
@@ -143,7 +143,7 @@ export default function AdminPage() {
               <div key={p.id} className="bg-white border border-[#e5e5e5] rounded-xl p-4">
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <Link href={`/property/${p.id}`} className="font-bold text-sm hover:text-[#f97316]">
+                    <Link href={`/property/${p.id}`} className="font-bold text-sm hover:text-[#C25E3A]">
                       {p.address}{", "}{p.city}
                     </Link>
                     <p className="text-xs text-[#aaa] mt-0.5">{propReviews.length}{" ביקורות"}</p>
@@ -159,7 +159,7 @@ export default function AdminPage() {
                     {propReviews.map((r) => (
                       <div key={r.id} className="flex items-center justify-between gap-3 text-sm">
                         <div className="min-w-0">
-                          <span className="text-[#f97316]">{"★".repeat(r.rating)}</span>
+                          <span className="text-[#C25E3A]">{"★".repeat(r.rating)}</span>
                           {r.is_verified && <span className="text-green-600 text-xs mr-1">{"✓"}</span>}
                           <span className="text-[#666] text-xs mr-2">
                             {new Date(r.created_at).toLocaleDateString("he-IL")}

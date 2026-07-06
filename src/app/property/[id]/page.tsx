@@ -135,16 +135,16 @@ export default function PropertyPage() {
   if (!property) return (
     <main className="py-8 text-center text-[#aaa]">
       <p>{"נכס לא נמצא"}</p>
-      <Link href="/" className="text-[#f97316] mt-4 inline-block">{"חזרה לדף הבית"}</Link>
+      <Link href="/" className="text-[#C25E3A] mt-4 inline-block">{"חזרה לדף הבית"}</Link>
     </main>
   );
 
   return (
     <main className="py-6">
       <div className="flex justify-between items-center mb-4">
-        <Link href="/" className="text-[#f97316] text-sm">{"← חזרה"}</Link>
+        <Link href="/" className="text-[#C25E3A] text-sm">{"← חזרה"}</Link>
         <button onClick={handleShare}
-          className="flex items-center gap-1.5 text-sm text-[#666] hover:text-[#f97316] transition-colors border border-[#e5e5e5] rounded-lg px-3 py-1.5">
+          className="flex items-center gap-1.5 text-sm text-[#666] hover:text-[#C25E3A] transition-colors border border-[#e5e5e5] rounded-lg px-3 py-1.5">
           {copied ? "✓ הועתק!" : "🔗 שתף"}
         </button>
       </div>
@@ -156,7 +156,7 @@ export default function PropertyPage() {
 
         <div className="flex items-center gap-3 mt-4">
           <StarRating rating={overallAvg} size="md" />
-          <span className="text-2xl font-black text-[#f97316]">{overallAvg > 0 ? overallAvg.toFixed(1) : "—"}</span>
+          <span className="text-2xl font-black text-[#C25E3A]">{overallAvg > 0 ? overallAvg.toFixed(1) : "—"}</span>
           <span className="text-[#aaa] text-sm">{"("}{reviews.length}{" ביקורות)"}</span>
         </div>
 
@@ -168,7 +168,7 @@ export default function PropertyPage() {
                 <div key={key} className="flex items-center gap-3">
                   <span className="text-sm text-[#666] w-20 shrink-0">{label}</span>
                   <div className="flex-1 bg-[#f5f5f5] rounded-full h-2">
-                    <div className="bg-[#f97316] h-2 rounded-full transition-all" style={{ width: `${(a / 5) * 100}%` }} />
+                    <div className="bg-[#C25E3A] h-2 rounded-full transition-all" style={{ width: `${(a / 5) * 100}%` }} />
                   </div>
                   <span className="text-xs text-[#aaa] w-6 text-left">{a.toFixed(1)}</span>
                 </div>
@@ -201,12 +201,12 @@ export default function PropertyPage() {
         </div>
       )}
 
-      <div className="bg-orange-50 border border-orange-200 rounded-xl p-3 mb-4 text-xs text-[#888]">
+      <div className="bg-[#FAF5F0] border border-[#EBD5C8] rounded-xl p-3 mb-4 text-xs text-[#888]">
         {"⚠️ הביקורות מייצגות חוויות אישיות של משתמשים בלבד ואינן מהוות עמדת הפלטפורמה."}
       </div>
 
       <button onClick={() => setShowModal(true)}
-        className="w-full py-3 rounded-xl bg-[#f97316] text-white font-bold text-base hover:bg-[#fb923c] transition-colors mb-2">
+        className="w-full py-3 rounded-xl bg-[#C25E3A] text-white font-bold text-base hover:bg-[#A94F2E] transition-colors mb-2">
         {"+ כתוב ביקורת"}
       </button>
       <p className="text-center text-xs text-[#999] mb-6">{"🏠 שוקל לקנות את הנכס? קרא מה הדיירים אומרים"}</p>
@@ -214,7 +214,7 @@ export default function PropertyPage() {
       <div className="flex border-b border-[#e5e5e5] mb-4">
         {(["reviews", "rights"] as const).map((t) => (
           <button key={t} onClick={() => setTab(t)}
-            className={`px-4 py-2 text-sm font-medium transition-colors ${tab === t ? "text-[#f97316] border-b-2 border-[#f97316]" : "text-[#aaa] hover:text-[#666]"}`}>
+            className={`px-4 py-2 text-sm font-medium transition-colors ${tab === t ? "text-[#C25E3A] border-b-2 border-[#C25E3A]" : "text-[#aaa] hover:text-[#666]"}`}>
             {t === "reviews" ? "ביקורות" : "זכויות דייר"}
           </button>
         ))}
@@ -235,7 +235,7 @@ export default function PropertyPage() {
                   <div className="space-y-2">
                     {nearbyProps.map((p) => (
                       <Link key={p.id} href={`/property/${p.id}`}>
-                        <div className="border border-[#e5e5e5] rounded-xl p-3 hover:border-[#f97316]/40 hover:shadow-sm transition-all">
+                        <div className="border border-[#e5e5e5] rounded-xl p-3 hover:border-[#C25E3A]/40 hover:shadow-sm transition-all">
                           <p className="font-medium text-[#111] text-sm">{p.address}</p>
                           <p className="text-xs text-[#999]">{p.city} · {p.review_count} ביקורות</p>
                         </div>
@@ -285,8 +285,8 @@ export default function PropertyPage() {
 
               {/* Landlord responses */}
               {(responses[r.id] ?? []).map((resp, i) => (
-                <div key={i} className="mt-3 bg-[#fff7f0] border border-[#fed7aa] rounded-xl p-3">
-                  <p className="text-xs font-bold text-[#f97316] mb-1">{"תגובת משכיר"}</p>
+                <div key={i} className="mt-3 bg-[#FAF5F0] border border-[#EBD5C8] rounded-xl p-3">
+                  <p className="text-xs font-bold text-[#C25E3A] mb-1">{"תגובת משכיר"}</p>
                   <p className="text-sm text-[#555]">{resp.text}</p>
                   <p className="text-xs text-[#bbb] mt-1">{new Date(resp.created_at).toLocaleDateString("he-IL")}</p>
                 </div>
@@ -296,10 +296,10 @@ export default function PropertyPage() {
                 <div className="mt-3 space-y-2">
                   <textarea value={responseText} onChange={(e) => setResponseText(e.target.value)}
                     placeholder="כתוב תגובה כמשכיר..." rows={3} dir="rtl"
-                    className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-3 py-2 text-sm text-[#111] placeholder-[#aaa] focus:outline-none focus:border-[#f97316] transition-colors resize-none" />
+                    className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-3 py-2 text-sm text-[#111] placeholder-[#aaa] focus:outline-none focus:border-[#C25E3A] transition-colors resize-none" />
                   <div className="flex gap-2">
                     <button onClick={() => submitResponse(r.id)} disabled={submittingResponse || !responseText.trim()}
-                      className="px-4 py-2 bg-[#f97316] text-white text-sm rounded-lg hover:bg-[#fb923c] disabled:opacity-40 transition-colors">
+                      className="px-4 py-2 bg-[#C25E3A] text-white text-sm rounded-lg hover:bg-[#A94F2E] disabled:opacity-40 transition-colors">
                       {submittingResponse ? "שולח..." : "פרסם"}
                     </button>
                     <button onClick={() => { setRespondingTo(null); setResponseText(""); }}
@@ -310,7 +310,7 @@ export default function PropertyPage() {
                 </div>
               ) : (
                 <button onClick={() => { setRespondingTo(r.id); setResponseText(""); }}
-                  className="mt-2 text-xs text-[#bbb] hover:text-[#f97316] transition-colors">
+                  className="mt-2 text-xs text-[#bbb] hover:text-[#C25E3A] transition-colors">
                   {"↩ השב כמשכיר"}
                 </button>
               )}

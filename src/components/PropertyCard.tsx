@@ -13,7 +13,7 @@ export default function PropertyCard({ property: p }: { property: Property }) {
 
   return (
     <>
-      <div className="bg-white border border-[#e5e5e5] rounded-xl overflow-hidden hover:border-[#f97316]/40 hover:shadow-sm transition-all">
+      <div className="bg-white border border-[#e5e5e5] rounded-xl overflow-hidden hover:border-[#C25E3A]/40 hover:shadow-sm transition-all">
         <Link href={`/property/${p.id}`}>
           {apiKey && hasLocation && (
             <div className="relative h-36 bg-[#f5f5f5]">
@@ -46,7 +46,7 @@ export default function PropertyCard({ property: p }: { property: Property }) {
           <button
             onClick={(e) => { e.stopPropagation(); setShowModal(true); }}
             style={{ display: "flex", width: "100%" }}
-            className="py-2 rounded-xl border border-[#f97316] text-[#f97316] text-sm font-medium hover:bg-[#fff7f0] transition-colors justify-center items-center">
+            className="py-2 rounded-xl border border-[#C25E3A] text-[#C25E3A] text-sm font-medium hover:bg-[#FAF5F0] transition-colors justify-center items-center">
             {"+ כתוב ביקורת"}
           </button>
         </div>

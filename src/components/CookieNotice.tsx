@@ -25,13 +25,13 @@ export default function CookieNotice() {
       <p className="text-sm font-bold text-[#111] mb-1">{"🍪 עוגיות"}</p>
       <p className="text-xs text-[#666] leading-relaxed">
         {"אנחנו משתמשים בעוגיות לתפעול האתר ולסטטיסטיקת שימוש אנונימית. פרטים נוספים ב"}
-        <Link href="/privacy" className="text-[#f97316] underline">{"מדיניות הפרטיות"}</Link>
+        <Link href="/privacy" className="text-[#C25E3A] underline">{"מדיניות הפרטיות"}</Link>
         {"."}
       </p>
       <div className="flex justify-start mt-3">
         <button
           onClick={dismiss}
-          className="text-sm bg-[#f97316] text-white font-bold px-5 py-2 rounded-xl hover:bg-[#fb923c] transition-colors"
+          className="text-sm bg-[#C25E3A] text-white font-bold px-5 py-2 rounded-xl hover:bg-[#A94F2E] transition-colors"
         >
           {"הבנתי"}
         </button>

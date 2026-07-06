@@ -33,7 +33,7 @@ export default function AccessibilityPage() {
         <p>
           נתקלתם בבעיית נגישות? נשמח לשמוע.
           <br />
-          <a href="mailto:contact@dayar.co.il" className="text-[#f97316] underline">contact@dayar.co.il</a>
+          <a href="mailto:contact@dayar.co.il" className="text-[#C25E3A] underline">contact@dayar.co.il</a>
         </p>
 
         <h2 className="text-lg font-bold text-[#111] mt-6">עדכון אחרון</h2>
@@ -42,7 +42,7 @@ export default function AccessibilityPage() {
         <div className="mt-8 pt-6 border-t border-[#e5e5e5]">
           <p className="text-xs text-[#aaa]">
             למידע נוסף על נגישות דיגיטלית בישראל, בקרו באתר{" "}
-            <a href="https://www.nagish.org.il" target="_blank" rel="noopener noreferrer" className="text-[#f97316] underline">
+            <a href="https://www.nagish.org.il" target="_blank" rel="noopener noreferrer" className="text-[#C25E3A] underline">
               נגישות ישראל
             </a>
             .

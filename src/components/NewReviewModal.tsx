@@ -200,7 +200,7 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
         {step !== "done" && (
           <div className="flex gap-1.5 mb-6">
             {STEPS.map((s, i) => (
-              <div key={s} className={`h-1 flex-1 rounded-full transition-colors ${i <= stepIndex ? "bg-[#f97316]" : "bg-[#e5e5e5]"}`} />
+              <div key={s} className={`h-1 flex-1 rounded-full transition-colors ${i <= stepIndex ? "bg-[#C25E3A]" : "bg-[#e5e5e5]"}`} />
             ))}
           </div>
         )}
@@ -216,7 +216,7 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
               <input ref={inputRef} type="text" placeholder="רחוב ומספר, עיר..." dir="rtl"
                 value={addrQuery}
                 onChange={(e) => setAddrQuery(e.target.value)}
-                className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors" />
+                className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C25E3A] transition-colors" />
               {addrSuggestions.length > 0 && (
                 <ul className="mt-2 bg-white border border-[#e5e5e5] rounded-xl shadow-sm overflow-hidden">
                   {addrSuggestions.map((s) => (
@@ -224,7 +224,7 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
                       <button
                         type="button"
                         onClick={() => selectSuggestion(s)}
-                        className="w-full text-right px-4 py-2.5 text-sm hover:bg-[#fff8f3] transition-colors border-b border-[#f0f0f0] last:border-b-0"
+                        className="w-full text-right px-4 py-2.5 text-sm hover:bg-[#FAF5F0] transition-colors border-b border-[#f0f0f0] last:border-b-0"
                       >
                         {s.label}
                       </button>
@@ -234,7 +234,7 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
               )}
             </div>
             {address && hasStreetNum && (
-              <div className="bg-orange-50 border border-orange-200 rounded-xl px-4 py-2 text-sm text-[#f97316] font-medium">
+              <div className="bg-[#FAF5F0] border border-[#EBD5C8] rounded-xl px-4 py-2 text-sm text-[#C25E3A] font-medium">
                 {"✓ "}{address}
               </div>
             )}
@@ -252,7 +252,7 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
                   }}
                   placeholder="לדוגמה: 4"
                   type="text" dir="ltr"
-                  className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors"
+                  className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C25E3A] transition-colors"
                 />
               </div>
             )}
@@ -291,15 +291,15 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
               <div className="flex gap-2">
                 <input value={rentAmount} onChange={(e) => setRentAmount(e.target.value.replace(/\D/g, ""))}
                   placeholder="לדוגמה: 4500" type="text" inputMode="numeric" dir="ltr"
-                  className="flex-1 bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors" />
+                  className="flex-1 bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C25E3A] transition-colors" />
                 <input value={rentYear} onChange={(e) => setRentYear(e.target.value.replace(/\D/g, "").slice(0, 4))}
                   placeholder="שנה" type="text" inputMode="numeric" dir="ltr"
-                  className="w-24 bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors" />
+                  className="w-24 bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C25E3A] transition-colors" />
               </div>
             </div>
             <textarea value={text} onChange={(e) => setText(e.target.value)}
               placeholder="שתף את החוויה שלך (אופציונלי)..." rows={4} dir="rtl"
-              className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors resize-none" />
+              className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C25E3A] transition-colors resize-none" />
             <div>
               <p className="text-sm text-[#666] mb-2">{"תמונות (עד 3)"}</p>
               <div className="flex gap-2 flex-wrap">
@@ -312,24 +312,24 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
                 ))}
                 {photos.length < 3 && (
                   <button onClick={() => fileInputRef.current?.click()}
-                    className="w-16 h-16 rounded-xl border-2 border-dashed border-[#e5e5e5] flex flex-col items-center justify-center text-[#bbb] hover:border-[#f97316] hover:text-[#f97316] transition-colors text-xs">
+                    className="w-16 h-16 rounded-xl border-2 border-dashed border-[#e5e5e5] flex flex-col items-center justify-center text-[#bbb] hover:border-[#C25E3A] hover:text-[#C25E3A] transition-colors text-xs">
                     <span className="text-xl leading-none">+</span>
                   </button>
                 )}
               </div>
               <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handlePhotoChange} />
             </div>
-            <div className="bg-[#fff8f3] border border-orange-100 rounded-xl p-3 text-xs text-[#888] leading-relaxed" dir="rtl">
+            <div className="bg-[#FAF5F0] border border-[#F3E6DC] rounded-xl p-3 text-xs text-[#888] leading-relaxed" dir="rtl">
               {"דַּיָּר מאמינה בחופש הביטוי ובשקיפות. אנא שתף את חוויותיך באופן כן, מכבד ועניני. ביקורות הכוללות תוכן פוגעני, לשון הרע או שפה בוטה יוסרו."}
             </div>
             <label className="flex items-center gap-3 cursor-pointer">
-              <input type="checkbox" checked={isAnonymous} onChange={(e) => setIsAnonymous(e.target.checked)} className="accent-[#f97316]" />
+              <input type="checkbox" checked={isAnonymous} onChange={(e) => setIsAnonymous(e.target.checked)} className="accent-[#C25E3A]" />
               <span className="text-sm text-[#666]">{"פרסם באנונימיות"}</span>
             </label>
             <label className="flex items-center gap-3 cursor-pointer">
-              <input type="checkbox" checked={agreedToTerms} onChange={(e) => setAgreedToTerms(e.target.checked)} className="accent-[#f97316]" />
+              <input type="checkbox" checked={agreedToTerms} onChange={(e) => setAgreedToTerms(e.target.checked)} className="accent-[#C25E3A]" />
               <span className="text-sm text-[#666]">{"אני מסכים/ה ל"}
-                <a href="/terms" target="_blank" className="text-[#f97316] underline mr-1">{"תנאי השימוש"}</a>
+                <a href="/terms" target="_blank" className="text-[#C25E3A] underline mr-1">{"תנאי השימוש"}</a>
               </span>
             </label>
           </div>
@@ -340,17 +340,17 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
           <div className="space-y-4">
             {!verified ? (
               <>
-                <div className="bg-orange-50 border border-orange-200 rounded-xl p-4">
-                  <p className="text-sm font-semibold text-[#f97316] mb-1">{"אימות ביקורת"}</p>
+                <div className="bg-[#FAF5F0] border border-[#EBD5C8] rounded-xl p-4">
+                  <p className="text-sm font-semibold text-[#C25E3A] mb-1">{"אימות ביקורת"}</p>
                   <p className="text-xs text-[#888]">{"אמת את הביקורת עם האימייל שלך כדי לפרסם. הכתובת לא תוצג פומבית."}</p>
                 </div>
                 {!codeSent ? (
                   <div className="space-y-2">
                     <input value={email} onChange={(e) => setEmail(e.target.value)}
                       placeholder="האימייל שלך" type="email" dir="ltr"
-                      className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#f97316] transition-colors" />
+                      className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#C25E3A] transition-colors" />
                     <button onClick={sendCode} disabled={submitting || !email}
-                      className="w-full py-2.5 bg-[#f97316] text-white rounded-xl text-sm font-medium disabled:opacity-40 hover:bg-[#fb923c] transition-colors">
+                      className="w-full py-2.5 bg-[#C25E3A] text-white rounded-xl text-sm font-medium disabled:opacity-40 hover:bg-[#A94F2E] transition-colors">
                       {submitting ? "שולח..." : "שלח קוד אימות"}
                     </button>
                   </div>
@@ -359,9 +359,9 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
                     <p className="text-sm text-[#666]">{"הכנס את הקוד שנשלח ל-"}{email}</p>
                     <input value={code} onChange={(e) => setCode(e.target.value)}
                       placeholder="123456" maxLength={6} dir="ltr"
-                      className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm text-center tracking-widest focus:outline-none focus:border-[#f97316] transition-colors" />
+                      className="w-full bg-[#f5f5f5] border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm text-center tracking-widest focus:outline-none focus:border-[#C25E3A] transition-colors" />
                     <button onClick={verifyCode} disabled={submitting || code.length !== 6}
-                      className="w-full py-2.5 bg-[#f97316] text-white rounded-xl text-sm font-medium disabled:opacity-40 hover:bg-[#fb923c] transition-colors">
+                      className="w-full py-2.5 bg-[#C25E3A] text-white rounded-xl text-sm font-medium disabled:opacity-40 hover:bg-[#A94F2E] transition-colors">
                       {submitting ? "מאמת..." : "אמת קוד"}
                     </button>
                   </div>
@@ -394,7 +394,7 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
                 await navigator.clipboard.writeText(url);
                 alert("הלינק הועתק!");
               }}
-              className="px-6 py-2.5 rounded-xl bg-[#f97316] text-white font-bold text-sm hover:bg-[#fb923c] transition-colors"
+              className="px-6 py-2.5 rounded-xl bg-[#C25E3A] text-white font-bold text-sm hover:bg-[#A94F2E] transition-colors"
             >
               {"🔗 שתף את הדף"}
             </button>
@@ -414,35 +414,35 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
             {step === "address" && (
               <button onClick={() => setStep("rating")} disabled={!propertyId || !hasStreetNum || !apartmentNumber.trim()}
                 style={{ display: "flex", flex: 1, justifyContent: "center", textAlign: "center" }}
-                className="py-3 rounded-xl bg-[#f97316] text-white font-bold disabled:opacity-30 hover:bg-[#fb923c] transition-colors text-sm">
+                className="py-3 rounded-xl bg-[#C25E3A] text-white font-bold disabled:opacity-30 hover:bg-[#A94F2E] transition-colors text-sm">
                 {"המשך"}
               </button>
             )}
             {step === "rating" && (
               <button onClick={() => setStep("categories")} disabled={rating === 0}
                 style={{ display: "flex", flex: 1, justifyContent: "center", textAlign: "center" }}
-                className="py-3 rounded-xl bg-[#f97316] text-white font-bold disabled:opacity-30 hover:bg-[#fb923c] transition-colors text-sm">
+                className="py-3 rounded-xl bg-[#C25E3A] text-white font-bold disabled:opacity-30 hover:bg-[#A94F2E] transition-colors text-sm">
                 {"המשך"}
               </button>
             )}
             {step === "categories" && (
               <button onClick={() => setStep("details")}
                 style={{ display: "flex", flex: 1, justifyContent: "center", textAlign: "center" }}
-                className="py-3 rounded-xl bg-[#f97316] text-white font-bold hover:bg-[#fb923c] transition-colors text-sm">
+                className="py-3 rounded-xl bg-[#C25E3A] text-white font-bold hover:bg-[#A94F2E] transition-colors text-sm">
                 {"המשך"}
               </button>
             )}
             {step === "details" && (
               <button onClick={() => { if (!agreedToTerms) { setError("יש לאשר את תנאי השימוש"); return; } setError(""); setStep("verify"); }}
                 style={{ display: "flex", flex: 1, justifyContent: "center", textAlign: "center" }}
-                className="py-3 rounded-xl bg-[#f97316] text-white font-bold hover:bg-[#fb923c] transition-colors text-sm">
+                className="py-3 rounded-xl bg-[#C25E3A] text-white font-bold hover:bg-[#A94F2E] transition-colors text-sm">
                 {"המשך"}
               </button>
             )}
             {step === "verify" && (
               <button onClick={handleSubmit} disabled={submitting || !verified}
                 style={{ display: "flex", flex: 1, justifyContent: "center", textAlign: "center" }}
-                className="py-3 rounded-xl bg-[#f97316] text-white font-bold disabled:opacity-50 hover:bg-[#fb923c] transition-colors text-sm">
+                className="py-3 rounded-xl bg-[#C25E3A] text-white font-bold disabled:opacity-50 hover:bg-[#A94F2E] transition-colors text-sm">
                 {submitting ? "שולח..." : verified ? "פרסם ביקורת" : "יש לאמת אימייל תחילה"}
               </button>
             )}

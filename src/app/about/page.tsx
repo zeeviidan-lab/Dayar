@@ -20,7 +20,7 @@ export default function AboutPage() {
           דַּיָּר נוצרה כדי לשנות את זה. אנחנו מאמינים שלכל דייר מגיע לדעת את האמת לפני שהוא חותם על חוזה — ולכל דייר מגיע הזכות לשתף את החוויה שלו, בצורה אנונימית וחופשית.
         </p>
 
-        <div className="bg-[#fff8f3] border border-orange-100 rounded-xl p-5">
+        <div className="bg-[#FAF5F0] border border-[#F3E6DC] rounded-xl p-5">
           <h2 className="font-bold text-[#111] mb-3">מה אנחנו מציעים</h2>
           <ul className="space-y-2 text-[#555]">
             <li>✅ ביקורות אמיתיות על דירות ומשכירים</li>
@@ -38,14 +38,14 @@ export default function AboutPage() {
         <div className="border-t border-[#e5e5e5] pt-6">
           <h2 className="font-bold text-[#111] mb-3">צרו קשר</h2>
           <p>שאלות, הצעות, או בעיות טכניות — נשמח לשמוע.</p>
-          <a href="mailto:info@hadayar.co.il" className="text-[#f97316] underline mt-1 inline-block">
+          <a href="mailto:info@hadayar.co.il" className="text-[#C25E3A] underline mt-1 inline-block">
             info@hadayar.co.il
           </a>
         </div>
 
         <div className="text-center pt-4">
           <Link href="/?write=true"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#f97316] text-white rounded-xl font-bold hover:bg-[#fb923c] transition-colors">
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[#C25E3A] text-white rounded-xl font-bold hover:bg-[#A94F2E] transition-colors">
             ✏️ כתוב ביקורת עכשיו
           </Link>
         </div>

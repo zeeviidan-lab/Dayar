@@ -27,7 +27,7 @@ function rtl(s: string): string {
 
 function Star() {
   return (
-    <svg width="52" height="52" viewBox="0 0 24 24" fill="#ffedd5">
+    <svg width="52" height="52" viewBox="0 0 24 24" fill="#F3E6DC">
       <path d="M12 2l2.9 6.26 6.86.6-5.2 4.52 1.55 6.72L12 16.54 5.89 20.1l1.55-6.72-5.2-4.52 6.86-.6L12 2z" />
     </svg>
   );
@@ -46,7 +46,7 @@ export default async function Image() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: "#f97316",
+          background: "#C25E3A",
           fontFamily: "Heebo",
         }}
       >
@@ -64,7 +64,7 @@ export default async function Image() {
           style={{
             marginTop: 44,
             fontSize: 30,
-            color: "#f97316",
+            color: "#C25E3A",
             background: "#fff",
             padding: "12px 36px",
             borderRadius: 999,

@@ -76,14 +76,14 @@ export default function SmartSearch({ onSearch }: Props) {
           onChange={handleChange}
           placeholder="חפשו כתובת או שאלו שאלה..."
           aria-label="חיפוש כתובת או שאלה על זכויות דיירים"
-          className="w-full bg-white border-2 border-[#f97316]/60 rounded-2xl pr-4 pl-14 py-4 text-[#111] placeholder-[#aaa] focus:outline-none focus:border-[#f97316] shadow-sm transition-colors text-right"
+          className="w-full bg-white border-2 border-[#C25E3A]/60 rounded-2xl pr-4 pl-14 py-4 text-[#111] placeholder-[#aaa] focus:outline-none focus:border-[#C25E3A] shadow-sm transition-colors text-right"
           dir="rtl"
         />
         <button
           onClick={() => askAI()}
           disabled={!value.trim() || aiLoading}
           aria-label="שאל את ה-AI"
-          className="absolute left-2 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-[#f97316] text-white text-xl disabled:opacity-30 hover:bg-[#fb923c] transition-colors flex items-center justify-center"
+          className="absolute left-2 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-[#C25E3A] text-white text-xl disabled:opacity-30 hover:bg-[#A94F2E] transition-colors flex items-center justify-center"
         >
           {aiLoading ? "…" : "✨"}
         </button>
@@ -94,7 +94,7 @@ export default function SmartSearch({ onSearch }: Props) {
                 <button
                   type="button"
                   onClick={() => selectSuggestion(s)}
-                  className="w-full text-right px-4 py-2.5 text-sm hover:bg-[#fff8f3] transition-colors border-b border-[#f0f0f0] last:border-b-0"
+                  className="w-full text-right px-4 py-2.5 text-sm hover:bg-[#FAF5F0] transition-colors border-b border-[#f0f0f0] last:border-b-0"
                 >
                   {s.label}
                 </button>
@@ -114,7 +114,7 @@ export default function SmartSearch({ onSearch }: Props) {
             key={q}
             onClick={() => askAI(q)}
             disabled={aiLoading}
-            className="text-xs text-[#666] bg-white border border-[#e5e5e5] rounded-full px-3.5 py-2 hover:border-[#f97316] hover:text-[#f97316] transition-colors disabled:opacity-50"
+            className="text-xs text-[#666] bg-white border border-[#e5e5e5] rounded-full px-3.5 py-2 hover:border-[#C25E3A] hover:text-[#C25E3A] transition-colors disabled:opacity-50"
           >
             {"✨ "}{q}
           </button>
@@ -122,7 +122,7 @@ export default function SmartSearch({ onSearch }: Props) {
       </div>
 
       {(aiLoading || aiAnswer) && (
-        <div className="mt-3 bg-[#fff8f3] border border-orange-200 rounded-xl p-4 relative" dir="rtl">
+        <div className="mt-3 bg-[#FAF5F0] border border-[#EBD5C8] rounded-xl p-4 relative" dir="rtl">
           <button
             onClick={() => setAiAnswer("")}
             aria-label="סגור תשובה"

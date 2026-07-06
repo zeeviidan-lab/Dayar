@@ -52,7 +52,7 @@ export default function Header() {
           <div ref={menuRef} className="relative">
             <button
               onClick={() => { setMenuOpen((v) => !v); setAccessOpen(false); }}
-              className="w-10 h-10 flex flex-col justify-center items-center gap-1.5 text-[#555] hover:text-[#f97316] transition-colors rounded-lg hover:bg-[#f5f5f5]"
+              className="w-10 h-10 flex flex-col justify-center items-center gap-1.5 text-[#555] hover:text-[#C25E3A] transition-colors rounded-lg hover:bg-[#f5f5f5]"
               aria-label="תפריט"
             >
               <span className={`block w-5 h-0.5 bg-current transition-all duration-200 ${menuOpen ? "rotate-45 translate-y-2" : ""}`} />
@@ -69,7 +69,7 @@ export default function Header() {
                 { href: "/contact", label: "צור קשר", icon: "✉️" },
               ].map(({ href, label, icon }) => (
                 <Link key={href} href={href} onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 text-sm text-[#333] hover:bg-[#fff7f0] hover:text-[#f97316] transition-colors border-b border-[#f9f9f9] last:border-0">
+                  className="flex items-center gap-3 px-4 py-3 text-sm text-[#333] hover:bg-[#FAF5F0] hover:text-[#C25E3A] transition-colors border-b border-[#f9f9f9] last:border-0">
                   <span>{icon}</span>
                   <span>{label}</span>
                 </Link>
@@ -85,7 +85,7 @@ export default function Header() {
       <div ref={accessRef}>
         <button
           onClick={() => { setAccessOpen((v) => !v); setMenuOpen(false); }}
-          className="fixed right-0 top-1/3 z-40 w-12 h-12 rounded-l-full bg-[#f97316] text-white shadow-lg flex items-center justify-center hover:bg-[#fb923c] transition-colors"
+          className="fixed right-0 top-1/3 z-40 w-12 h-12 rounded-l-full bg-[#C25E3A] text-white shadow-lg flex items-center justify-center hover:bg-[#A94F2E] transition-colors"
           aria-label="תפריט נגישות"
         >
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
@@ -104,16 +104,16 @@ export default function Header() {
                 <p className="text-xs text-[#aaa] mb-2">גודל גופן</p>
                 <div className="flex items-center gap-2">
                   <button onClick={() => setFontSize((f) => Math.max(80, f - 10))}
-                    className="w-9 h-9 rounded-full border border-[#e5e5e5] font-bold text-[#555] hover:border-[#f97316] hover:text-[#f97316] transition-colors text-sm">
+                    className="w-9 h-9 rounded-full border border-[#e5e5e5] font-bold text-[#555] hover:border-[#C25E3A] hover:text-[#C25E3A] transition-colors text-sm">
                     A-
                   </button>
                   <span className="text-sm text-[#666] w-10 text-center">{fontSize}%</span>
                   <button onClick={() => setFontSize((f) => Math.min(150, f + 10))}
-                    className="w-9 h-9 rounded-full border border-[#e5e5e5] font-bold text-[#555] hover:border-[#f97316] hover:text-[#f97316] transition-colors text-sm">
+                    className="w-9 h-9 rounded-full border border-[#e5e5e5] font-bold text-[#555] hover:border-[#C25E3A] hover:text-[#C25E3A] transition-colors text-sm">
                     A+
                   </button>
                   <button onClick={() => setFontSize(100)}
-                    className="text-xs text-[#bbb] hover:text-[#f97316] transition-colors">
+                    className="text-xs text-[#bbb] hover:text-[#C25E3A] transition-colors">
                     איפוס
                   </button>
                 </div>
@@ -128,14 +128,14 @@ export default function Header() {
                 <div key={label} className="flex items-center justify-between">
                   <p className="text-sm text-[#555]">{label}</p>
                   <button onClick={toggle} role="switch" aria-checked={value} aria-label={label}
-                    className={`w-11 h-6 min-w-0 min-h-0 rounded-full transition-colors relative shrink-0 ${value ? "bg-[#f97316]" : "bg-[#e5e5e5]"}`}>
+                    className={`w-11 h-6 min-w-0 min-h-0 rounded-full transition-colors relative shrink-0 ${value ? "bg-[#C25E3A]" : "bg-[#e5e5e5]"}`}>
                     <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all ${value ? "left-5" : "left-0.5"}`} />
                   </button>
                 </div>
               ))}
 
               <Link href="/accessibility"
-                className="block text-xs text-[#bbb] hover:text-[#f97316] transition-colors pt-2 border-t border-[#f5f5f5]">
+                className="block text-xs text-[#bbb] hover:text-[#C25E3A] transition-colors pt-2 border-t border-[#f5f5f5]">
                 הצהרת נגישות ←
               </Link>
             </div>

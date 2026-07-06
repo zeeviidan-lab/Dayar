@@ -3,8 +3,8 @@ import Link from "next/link";
 export default function TermsPage() {
   return (
     <main className="py-8 space-y-6">
-      <Link href="/" className="text-[#f97316] text-sm">{"← חזרה"}</Link>
-      <h1 className="text-2xl font-black text-[#f97316]">{"תנאי שימוש"}</h1>
+      <Link href="/" className="text-[#C25E3A] text-sm">{"← חזרה"}</Link>
+      <h1 className="text-2xl font-black text-[#C25E3A]">{"תנאי שימוש"}</h1>
 
       <div className="text-sm text-[#666] leading-relaxed space-y-4">
         <p>{"עדכון אחרון: יוני 2026"}</p>
@@ -37,7 +37,7 @@ export default function TermsPage() {
         <section>
           <h2 className="text-[#111] font-semibold mb-2">{"6. הגשת תלונה ובקשת הסרה"}</h2>
           <p>{"כל אדם הסבור כי פורסמה ביקורת הפוגעת בו שלא כדין, רשאי לפנות אלינו בדרישה להסירה דרך "}
-            <Link href="/contact" className="text-[#f97316] underline">{"דף יצירת קשר"}</Link>
+            <Link href="/contact" className="text-[#C25E3A] underline">{"דף יצירת קשר"}</Link>
             {". הפלטפורמה תבחן את הבקשה ותפעל בהתאם לדין תוך 14 ימי עסקים."}
           </p>
         </section>

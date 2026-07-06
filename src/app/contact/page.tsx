@@ -3,8 +3,8 @@ import Link from "next/link";
 export default function ContactPage() {
   return (
     <main className="py-8 space-y-6 max-w-lg mx-auto">
-      <Link href="/" className="text-[#f97316] text-sm">{"← חזרה"}</Link>
-      <h1 className="text-2xl font-black text-[#f97316]">{"צור קשר"}</h1>
+      <Link href="/" className="text-[#C25E3A] text-sm">{"← חזרה"}</Link>
+      <h1 className="text-2xl font-black text-[#C25E3A]">{"צור קשר"}</h1>
 
       <div className="bg-white border border-[#e5e5e5] rounded-2xl p-6 space-y-4 shadow-sm">
         <p className="text-sm text-[#666]">{"לפניות בנושאים הבאים:"}</p>
@@ -20,7 +20,7 @@ export default function ContactPage() {
             <span className="text-xl">📧</span>
             <div>
               <p className="text-xs text-[#aaa]">{"דואר אלקטרוני"}</p>
-              <a href="mailto:zeevi.idan@gmail.com" className="text-[#f97316] text-sm font-medium hover:underline">
+              <a href="mailto:zeevi.idan@gmail.com" className="text-[#C25E3A] text-sm font-medium hover:underline">
                 {"zeevi.idan@gmail.com"}
               </a>
             </div>
@@ -29,15 +29,15 @@ export default function ContactPage() {
         </div>
       </div>
 
-      <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 text-sm text-[#888]">
+      <div className="bg-[#FAF5F0] border border-[#EBD5C8] rounded-xl p-4 text-sm text-[#888]">
         <p className="font-medium text-[#555] mb-1">{"בקשת הסרת ביקורת"}</p>
         <p>{"אנא ציין בפנייתך: כתובת הנכס, תוכן הביקורת, והסיבה לבקשת ההסרה. הפלטפורמה תבחן את הבקשה בהתאם לחוק איסור לשון הרע."}</p>
       </div>
 
       <div className="flex gap-4 text-xs text-[#bbb] justify-center pt-2">
-        <Link href="/terms" className="hover:text-[#f97316]">{"תנאי שימוש"}</Link>
+        <Link href="/terms" className="hover:text-[#C25E3A]">{"תנאי שימוש"}</Link>
         <span>{"·"}</span>
-        <Link href="/privacy" className="hover:text-[#f97316]">{"מדיניות פרטיות"}</Link>
+        <Link href="/privacy" className="hover:text-[#C25E3A]">{"מדיניות פרטיות"}</Link>
       </div>
     </main>
   );

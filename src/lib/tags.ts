@@ -24,7 +24,7 @@ export const TAGS: { label: string; color: TagColor }[] = [
 
 export const TAG_COLOR_CLASSES: Record<TagColor, string> = {
   red: "bg-red-50 text-red-500 border-red-200",
-  orange: "bg-orange-50 text-orange-500 border-orange-200",
+  orange: "bg-[#FAF5F0] text-[#C25E3A] border-[#EBD5C8]",
   green: "bg-green-50 text-green-600 border-green-200",
   blue: "bg-blue-50 text-blue-500 border-blue-200",
 };

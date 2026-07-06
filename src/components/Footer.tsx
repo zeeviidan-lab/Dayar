@@ -32,7 +32,7 @@ export default function Footer() {
       <div className="w-full max-w-[560px] md:max-w-[900px] mx-auto px-4 md:px-8 py-10">
         {/* Brand */}
         <div className="mb-8">
-          <span className="text-2xl font-black text-[#f97316]">דַּיָּר</span>
+          <span className="text-2xl font-black text-[#C25E3A]">דַּיָּר</span>
           <p className="text-sm text-[#a89a8d] mt-1">
             {"פלטפורמת ביקורות הדיירים של ישראל — שקיפות בשוק השכירות"}
           </p>
@@ -46,7 +46,7 @@ export default function Footer() {
               <ul className="space-y-2">
                 {links.map(({ label, href }) => (
                   <li key={href}>
-                    <Link href={href} className="text-sm text-[#a89a8d] hover:text-[#f97316] transition-colors">
+                    <Link href={href} className="text-sm text-[#a89a8d] hover:text-[#C25E3A] transition-colors">
                       {label}
                     </Link>
                   </li>
