@@ -88,8 +88,11 @@ export default function Header() {
           className="fixed right-0 top-1/3 z-40 w-12 h-12 rounded-l-full bg-[#f97316] text-white shadow-lg flex items-center justify-center hover:bg-[#fb923c] transition-colors"
           aria-label="תפריט נגישות"
         >
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z" />
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" />
+            <circle cx="12" cy="6.8" r="1.5" fill="currentColor" stroke="none" />
+            <path d="M6.5 9.5c1.8.5 3.7.8 5.5.8s3.7-.3 5.5-.8" strokeLinecap="round" />
+            <path d="M12 10.3v3.2l-2.2 4.6M12 13.5l2.2 4.6" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
 
@@ -125,7 +128,7 @@ export default function Header() {
                 <div key={label} className="flex items-center justify-between">
                   <p className="text-sm text-[#555]">{label}</p>
                   <button onClick={toggle} role="switch" aria-checked={value} aria-label={label}
-                    className={`w-11 h-6 rounded-full transition-colors relative ${value ? "bg-[#f97316]" : "bg-[#e5e5e5]"}`}>
+                    className={`w-11 h-6 min-w-0 min-h-0 rounded-full transition-colors relative shrink-0 ${value ? "bg-[#f97316]" : "bg-[#e5e5e5]"}`}>
                     <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all ${value ? "left-5" : "left-0.5"}`} />
                   </button>
                 </div>
