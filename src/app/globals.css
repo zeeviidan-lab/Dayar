@@ -29,11 +29,23 @@ body {
   padding-bottom: env(safe-area-inset-bottom, 16px);
 }
 
-/* Tap targets min 44px on mobile */
-button, a {
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
+/* Tap targets min 44px on mobile.
+   justify-content matters: inline-flex + RTL otherwise pushes button
+   labels to the right edge instead of centering them. Kept in the base
+   layer so Tailwind utilities (text-right, justify-*) can still override. */
+@layer base {
+  button {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
 }
 
 /* Remove tap highlight on mobile */
