@@ -78,19 +78,23 @@ export default function Header() {
           </div>
 
           <div />
+        </div>
+      </header>
 
-          {/* Accessibility — far right */}
-          <div ref={accessRef} className="relative">
-            <button
-              onClick={() => { setAccessOpen((v) => !v); setMenuOpen(false); }}
-              className="w-10 h-10 flex items-center justify-center text-2xl text-[#555] hover:text-[#f97316] transition-colors rounded-lg hover:bg-[#f5f5f5]"
-              aria-label="נגישות"
-            >
-              ♿
-            </button>
+      {/* Accessibility — floating on the right edge */}
+      <div ref={accessRef}>
+        <button
+          onClick={() => { setAccessOpen((v) => !v); setMenuOpen(false); }}
+          className="fixed right-0 top-1/3 z-40 w-12 h-12 rounded-l-full bg-[#f97316] text-white shadow-lg flex items-center justify-center hover:bg-[#fb923c] transition-colors"
+          aria-label="תפריט נגישות"
+        >
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z" />
+          </svg>
+        </button>
 
-            {/* Accessibility dropdown */}
-            <div className={`absolute top-12 left-0 w-64 bg-white rounded-2xl shadow-xl border border-[#f0f0f0] p-4 space-y-4 transition-all duration-200 origin-top-left ${accessOpen ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 -translate-y-2 pointer-events-none"}`}>
+        {/* Accessibility panel */}
+        <div className={`fixed right-14 top-1/3 z-40 w-64 bg-white rounded-2xl shadow-xl border border-[#f0f0f0] p-4 space-y-4 transition-all duration-200 origin-top-right ${accessOpen ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 -translate-y-2 pointer-events-none"}`}>
               <p className="text-sm font-bold text-[#111]">נגישות</p>
 
               <div>
@@ -133,9 +137,6 @@ export default function Header() {
               </Link>
             </div>
           </div>
-
-        </div>
-      </header>
 
       <style>{`
         .high-contrast body { background: #fff !important; color: #000 !important; }
