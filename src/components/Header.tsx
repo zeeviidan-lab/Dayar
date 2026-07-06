@@ -8,6 +8,9 @@ export default function Header() {
   const [accessOpen, setAccessOpen] = useState(false);
   const [fontSize, setFontSize] = useState(100);
   const [highContrast, setHighContrast] = useState(false);
+  const [grayscale, setGrayscale] = useState(false);
+  const [underlineLinks, setUnderlineLinks] = useState(false);
+  const [noMotion, setNoMotion] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const accessRef = useRef<HTMLDivElement>(null);
 
@@ -18,6 +21,18 @@ export default function Header() {
   useEffect(() => {
     document.documentElement.classList.toggle("high-contrast", highContrast);
   }, [highContrast]);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("grayscale-mode", grayscale);
+  }, [grayscale]);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("underline-links", underlineLinks);
+  }, [underlineLinks]);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("no-motion", noMotion);
+  }, [noMotion]);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -97,18 +112,25 @@ export default function Header() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between">
-                <p className="text-sm text-[#555]">ניגודיות גבוהה</p>
-                <button onClick={() => setHighContrast((v) => !v)}
-                  className={`w-11 h-6 rounded-full transition-colors relative ${highContrast ? "bg-[#f97316]" : "bg-[#e5e5e5]"}`}>
-                  <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all ${highContrast ? "left-5" : "left-0.5"}`} />
-                </button>
-              </div>
+              {[
+                { label: "ניגודיות גבוהה", value: highContrast, toggle: () => setHighContrast((v) => !v) },
+                { label: "גווני אפור", value: grayscale, toggle: () => setGrayscale((v) => !v) },
+                { label: "הדגשת קישורים", value: underlineLinks, toggle: () => setUnderlineLinks((v) => !v) },
+                { label: "עצירת אנימציות", value: noMotion, toggle: () => setNoMotion((v) => !v) },
+              ].map(({ label, value, toggle }) => (
+                <div key={label} className="flex items-center justify-between">
+                  <p className="text-sm text-[#555]">{label}</p>
+                  <button onClick={toggle} role="switch" aria-checked={value} aria-label={label}
+                    className={`w-11 h-6 rounded-full transition-colors relative ${value ? "bg-[#f97316]" : "bg-[#e5e5e5]"}`}>
+                    <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all ${value ? "left-5" : "left-0.5"}`} />
+                  </button>
+                </div>
+              ))}
 
-              <a href="https://www.gov.il/he/pages/accessibility" target="_blank" rel="noopener noreferrer"
+              <Link href="/accessibility"
                 className="block text-xs text-[#bbb] hover:text-[#f97316] transition-colors pt-2 border-t border-[#f5f5f5]">
                 הצהרת נגישות ←
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -119,6 +141,12 @@ export default function Header() {
         .high-contrast body { background: #fff !important; color: #000 !important; }
         .high-contrast * { border-color: #000 !important; }
         .high-contrast a, .high-contrast button { color: #0000ee !important; }
+        .grayscale-mode { filter: grayscale(1); }
+        .underline-links a { text-decoration: underline !important; }
+        .no-motion *, .no-motion *::before, .no-motion *::after {
+          animation: none !important;
+          transition: none !important;
+        }
       `}</style>
     </>
   );
