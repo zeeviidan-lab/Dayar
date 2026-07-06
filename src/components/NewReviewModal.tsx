@@ -326,12 +326,6 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
               <input type="checkbox" checked={isAnonymous} onChange={(e) => setIsAnonymous(e.target.checked)} className="accent-[#C25E3A]" />
               <span className="text-sm text-[#666]">{"פרסם באנונימיות"}</span>
             </label>
-            <label className="flex items-center gap-3 cursor-pointer">
-              <input type="checkbox" checked={agreedToTerms} onChange={(e) => setAgreedToTerms(e.target.checked)} className="accent-[#C25E3A]" />
-              <span className="text-sm text-[#666]">{"אני מסכים/ה ל"}
-                <a href="/terms" target="_blank" className="text-[#C25E3A] underline mr-1">{"תנאי השימוש"}</a>
-              </span>
-            </label>
           </div>
         )}
 
@@ -402,8 +396,18 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
         )}
         </div>
 
+        {step === "details" && (
+          <label className="flex items-center gap-3 cursor-pointer mt-4">
+            <input type="checkbox" checked={agreedToTerms}
+              onChange={(e) => { setAgreedToTerms(e.target.checked); if (e.target.checked) setError(""); }}
+              className="accent-[#C25E3A] w-4 h-4" />
+            <span className="text-sm text-[#666]">{"קראתי ואני מסכים/ה ל"}
+              <a href="/terms" target="_blank" className="text-[#C25E3A] underline mr-1">{"תנאי השימוש"}</a>
+            </span>
+          </label>
+        )}
         {step !== "done" && (
-          <div className="flex gap-3 mt-6 w-full">
+          <div className="flex gap-3 mt-3 w-full">
             {stepIndex > (existingPropertyId ? 1 : 0) && (
               <button onClick={() => setStep(STEPS[stepIndex - 1])}
                 style={{ display: "flex", flex: 1, justifyContent: "center", textAlign: "center" }}
