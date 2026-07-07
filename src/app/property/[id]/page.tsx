@@ -182,7 +182,7 @@ export default function PropertyPage() {
         <div className="mb-4 space-y-2">
           <div className="rounded-2xl overflow-hidden relative">
             <img
-              src={`https://maps.googleapis.com/maps/api/streetview?size=560x240&location=${property.lat},${property.lng}&fov=90&pitch=0&key=${apiKey}`}
+              src={`https://maps.googleapis.com/maps/api/streetview?size=640x360&location=${property.lat},${property.lng}&fov=75&pitch=5&source=outdoor&key=${apiKey}`}
               alt={property.address}
               className="w-full h-48 object-cover"
               onError={(e) => {

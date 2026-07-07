@@ -34,11 +34,12 @@ function HomePageInner() {
           data.map(async (p) => {
             const { data: reviews } = await supabase
               .from("reviews")
-              .select("rating")
+              .select("rating, photos")
               .eq("property_id", p.id);
             const count = reviews?.length ?? 0;
             const avg = count > 0 ? reviews!.reduce((s, r) => s + r.rating, 0) / count : 0;
-            return { ...p, avg_rating: avg, review_count: count };
+            const photo_url = reviews?.find((r) => r.photos && r.photos.length > 0)?.photos?.[0] ?? null;
+            return { ...p, avg_rating: avg, review_count: count, photo_url };
           })
         );
         const seen = new Set<string>();

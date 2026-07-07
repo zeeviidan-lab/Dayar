@@ -15,6 +15,7 @@ export type Property = {
   created_at: string;
   avg_rating?: number;
   review_count?: number;
+  photo_url?: string | null;
 };
 
 export type Review = {
