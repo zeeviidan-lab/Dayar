@@ -17,14 +17,41 @@ const heebo = Heebo({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://hadayar.co.il"),
-  title: { default: "דַּיָּר – ביקורות דיירים", template: "%s | דַּיָּר" },
-  description: "פלטפורמת ביקורות דיירים בישראל — קרא וכתוב ביקורות על דירות, בתים ומשכירים.",
-  keywords: ["ביקורות דיירים", "שכירות", "דירה", "משכיר", "ישראל"],
+  // Unpointed "דייר" alongside the pointed brand — matches how people actually type
+  title: { default: "דַּיָּר (הדייר) – ביקורות דיירים על דירות ומשכירים בישראל", template: "%s | דַּיָּר" },
+  description: "בדקו את הדירה והמשכיר לפני שחותמים על חוזה שכירות: ביקורות אמיתיות ואנונימיות של שוכרים על דירות ומשכירים בכל הארץ, בחינם.",
+  keywords: ["ביקורות דיירים", "ביקורות על משכיר", "לבדוק משכיר", "שכירות", "דירה", "משכיר", "הדייר", "דייר", "hadayar", "ישראל"],
   openGraph: {
     siteName: "דַּיָּר",
     locale: "he_IL",
     type: "website",
   },
+};
+
+// Brand entity for Google: ties every spelling of the name to this site
+const ORG_JSONLD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://hadayar.co.il/#org",
+      name: "דַּיָּר",
+      alternateName: ["דייר", "הדייר", "hadayar", "Hadayar"],
+      url: "https://hadayar.co.il",
+      logo: "https://hadayar.co.il/logo-share.png",
+      email: "info@hadayar.co.il",
+      description: "פלטפורמת ביקורות הדיירים של ישראל — שוכרים כותבים ביקורות אנונימיות על דירות ומשכירים",
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://hadayar.co.il/#website",
+      name: "דַּיָּר — ביקורות דיירים",
+      alternateName: ["הדייר", "hadayar"],
+      url: "https://hadayar.co.il",
+      inLanguage: "he",
+      publisher: { "@id": "https://hadayar.co.il/#org" },
+    },
+  ],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -52,6 +79,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           />
         )}
         <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_JSONLD) }} />
         <Header />
         <AIChat />
         {/* Responsive container: full on mobile, centered+wider on desktop */}
