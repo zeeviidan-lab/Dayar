@@ -6,7 +6,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const { data: properties } = await supabase
     .from("properties")
-    .select("id, created_at")
+    .select("id, city, created_at")
     .order("created_at", { ascending: false });
 
   const propertyUrls: MetadataRoute.Sitemap = (properties ?? []).map((p) => ({
@@ -16,11 +16,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
+  const cities = Array.from(new Set((properties ?? []).map((p) => p.city).filter(Boolean)));
+  const cityUrls: MetadataRoute.Sitemap = cities.map((city) => ({
+    url: `${baseUrl}/city/${encodeURIComponent(city)}`,
+    lastModified: new Date(),
+    changeFrequency: "daily",
+    priority: 0.9,
+  }));
+
   return [
     { url: baseUrl, lastModified: new Date(), changeFrequency: "daily", priority: 1 },
     { url: `${baseUrl}/accessibility`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
     { url: `${baseUrl}/terms`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.2 },
     { url: `${baseUrl}/privacy`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.2 },
+    ...cityUrls,
     ...propertyUrls,
   ];
 }

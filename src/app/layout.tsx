@@ -44,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           gtag('config', 'G-C2PWQY3OJ5');
         `}</Script>
       </head>
-      <body className={`${heebo.variable} font-[family-name:var(--font-heebo)] bg-[#f9f9f9] text-[#111] min-h-screen`}>
+      <body className={`${heebo.variable} font-[family-name:var(--font-heebo)] bg-[#FAF9F5] text-[#111] min-h-screen`}>
         {apiKey && (
           <Script
             src={`https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&language=he`}

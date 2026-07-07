@@ -1,4 +1,14 @@
 import Link from "next/link";
+import { supabase } from "@/lib/supabase";
+
+async function getCities(): Promise<string[]> {
+  try {
+    const { data } = await supabase.from("properties").select("city");
+    return Array.from(new Set((data ?? []).map((p) => p.city).filter(Boolean))).sort();
+  } catch {
+    return [];
+  }
+}
 
 const COLUMNS = [
   {
@@ -26,7 +36,8 @@ const COLUMNS = [
   },
 ];
 
-export default function Footer() {
+export default async function Footer() {
+  const cities = await getCities();
   return (
     <footer className="mt-16 bg-[#2b2118] text-[#d8cfc7]" dir="rtl">
       <div className="w-full max-w-[560px] md:max-w-[900px] mx-auto px-4 md:px-8 py-10">
@@ -55,6 +66,21 @@ export default function Footer() {
             </div>
           ))}
         </div>
+
+        {/* City pages */}
+        {cities.length > 0 && (
+          <div className="mt-8">
+            <p className="text-sm font-bold text-white mb-3">{"ביקורות לפי עיר"}</p>
+            <div className="flex flex-wrap gap-x-4 gap-y-2">
+              {cities.map((city) => (
+                <Link key={city} href={`/city/${encodeURIComponent(city)}`}
+                  className="text-sm text-[#a89a8d] hover:text-[#C25E3A] transition-colors">
+                  {"ביקורות ב"}{city}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Bottom bar */}
         <div className="mt-10 pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-[#8a7d70]">
