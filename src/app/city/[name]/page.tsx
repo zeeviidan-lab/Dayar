@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: { params: Promise<{ name: str
   const city = decodeURIComponent(name);
   // The root layout template appends "| דַּיָּר" automatically
   const title = `ביקורות דיירים ב${city} — דירות ומשכירים`;
-  const description = `מה שוכרים אומרים על דירות ומשכירים ב${city}? ביקורות אמיתיות ואנונימיות של דיירים. בדקו את הכתובת לפני שאתם חותמים על חוזה שכירות.`;
+  const description = `לפני השכרת דירה ב${city} — מה שוכרים אומרים על הדירות והמשכירים? ביקורות אמיתיות ואנונימיות של דיירים על דירות להשכרה. בדקו את הכתובת לפני שאתם חותמים על חוזה שכירות.`;
   return {
     title,
     description,
