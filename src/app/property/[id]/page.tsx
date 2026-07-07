@@ -42,6 +42,7 @@ export default function PropertyPage() {
   const [responseText, setResponseText] = useState("");
   const [responses, setResponses] = useState<Record<string, { text: string; created_at: string }[]>>({});
   const [submittingResponse, setSubmittingResponse] = useState(false);
+  const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
   async function loadData() {
     const [{ data: prop }, { data: revs }] = await Promise.all([
       supabase.from("properties").select("*").eq("id", id).single(),
@@ -267,9 +268,10 @@ export default function PropertyPage() {
               {r.photos && r.photos.length > 0 && (
                 <div className="flex gap-2 mt-2 flex-wrap">
                   {r.photos.map((url: string, i: number) => (
-                    <a key={i} href={url} target="_blank" rel="noopener noreferrer">
+                    <button key={i} type="button" onClick={() => setLightboxUrl(url)} aria-label="הגדל תמונה"
+                      className="min-w-0 min-h-0 p-0 border-0 bg-transparent cursor-pointer">
                       <img src={url} alt="" className="w-20 h-20 object-cover rounded-xl border border-[#e5e5e5] hover:opacity-90 transition-opacity" />
-                    </a>
+                    </button>
                   ))}
                 </div>
               )}
@@ -337,6 +339,18 @@ export default function PropertyPage() {
       )}
 
       {showModal && <NewReviewModal existingPropertyId={property.id} onClose={() => setShowModal(false)} onPublished={() => { setShowModal(false); loadData(); }} />}
+
+      {/* Photo lightbox — closes on ✕ or tap anywhere */}
+      {lightboxUrl && (
+        <div className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4"
+          onClick={() => setLightboxUrl(null)}>
+          <button type="button" aria-label="סגור תמונה" onClick={() => setLightboxUrl(null)}
+            className="absolute top-4 left-4 w-11 h-11 rounded-full bg-white/15 text-white text-2xl flex items-center justify-center hover:bg-white/30 transition-colors">
+            ✕
+          </button>
+          <img src={lightboxUrl} alt="" className="max-w-full max-h-[85vh] object-contain rounded-xl" />
+        </div>
+      )}
     </main>
   );
 }
