@@ -42,14 +42,16 @@ function HomePageInner() {
             return { ...p, avg_rating: avg, review_count: count, photo_url };
           })
         );
-        const seen = new Set<string>();
-        const unique = enriched.filter((p) => {
+        // Collapse duplicate rows for the same address to one card, keeping
+        // the copy with the most reviews (some addresses exist as multiple
+        // rows — seed dupes or different apartments in one building).
+        const byAddress = new Map<string, typeof enriched[number]>();
+        for (const p of enriched) {
           const key = p.address + p.city;
-          if (seen.has(key)) return false;
-          seen.add(key);
-          return true;
-        });
-        setProperties(unique);
+          const kept = byAddress.get(key);
+          if (!kept || (p.review_count ?? 0) > (kept.review_count ?? 0)) byAddress.set(key, p);
+        }
+        setProperties([...byAddress.values()]);
       }
       setLoading(false);
     }

@@ -27,13 +27,14 @@ async function getCityProperties(city: string): Promise<Property[]> {
     })
   );
 
-  const seen = new Set<string>();
-  return enriched.filter((p) => {
+  // Collapse duplicate rows for the same address, keeping the richest copy.
+  const byAddress = new Map<string, typeof enriched[number]>();
+  for (const p of enriched) {
     const key = p.address + p.city;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
+    const kept = byAddress.get(key);
+    if (!kept || (p.review_count ?? 0) > (kept.review_count ?? 0)) byAddress.set(key, p);
+  }
+  return [...byAddress.values()];
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ name: string }> }): Promise<Metadata> {
