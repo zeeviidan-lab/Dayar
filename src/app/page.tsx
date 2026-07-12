@@ -107,14 +107,14 @@ function HomePageInner() {
       <SmartSearch onSearch={handleSelect} />
 
       {/* Contribute CTA — writing reviews is the priority */}
-      <div className="mt-5 bg-gradient-to-l from-[#C25E3A] to-[#A94F2E] rounded-2xl p-5 text-center text-white shadow-sm">
-        <p className="font-black text-lg">{"גרתם בדירה שכורה? 🏠"}</p>
-        <p className="text-sm text-white/90 mt-1 mb-4">
-          {"2 דקות של ביקורת שלכם עוזרות לשוכר הבא לא ליפול. ספרו על הדירה והמשכיר."}
+      <div className="mt-5 bg-[#FAF5F0] border border-[#EBD5C8] rounded-2xl p-5 text-center">
+        <p className="font-bold text-[#111] text-base">{"גרתם בדירה שכורה?"}</p>
+        <p className="text-sm text-[#666] mt-1 mb-4">
+          {"שתפו את החוויה שלכם — זה עוזר לשוכרים הבאים לבחור נכון."}
         </p>
         <button onClick={() => setShowNewReview(true)}
-          className="w-full py-3 rounded-xl bg-white text-[#C25E3A] font-black text-base hover:bg-[#FAF5F0] transition-colors flex items-center justify-center gap-2">
-          {"✏️ כתבו ביקורת עכשיו"}
+          className="w-full py-3 rounded-xl bg-[#C25E3A] text-white font-bold text-base hover:bg-[#A94F2E] transition-colors flex items-center justify-center gap-2">
+          {"✏️ כתבו ביקורת"}
         </button>
       </div>
 

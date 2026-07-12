@@ -1,31 +1,37 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Property } from "@/lib/supabase";
 import StarRating from "./StarRating";
 import NewReviewModal from "./NewReviewModal";
 
-// Card image quality ladder: reviewer photo → Street View → placeholder.
-// Street View returns a gray "no imagery" JPEG with HTTP 200, so presence
-// must be checked via the (free) metadata endpoint rather than onError.
-function CardImage({ p, apiKey }: { p: Property; apiKey?: string }) {
-  const hasLocation = Boolean(p.lat && p.lng);
-  const [svOk, setSvOk] = useState<boolean | null>(null);
-  const [broken, setBroken] = useState(false);
+// Card image ladder: reviewer photo → clean location map → icon placeholder.
+// Street View was dropped — its quality is Google's camera luck (trees,
+// bins, fences) and looks inconsistent. A styled static map is always
+// clean, on-brand (clay marker), and shows the neighborhood.
+export function locationMapUrl(lat: number, lng: number, apiKey: string): string {
+  const params = [
+    `center=${lat},${lng}`,
+    "zoom=16",
+    "size=640x260",
+    "scale=2",
+    `markers=color:0xC25E3A|${lat},${lng}`,
+    "style=feature:poi|visibility:off",
+    "style=feature:transit|visibility:off",
+    `key=${apiKey}`,
+  ];
+  return `https://maps.googleapis.com/maps/api/staticmap?${params.join("&")}`;
+}
 
-  useEffect(() => {
-    if (p.photo_url || !apiKey || !hasLocation) return;
-    fetch(`https://maps.googleapis.com/maps/api/streetview/metadata?location=${p.lat},${p.lng}&source=outdoor&key=${apiKey}`)
-      .then((r) => r.json())
-      .then((d) => setSvOk(d.status === "OK"))
-      .catch(() => setSvOk(true));
-  }, [p.photo_url, p.lat, p.lng, apiKey, hasLocation]);
+function CardImage({ p, apiKey }: { p: Property; apiKey?: string }) {
+  const [broken, setBroken] = useState(false);
+  const hasLocation = Boolean(p.lat && p.lng);
 
   const src = p.photo_url
     ? p.photo_url
-    : apiKey && hasLocation && svOk
-      ? `https://maps.googleapis.com/maps/api/streetview?size=640x360&location=${p.lat},${p.lng}&fov=75&pitch=5&source=outdoor&key=${apiKey}`
+    : apiKey && hasLocation
+      ? locationMapUrl(p.lat!, p.lng!, apiKey)
       : null;
 
   if (src && !broken) {
@@ -36,7 +42,6 @@ function CardImage({ p, apiKey }: { p: Property; apiKey?: string }) {
       </div>
     );
   }
-  // Placeholder while metadata loads or when nothing is available
   return (
     <div className="relative h-36 bg-[#FAF5F0] flex items-center justify-center">
       <span className="text-4xl opacity-60" aria-hidden="true">🏠</span>

@@ -180,24 +180,10 @@ export default function PropertyPage() {
       </div>
 
       {apiKey && property.lat && property.lng && (
-        <div className="mb-4 space-y-2">
-          <div className="rounded-2xl overflow-hidden relative">
-            <img
-              src={`https://maps.googleapis.com/maps/api/streetview?size=640x360&location=${property.lat},${property.lng}&fov=75&pitch=5&source=outdoor&key=${apiKey}`}
-              alt={property.address}
-              className="w-full h-48 object-cover"
-              onError={(e) => {
-                const parent = (e.target as HTMLImageElement).parentElement;
-                if (parent) parent.style.display = "none";
-              }}
-            />
-            <div className="absolute bottom-2 left-2 bg-black/50 text-white text-xs px-2 py-1 rounded-full">
-              Street View
-            </div>
-          </div>
-          <div className="rounded-2xl overflow-hidden h-40">
+        <div className="mb-4">
+          <div className="rounded-2xl overflow-hidden h-48">
             <iframe title="מיקום הנכס" width="100%" height="100%" style={{ border: 0 }} loading="lazy" allowFullScreen
-              src={`https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${property.lat},${property.lng}&zoom=15&language=he`} />
+              src={`https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${property.lat},${property.lng}&zoom=16&language=he`} />
           </div>
         </div>
       )}
