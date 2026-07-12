@@ -10,6 +10,7 @@ export type Property = {
   address: string;
   city: string;
   landlord_name: string | null;
+  apartment_number: string | null;
   lat: number | null;
   lng: number | null;
   created_at: string;

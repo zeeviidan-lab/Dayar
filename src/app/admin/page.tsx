@@ -139,14 +139,20 @@ export default function AdminPage() {
         <div className="space-y-4">
           {properties.map((p) => {
             const propReviews = reviews.filter((r) => r.property_id === p.id);
+            const isDup = properties.filter((q) => q.address === p.address && q.city === p.city).length > 1;
             return (
-              <div key={p.id} className="bg-white border border-[#e5e5e5] rounded-xl p-4">
+              <div key={p.id} className={`bg-white border rounded-xl p-4 ${isDup ? "border-amber-300 bg-amber-50/40" : "border-[#e5e5e5]"}`}>
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <Link href={`/property/${p.id}`} className="font-bold text-sm hover:text-[#C25E3A]">
                       {p.address}{", "}{p.city}
                     </Link>
-                    <p className="text-xs text-[#aaa] mt-0.5">{propReviews.length}{" ביקורות"}</p>
+                    <p className="text-xs text-[#aaa] mt-0.5">
+                      {propReviews.length}{" ביקורות"}
+                      {p.apartment_number ? ` · דירה ${p.apartment_number}` : " · ללא מס' דירה"}
+                      {` · ${new Date(p.created_at).toLocaleDateString("he-IL")}`}
+                      {isDup && <span className="text-amber-600 font-medium">{" · ⚠ כתובת כפולה"}</span>}
+                    </p>
                   </div>
                   <button onClick={() => deleteProperty(p.id)}
                     className="text-xs px-3 py-1.5 rounded-lg border border-red-200 text-red-500 hover:bg-red-50 transition-colors shrink-0">
