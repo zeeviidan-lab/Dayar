@@ -12,6 +12,7 @@ interface AdminReview {
   is_verified: boolean;
   created_at: string;
   photos: string[] | null;
+  report_count: number | null;
 }
 
 export default function AdminPage() {
@@ -51,10 +52,18 @@ export default function AdminPage() {
 
   async function loadData() {
     setLoading(true);
-    const [{ data: props }, { data: revs }] = await Promise.all([
+    const [{ data: props }, revRes] = await Promise.all([
       supabase.from("properties").select("*").order("created_at", { ascending: false }),
-      supabase.from("reviews").select("id,property_id,rating,text,is_verified,created_at,photos").order("created_at", { ascending: false }),
+      supabase.from("reviews").select("id,property_id,rating,text,is_verified,created_at,photos,report_count").order("created_at", { ascending: false }),
     ]);
+    // report_count only exists after the reports migration is run; fall back
+    // to the base columns so the dashboard still works before that.
+    let revs: unknown = revRes.data;
+    if (revRes.error) {
+      const fallback = await supabase.from("reviews")
+        .select("id,property_id,rating,text,is_verified,created_at,photos").order("created_at", { ascending: false });
+      revs = fallback.data;
+    }
     setProperties(props ?? []);
     setReviews((revs as AdminReview[]) ?? []);
     setLoading(false);
@@ -163,12 +172,15 @@ export default function AdminPage() {
 
                 {propReviews.length > 0 && (
                   <div className="mt-3 space-y-2 border-t border-[#f0f0f0] pt-3">
-                    {propReviews.map((r) => (
-                      <div key={r.id} className="flex items-center justify-between gap-3 text-sm">
+                    {[...propReviews]
+                      .sort((a, b) => (b.report_count ?? 0) - (a.report_count ?? 0))
+                      .map((r) => (
+                      <div key={r.id} className={`flex items-center justify-between gap-3 text-sm rounded-lg ${(r.report_count ?? 0) > 0 ? "bg-red-50 p-2" : ""}`}>
                         <div className="min-w-0">
                           <span className="text-[#C25E3A]">{"★".repeat(r.rating)}</span>
                           {r.is_verified && <span className="text-green-600 text-xs mr-1">{"✓"}</span>}
                           {r.photos && r.photos.length > 0 && <span className="text-xs mr-1" title="כולל תמונה">{"📷"}</span>}
+                          {(r.report_count ?? 0) > 0 && <span className="text-red-600 text-xs font-bold mr-1" title="דיווחים">{"🚩 "}{r.report_count}</span>}
                           <span className="text-[#666] text-xs mr-2">
                             {new Date(r.created_at).toLocaleDateString("he-IL")}
                           </span>

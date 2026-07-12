@@ -264,7 +264,17 @@ export default function PropertyPage() {
               <div className="flex justify-between items-center mt-3">
                 <span className="text-xs text-[#bbb]">{r.is_anonymous ? "אנונימי" : "משתמש רשום"}</span>
                 <div className="flex items-center gap-3">
-                  <button onClick={() => setReported((prev) => new Set([...prev, r.id]))}
+                  <button
+                    onClick={() => {
+                      if (reported.has(r.id)) return;
+                      setReported((prev) => new Set([...prev, r.id]));
+                      fetch("/api/report-review", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ reviewId: r.id }),
+                      }).catch(() => {});
+                    }}
+                    disabled={reported.has(r.id)}
                     className="text-xs text-[#ddd] hover:text-red-400 transition-colors">
                     {reported.has(r.id) ? "✓ דווח" : "דווח"}
                   </button>
