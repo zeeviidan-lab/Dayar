@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { verifyTurnstile } from "@/lib/turnstile-server";
+import { moderateReview } from "@/lib/moderation";
 
 // Reviews are written server-side only (service role), behind Turnstile —
 // the public INSERT policy on the reviews table can be dropped.
@@ -57,6 +58,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "כבר פרסמת ביקורת על נכס זה עם האימייל הזה" }, { status: 409 });
   }
 
+  // Screen free-text against the community policy (fail-open on error)
+  const reviewText = typeof body.text === "string" ? body.text.slice(0, 5000) : "";
+  if (reviewText.trim()) {
+    const verdict = await moderateReview(reviewText);
+    if (!verdict.allowed) {
+      return NextResponse.json({ error: verdict.reason }, { status: 422 });
+    }
+  }
+
   // Photos must point at our own storage bucket
   const photos = Array.isArray(body.photos)
     ? body.photos
@@ -77,7 +87,7 @@ export async function POST(req: NextRequest) {
     property_id: propertyId,
     rating,
     ...catValues,
-    text: typeof body.text === "string" ? body.text.slice(0, 5000) : null,
+    text: reviewText || null,
     is_anonymous: body.is_anonymous !== false,
     is_verified: true,
     verifier_email: verifierEmail,
