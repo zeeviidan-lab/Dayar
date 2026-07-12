@@ -11,6 +11,7 @@ interface AdminReview {
   text: string | null;
   is_verified: boolean;
   created_at: string;
+  photos: string[] | null;
 }
 
 export default function AdminPage() {
@@ -52,7 +53,7 @@ export default function AdminPage() {
     setLoading(true);
     const [{ data: props }, { data: revs }] = await Promise.all([
       supabase.from("properties").select("*").order("created_at", { ascending: false }),
-      supabase.from("reviews").select("id,property_id,rating,text,is_verified,created_at").order("created_at", { ascending: false }),
+      supabase.from("reviews").select("id,property_id,rating,text,is_verified,created_at,photos").order("created_at", { ascending: false }),
     ]);
     setProperties(props ?? []);
     setReviews((revs as AdminReview[]) ?? []);
@@ -167,6 +168,7 @@ export default function AdminPage() {
                         <div className="min-w-0">
                           <span className="text-[#C25E3A]">{"★".repeat(r.rating)}</span>
                           {r.is_verified && <span className="text-green-600 text-xs mr-1">{"✓"}</span>}
+                          {r.photos && r.photos.length > 0 && <span className="text-xs mr-1" title="כולל תמונה">{"📷"}</span>}
                           <span className="text-[#666] text-xs mr-2">
                             {new Date(r.created_at).toLocaleDateString("he-IL")}
                           </span>
