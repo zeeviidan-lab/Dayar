@@ -13,7 +13,7 @@ import NewReviewModal from "./NewReviewModal";
 export function locationMapUrl(lat: number, lng: number, apiKey: string): string {
   const params = [
     `center=${lat},${lng}`,
-    "zoom=16",
+    "zoom=17",
     "size=640x260",
     "scale=2",
     `markers=color:0xC25E3A|${lat},${lng}`,
