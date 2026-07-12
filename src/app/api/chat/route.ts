@@ -1,11 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { verifyTurnstile } from "@/lib/turnstile-server";
+import { getCachedAnswer } from "@/lib/faq-cache";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 export async function POST(req: NextRequest) {
   const { messages, turnstileToken } = await req.json();
+
+  // Common questions (the homepage example chips) are served from a
+  // pre-written cache: instant, consistent, free — and no Turnstile or
+  // AI call needed since there's nothing to abuse or pay for.
+  const lastMessage = Array.isArray(messages) ? messages[messages.length - 1] : null;
+  if (messages?.length === 1 && lastMessage?.role === "user" && typeof lastMessage.content === "string") {
+    const cached = getCachedAnswer(lastMessage.content);
+    if (cached) return NextResponse.json({ reply: cached });
+  }
 
   if (!(await verifyTurnstile(turnstileToken))) {
     return NextResponse.json({ error: "אימות אבטחה נכשל, רעננו את הדף ונסו שוב" }, { status: 403 });

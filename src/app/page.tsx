@@ -84,18 +84,39 @@ function HomePageInner() {
 
   return (
     <main className="py-6">
-      {/* Tagline */}
-      <p className="text-center text-sm text-[#888] mb-5">
-        {"גלה ביקורות אמיתיות על דירות ומשכירים בישראל"}
-      </p>
+      {/* Hero */}
+      <div className="text-center mb-6">
+        <h1 className="text-2xl md:text-3xl font-black text-[#111] leading-tight">
+          {"בדקו את הדירה והמשכיר"}
+          <br />
+          <span className="text-[#C25E3A]">{"לפני שאתם חותמים"}</span>
+        </h1>
+        <p className="text-sm text-[#888] mt-2">
+          {"ביקורות אמיתיות של שוכרים על דירות ומשכירים בישראל"}
+        </p>
+        <div className="flex justify-center gap-2 mt-4 flex-wrap">
+          {["100% חינם", "אנונימי לחלוטין", "ביקורות אמיתיות"].map((badge) => (
+            <span key={badge} className="inline-flex items-center gap-1 bg-[#FAF5F0] border border-[#EBD5C8] text-[#A94F2E] text-xs font-medium rounded-full px-3 py-1">
+              {"✓ "}{badge}
+            </span>
+          ))}
+        </div>
+      </div>
 
-      {/* Hero: smart search */}
+      {/* Smart search */}
       <SmartSearch onSearch={handleSelect} />
 
-      <button onClick={() => setShowNewReview(true)}
-        className="w-full py-3 rounded-xl bg-[#C25E3A] text-white font-bold text-base hover:bg-[#A94F2E] transition-colors mt-4 flex items-center justify-center gap-2">
-        {"✏️ כתוב ביקורת חדשה"}
-      </button>
+      {/* Contribute CTA — writing reviews is the priority */}
+      <div className="mt-5 bg-gradient-to-l from-[#C25E3A] to-[#A94F2E] rounded-2xl p-5 text-center text-white shadow-sm">
+        <p className="font-black text-lg">{"גרתם בדירה שכורה? 🏠"}</p>
+        <p className="text-sm text-white/90 mt-1 mb-4">
+          {"2 דקות של ביקורת שלכם עוזרות לשוכר הבא לא ליפול. ספרו על הדירה והמשכיר."}
+        </p>
+        <button onClick={() => setShowNewReview(true)}
+          className="w-full py-3 rounded-xl bg-white text-[#C25E3A] font-black text-base hover:bg-[#FAF5F0] transition-colors flex items-center justify-center gap-2">
+          {"✏️ כתבו ביקורת עכשיו"}
+        </button>
+      </div>
 
       {/* Filters row */}
       {!loading && (

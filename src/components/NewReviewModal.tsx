@@ -396,16 +396,22 @@ export default function NewReviewModal({ onClose, existingPropertyId, onPublishe
         )}
         </div>
 
-        {step === "details" && (
-          <label className="flex items-center gap-3 cursor-pointer mt-4">
-            <input type="checkbox" checked={agreedToTerms}
-              onChange={(e) => { setAgreedToTerms(e.target.checked); if (e.target.checked) setError(""); }}
-              className="accent-[#C25E3A] w-4 h-4" />
-            <span className="text-sm text-[#666]">{"קראתי ואני מסכים/ה ל"}
-              <a href="/terms" target="_blank" className="text-[#C25E3A] underline mr-1">{"תנאי השימוש"}</a>
-            </span>
-          </label>
-        )}
+        {step === "details" && (() => {
+          const termsError = !agreedToTerms && error.includes("תנאי");
+          return (
+            <div className="mt-4">
+              <label className={`flex items-center gap-3 cursor-pointer rounded-xl p-3 border transition-colors ${termsError ? "border-red-400 bg-red-50" : "border-transparent"}`}>
+                <input type="checkbox" checked={agreedToTerms}
+                  onChange={(e) => { setAgreedToTerms(e.target.checked); if (e.target.checked) setError(""); }}
+                  className={`accent-[#C25E3A] w-5 h-5 ${termsError ? "ring-2 ring-red-400 rounded" : ""}`} />
+                <span className="text-sm text-[#666]">{"קראתי ואני מסכים/ה ל"}
+                  <a href="/terms" target="_blank" className="text-[#C25E3A] underline mr-1">{"תנאי השימוש"}</a>
+                </span>
+              </label>
+              {termsError && <p className="text-red-500 text-xs mt-1 mr-1">{"👆 יש לאשר את תנאי השימוש כדי להמשיך"}</p>}
+            </div>
+          );
+        })()}
         {step !== "done" && (
           <div className="flex gap-3 mt-3 w-full">
             {stepIndex > (existingPropertyId ? 1 : 0) && (
