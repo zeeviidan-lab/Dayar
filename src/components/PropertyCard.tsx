@@ -28,11 +28,10 @@ function CardImage({ p, apiKey }: { p: Property; apiKey?: string }) {
   const [broken, setBroken] = useState(false);
   const hasLocation = Boolean(p.lat && p.lng);
 
-  const src = p.photo_url
-    ? p.photo_url
-    : apiKey && hasLocation
-      ? locationMapUrl(p.lat!, p.lng!, apiKey)
-      : null;
+  // Cards always use the location map — never a reviewer's uploaded photo.
+  // Uploads are unvetted (could be a selfie or anything) so they don't
+  // belong as the building's card image; they show inside the review instead.
+  const src = apiKey && hasLocation ? locationMapUrl(p.lat!, p.lng!, apiKey) : null;
 
   if (src && !broken) {
     return (
