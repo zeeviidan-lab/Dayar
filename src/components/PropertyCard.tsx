@@ -1,15 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Property } from "@/lib/supabase";
 import StarRating from "./StarRating";
 import NewReviewModal from "./NewReviewModal";
 
-// Card image ladder: reviewer photo → clean location map → icon placeholder.
-// Street View was dropped — its quality is Google's camera luck (trees,
-// bins, fences) and looks inconsistent. A styled static map is always
-// clean, on-brand (clay marker), and shows the neighborhood.
+// Card image: show the actual building (Street View) where Google has
+// imagery, falling back to a clean location map for addresses with none
+// (Street View returns a gray "no imagery" JPEG with HTTP 200, so presence
+// is checked via the free metadata endpoint). Reviewer-uploaded photos are
+// never used here — they're unvetted (selfies etc.) and show in the review.
 export function locationMapUrl(lat: number, lng: number, apiKey: string): string {
   const params = [
     `center=${lat},${lng}`,
@@ -24,14 +25,29 @@ export function locationMapUrl(lat: number, lng: number, apiKey: string): string
   return `https://maps.googleapis.com/maps/api/staticmap?${params.join("&")}`;
 }
 
+function streetViewUrl(lat: number, lng: number, apiKey: string): string {
+  return `https://maps.googleapis.com/maps/api/streetview?size=640x360&location=${lat},${lng}&fov=75&pitch=5&source=outdoor&key=${apiKey}`;
+}
+
 function CardImage({ p, apiKey }: { p: Property; apiKey?: string }) {
   const [broken, setBroken] = useState(false);
+  const [hasStreetView, setHasStreetView] = useState<boolean | null>(null);
   const hasLocation = Boolean(p.lat && p.lng);
 
-  // Cards always use the location map — never a reviewer's uploaded photo.
-  // Uploads are unvetted (could be a selfie or anything) so they don't
-  // belong as the building's card image; they show inside the review instead.
-  const src = apiKey && hasLocation ? locationMapUrl(p.lat!, p.lng!, apiKey) : null;
+  useEffect(() => {
+    if (!apiKey || !hasLocation) return;
+    let cancelled = false;
+    fetch(`https://maps.googleapis.com/maps/api/streetview/metadata?location=${p.lat},${p.lng}&source=outdoor&key=${apiKey}`)
+      .then((r) => r.json())
+      .then((d) => { if (!cancelled) setHasStreetView(d.status === "OK"); })
+      .catch(() => { if (!cancelled) setHasStreetView(false); });
+    return () => { cancelled = true; };
+  }, [apiKey, hasLocation, p.lat, p.lng]);
+
+  // Building photo when Street View exists; clean map otherwise.
+  const src = apiKey && hasLocation && hasStreetView !== null
+    ? (hasStreetView ? streetViewUrl(p.lat!, p.lng!, apiKey) : locationMapUrl(p.lat!, p.lng!, apiKey))
+    : null;
 
   if (src && !broken) {
     return (
@@ -42,8 +58,8 @@ function CardImage({ p, apiKey }: { p: Property; apiKey?: string }) {
     );
   }
   return (
-    <div className="relative h-36 bg-[#FAF5F0] flex items-center justify-center">
-      <span className="text-4xl opacity-60" aria-hidden="true">🏠</span>
+    <div className="relative h-36 bg-[#FAF5F0] flex items-center justify-center" aria-hidden="true">
+      <span className="text-4xl opacity-60">🏠</span>
     </div>
   );
 }
